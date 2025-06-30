@@ -1,3 +1,3 @@
 package io.github.pandier.snowball
 
-interface SnowballPlugin
+public interface SnowballPlugin

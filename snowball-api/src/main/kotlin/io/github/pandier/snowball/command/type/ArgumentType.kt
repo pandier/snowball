@@ -1,5 +1,5 @@
 package io.github.pandier.snowball.command.type
 
-interface ArgumentType<T> {
-    val clazz: Class<T>
+public interface ArgumentType<T> {
+    public val clazz: Class<T>
 }

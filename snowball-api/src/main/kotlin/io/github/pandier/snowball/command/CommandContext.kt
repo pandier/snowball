@@ -1,8 +1,8 @@
 package io.github.pandier.snowball.command
 
-interface CommandContext<S : CommandSource> {
-    val source: S
+public interface CommandContext<S : CommandSource> {
+    public val source: S
 
-    fun <T> require(name: String, clazz: Class<T>): T
-    fun <T> get(name: String, clazz: Class<T>): T?
+    public fun <T> require(name: String, clazz: Class<T>): T
+    public fun <T> get(name: String, clazz: Class<T>): T?
 }

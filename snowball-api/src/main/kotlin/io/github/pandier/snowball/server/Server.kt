@@ -1,3 +1,3 @@
 package io.github.pandier.snowball.server
 
-interface Server
+public interface Server

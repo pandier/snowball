@@ -2,4 +2,7 @@ package io.github.pandier.snowball.command
 
 import io.github.pandier.snowball.command.type.ArgumentType
 
-class Argument<T>(val type: ArgumentType<T>, var name: String)
+public class Argument<T>(
+    public val type: ArgumentType<T>,
+    public val name: String
+)

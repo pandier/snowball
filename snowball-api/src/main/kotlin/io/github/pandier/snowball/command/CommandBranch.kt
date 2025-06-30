@@ -2,34 +2,29 @@ package io.github.pandier.snowball.command
 
 import io.github.pandier.snowball.command.type.ArgumentType
 
-open class CommandBranch(open val name: String?) {
-    val arguments = mutableListOf<Argument<*>>()
-    val children = mutableListOf<CommandBranch>()
-    var executor: CommandExecutor<CommandSource>? = null
+public open class CommandBranch(public open val name: String?) {
+    public val arguments: MutableList<Argument<*>> = mutableListOf<Argument<*>>()
+    public val children: MutableList<CommandBranch> = mutableListOf<CommandBranch>()
+    public var executor: CommandExecutor<CommandSource>? = null
 
-    fun <T : Any> argument(type: ArgumentType<T>, name: String): ArgumentDelegate<T> {
+    public fun <T : Any> argument(type: ArgumentType<T>, name: String): ArgumentDelegate<T> {
         arguments.add(Argument(type, name))
         return ArgumentDelegate(name, type.clazz)
     }
 
-    fun <T : Any> argumentOptional(type: ArgumentType<T>, name: String): OptionalArgumentDelegate<T> {
-        arguments.add(Argument(type, name))
-        return OptionalArgumentDelegate(name, type.clazz)
-    }
-
-    fun branch(block: CommandBranch.() -> Unit) {
+    public fun branch(block: CommandBranch.() -> Unit) {
         branch(null, block)
     }
 
-    fun branch(name: String?, block: CommandBranch.() -> Unit) {
+    public fun branch(name: String?, block: CommandBranch.() -> Unit) {
         add(CommandBranch(name).apply(block))
     }
 
-    fun add(branch: CommandBranch) {
+    public fun add(branch: CommandBranch) {
         children.add(branch)
     }
 
-    fun executes(executor: CommandExecutor<CommandSource>) {
+    public fun executes(executor: CommandExecutor<CommandSource>) {
         this.executor = executor
     }
 }

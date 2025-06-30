@@ -1,8 +1,8 @@
 package io.github.pandier.snowball.command.type
 
-class DoubleArgumentType(val min: Double, val max: Double) : ArgumentType<Double> {
-    constructor(): this(Double.MIN_VALUE, Double.MAX_VALUE)
-    constructor(min: Double): this(min, Double.MAX_VALUE)
+public class DoubleArgumentType(public val min: Double, public val max: Double) : ArgumentType<Double> {
+    public constructor(): this(Double.MIN_VALUE, Double.MAX_VALUE)
+    public constructor(min: Double): this(min, Double.MAX_VALUE)
 
     override val clazz: Class<Double> = Double::class.java
 }
