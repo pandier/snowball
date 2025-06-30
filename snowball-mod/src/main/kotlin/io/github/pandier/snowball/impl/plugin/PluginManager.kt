@@ -14,9 +14,8 @@ class PluginManager(
     var plugins: List<SnowballPlugin> = listOf()
         private set
 
-    fun initialize() {
+    internal fun initialize() {
         plugins = FabricLoader.getInstance().getEntrypoints("snowball-plugin", SnowballPlugin::class.java)
-        FabricLoader.getInstance().allMods
 
         try {
             eventManager.registerListeners(plugins)

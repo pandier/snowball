@@ -1,9 +1,12 @@
 package io.github.pandier.snowball.impl
 
 import io.github.pandier.snowball.Snowball
+import io.github.pandier.snowball.event.server.CommandRegisterEvent
 import io.github.pandier.snowball.event.server.ServerStartedEvent
 import io.github.pandier.snowball.event.server.ServerStartingEvent
+import io.github.pandier.snowball.impl.command.CommandTransformer
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 
 class SnowballInitializer : ModInitializer {
@@ -32,6 +35,12 @@ class SnowballInitializer : ModInitializer {
 
         ServerLifecycleEvents.SERVER_STARTED.register {
             SnowballImpl.eventManager.notify(ServerStartedEvent(Conversions.server(it)))
+        }
+
+        CommandRegistrationCallback.EVENT.register { dispatcher, registryAccess, environment ->
+            SnowballImpl.eventManager.notify(CommandRegisterEvent {
+                dispatcher.register(CommandTransformer.command(it))
+            })
         }
     }
 }

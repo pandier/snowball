@@ -3,5 +3,6 @@ plugins {
 }
 
 dependencies {
+    api(libs.adventure.api)
     api(libs.log4j)
 }
