@@ -2,12 +2,13 @@ package io.github.pandier.snowball.impl.command
 
 import io.github.pandier.snowball.command.CommandContext
 import io.github.pandier.snowball.command.CommandSource
+import io.github.pandier.snowball.impl.SnowballAdapter
 import net.minecraft.server.command.ServerCommandSource
 
 class CommandContextImpl(
-    val base: com.mojang.brigadier.context.CommandContext<ServerCommandSource>
-) : CommandContext<CommandSource> {
-    override val source: CommandSource = CommandSourceImpl(base.source)
+    override val adaptee: com.mojang.brigadier.context.CommandContext<ServerCommandSource>
+) : SnowballAdapter(adaptee), CommandContext<CommandSource> {
+    override val source: CommandSource = CommandSourceImpl(adaptee.source)
 
     override fun <T> require(name: String, clazz: Class<T>): T {
         // TODO: Better error message
@@ -15,6 +16,6 @@ class CommandContextImpl(
     }
 
     override fun <T> get(name: String, clazz: Class<T>): T? {
-        return base.getArgument(name, clazz)
+        return adaptee.getArgument(name, clazz)
     }
 }

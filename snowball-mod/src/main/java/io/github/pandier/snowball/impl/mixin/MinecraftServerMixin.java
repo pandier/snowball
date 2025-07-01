@@ -9,10 +9,10 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin implements SnowballConvertible<ServerImpl> {
-    @Unique private final ServerImpl impl = new ServerImpl((MinecraftServer) (Object) this);
+    @Unique private final ServerImpl impl$adapter = new ServerImpl((MinecraftServer) (Object) this);
 
     @Override
     public @NotNull ServerImpl snowball$get() {
-        return impl;
+        return impl$adapter;
     }
 }

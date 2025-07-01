@@ -4,7 +4,11 @@
   "package": "io.github.pandier.snowball.impl.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "EntityMixin",
+    "LivingEntityMixin",
     "MinecraftServerMixin",
+    "ServerPlayerEntityMixin",
+    "ServerWorldMixin",
     "StyleAccessor"
   ],
   "client": [

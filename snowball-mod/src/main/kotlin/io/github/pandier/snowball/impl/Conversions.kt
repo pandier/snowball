@@ -1,9 +1,16 @@
 package io.github.pandier.snowball.impl
 
+import io.github.pandier.snowball.entity.Entity
+import io.github.pandier.snowball.entity.Player
 import io.github.pandier.snowball.impl.bridge.SnowballConvertible
+import io.github.pandier.snowball.impl.entity.EntityImpl
 import io.github.pandier.snowball.impl.mixin.StyleAccessor
 import io.github.pandier.snowball.server.Server
+import io.github.pandier.snowball.world.World
+import net.kyori.adventure.chat.ChatType
+import net.kyori.adventure.chat.SignedMessage
 import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.BlockNBTComponent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.EntityNBTComponent
@@ -19,8 +26,22 @@ import net.kyori.adventure.text.format.ShadowColor
 import net.kyori.adventure.text.format.Style
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.util.Ticks
 import net.minecraft.nbt.NbtString
+import net.minecraft.network.message.FilterMask
+import net.minecraft.network.message.LastSeenMessageList
+import net.minecraft.network.message.MessageBody
+import net.minecraft.network.message.MessageLink
+import net.minecraft.network.message.MessageSignatureData
+import net.minecraft.network.message.MessageType
+import net.minecraft.registry.DynamicRegistryManager
+import net.minecraft.registry.Registry
+import net.minecraft.registry.RegistryKey
+import net.minecraft.registry.RegistryKeys
 import net.minecraft.server.MinecraftServer
+import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.world.ServerWorld
+import net.minecraft.sound.SoundCategory
 import net.minecraft.text.BlockNbtDataSource
 import net.minecraft.text.EntityNbtDataSource
 import net.minecraft.text.ParsedSelector
@@ -28,9 +49,13 @@ import net.minecraft.text.StorageNbtDataSource
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import net.minecraft.util.Util
+import java.time.Duration
 import java.util.Optional
 
 object Conversions {
+    fun entity(entity: net.minecraft.entity.Entity): Entity = convertible(entity)
+    fun player(player: ServerPlayerEntity): Player = convertible(player)
+    fun world(world: ServerWorld): World = convertible(world)
     fun server(obj: MinecraftServer): Server = convertible(obj)
 
     @Suppress("UNCHECKED_CAST")
@@ -39,6 +64,18 @@ object Conversions {
     object Adventure {
         fun vanilla(key: Key): Identifier {
             return Identifier.of(key.namespace(), key.value())
+        }
+
+        fun adventure(identifier: Identifier): Key {
+            return Key.key(identifier.namespace, identifier.path)
+        }
+
+        inline fun <reified T> registryKey(registry: RegistryKey<out Registry<T>>, key: Key): RegistryKey<T> {
+            return RegistryKey.of(registry, vanilla(key))
+        }
+
+        fun toTicks(duration: Duration): Long {
+            return duration.toMillis() / Ticks.SINGLE_TICK_DURATION_MS
         }
 
         fun vanilla(color: TextColor): net.minecraft.text.TextColor {
@@ -106,23 +143,72 @@ object Conversions {
                     component.arguments().map { vanilla(it.asComponent()) })
                 is KeybindComponent -> Text.keybind(component.keybind())
                 is ScoreComponent -> Text.score(component.name(), component.objective())
-                is SelectorComponent -> Text.selector(ParsedSelector.parse(component.pattern()).getOrThrow(),
+                is SelectorComponent -> Text.selector(
+                    ParsedSelector.parse(component.pattern()).getOrThrow(),
                     Optional.ofNullable(component.separator()?.let(::vanilla)))
                 is BlockNBTComponent -> Text.nbt(component.nbtPath(), component.interpret(),
                     Optional.ofNullable(component.separator()?.let(::vanilla)),
-                    BlockNbtDataSource(component.pos().asString()))
+                    BlockNbtDataSource(component.pos().asString())
+                )
                 is EntityNBTComponent -> Text.nbt(component.nbtPath(), component.interpret(),
                     Optional.ofNullable(component.separator()?.let(::vanilla)),
-                    EntityNbtDataSource(component.selector()))
+                    EntityNbtDataSource(component.selector())
+                )
                 is StorageNBTComponent -> Text.nbt(component.nbtPath(), component.interpret(),
                     Optional.ofNullable(component.separator()?.let(::vanilla)),
-                    StorageNbtDataSource(vanilla(component.storage())))
+                    StorageNbtDataSource(vanilla(component.storage()))
+                )
                 else -> error("Unrecognizable component class: ${component.javaClass.name}")
             }
             for (child in component.children())
                 vanilla.append(vanilla(child))
             vanilla.style = vanilla(component.style())
             return vanilla
+        }
+
+        fun vanilla(signedMessage: SignedMessage): net.minecraft.network.message.SignedMessage {
+            return net.minecraft.network.message.SignedMessage(
+                MessageLink.of(signedMessage.identity().uuid()),
+                signedMessage.signature()?.let { MessageSignatureData(it.bytes()) },
+                MessageBody(
+                    signedMessage.message(),
+                    signedMessage.timestamp(),
+                    signedMessage.salt(),
+                    LastSeenMessageList.EMPTY
+                ),
+                signedMessage.unsignedContent()?.let(::vanilla),
+                FilterMask.PASS_THROUGH
+            )
+        }
+
+        fun vanilla(bound: ChatType.Bound, registryManager: DynamicRegistryManager): MessageType.Parameters {
+            return MessageType.Parameters(
+                registryManager.getEntryOrThrow(registryKey(RegistryKeys.MESSAGE_TYPE, bound.type().key())),
+                vanilla(bound.name()),
+                Optional.ofNullable(bound.target()?.let(::vanilla)),
+            )
+        }
+
+        fun vanilla(source: Sound.Source): SoundCategory {
+            return when (source) {
+                Sound.Source.MASTER -> SoundCategory.MASTER
+                Sound.Source.MUSIC -> SoundCategory.MUSIC
+                Sound.Source.RECORD -> SoundCategory.RECORDS
+                Sound.Source.WEATHER -> SoundCategory.WEATHER
+                Sound.Source.BLOCK -> SoundCategory.BLOCKS
+                Sound.Source.HOSTILE -> SoundCategory.HOSTILE
+                Sound.Source.NEUTRAL -> SoundCategory.NEUTRAL
+                Sound.Source.PLAYER -> SoundCategory.PLAYERS
+                Sound.Source.AMBIENT -> SoundCategory.AMBIENT
+                Sound.Source.VOICE -> SoundCategory.VOICE
+                Sound.Source.UI -> SoundCategory.UI
+            }
+        }
+
+        fun vanilla(emitter: Sound.Emitter, self: net.minecraft.entity.Entity): net.minecraft.entity.Entity {
+            if (emitter == Sound.Emitter.self()) return self
+            if (emitter is EntityImpl) return emitter.adaptee
+            error("Unrecognizable emitter: $emitter")
         }
     }
 }
