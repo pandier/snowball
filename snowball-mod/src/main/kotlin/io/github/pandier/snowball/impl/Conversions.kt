@@ -7,6 +7,8 @@ import io.github.pandier.snowball.impl.entity.EntityImpl
 import io.github.pandier.snowball.impl.mixin.StyleAccessor
 import io.github.pandier.snowball.server.Server
 import io.github.pandier.snowball.world.World
+import io.github.pandier.snowball.world.block.BlockState
+import io.github.pandier.snowball.world.block.BlockType
 import net.kyori.adventure.chat.ChatType
 import net.kyori.adventure.chat.SignedMessage
 import net.kyori.adventure.key.Key
@@ -27,6 +29,7 @@ import net.kyori.adventure.text.format.Style
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.util.Ticks
+import net.minecraft.block.Block
 import net.minecraft.nbt.NbtString
 import net.minecraft.network.message.FilterMask
 import net.minecraft.network.message.LastSeenMessageList
@@ -56,6 +59,8 @@ object Conversions {
     fun entity(entity: net.minecraft.entity.Entity): Entity = convertible(entity)
     fun player(player: ServerPlayerEntity): Player = convertible(player)
     fun world(world: ServerWorld): World = convertible(world)
+    fun blockType(block: Block): BlockType = convertible(block)
+    fun blockState(state: net.minecraft.block.BlockState): BlockState = convertible(state)
     fun server(obj: MinecraftServer): Server = convertible(obj)
 
     @Suppress("UNCHECKED_CAST")

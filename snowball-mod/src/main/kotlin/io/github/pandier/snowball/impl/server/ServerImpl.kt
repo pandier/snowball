@@ -3,7 +3,7 @@ package io.github.pandier.snowball.impl.server
 import com.google.common.collect.Iterables
 import io.github.pandier.snowball.entity.Player
 import io.github.pandier.snowball.impl.Conversions
-import io.github.pandier.snowball.impl.SnowballAdapter
+import io.github.pandier.snowball.impl.adapter.SnowballAdapter
 import io.github.pandier.snowball.server.Console
 import io.github.pandier.snowball.server.Server
 import io.github.pandier.snowball.world.World
@@ -27,14 +27,14 @@ class ServerImpl(
     override val console: Console = ConsoleImpl()
 
     override val worlds: Iterable<World>
-        get() = Iterables.transform(adaptee.worlds) { Conversions.world(it) }
+        get() = Iterables.transform(adaptee.worlds, Conversions::world)
 
     override fun getWorld(key: Key): World? {
         return adaptee.getWorld(Conversions.Adventure.registryKey(RegistryKeys.WORLD, key))?.let(Conversions::world)
     }
 
     override val players: Iterable<Player>
-        get() = Iterables.transform(adaptee.playerManager.playerList) { Conversions.player(it) }
+        get() = Iterables.transform(adaptee.playerManager.playerList, Conversions::player)
 
     override fun getPlayer(uuid: UUID): Player? {
         return adaptee.playerManager.getPlayer(uuid)?.let(Conversions::player)

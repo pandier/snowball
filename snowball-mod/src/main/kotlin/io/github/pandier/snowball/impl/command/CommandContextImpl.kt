@@ -2,7 +2,7 @@ package io.github.pandier.snowball.impl.command
 
 import io.github.pandier.snowball.command.CommandContext
 import io.github.pandier.snowball.command.CommandSource
-import io.github.pandier.snowball.impl.SnowballAdapter
+import io.github.pandier.snowball.impl.adapter.SnowballAdapter
 import net.minecraft.server.command.ServerCommandSource
 
 class CommandContextImpl(

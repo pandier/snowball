@@ -11,11 +11,17 @@ public data class Vector2l(
         public val ZERO: Vector2l = Vector2l(0L, 0L)
     }
 
+    public fun plus(x: Long, y: Long): Vector2l =
+        Vector2l(this.x + x, this.y + y)
+
     override fun plus(other: Vector2<Long>): Vector2l =
-        Vector2l(x + other.x, y + other.y)
+        plus(other.x, other.y)
+
+    public fun minus(x: Long, y: Long): Vector2l =
+        Vector2l(this.x - x, this.y - y)
 
     override fun minus(other: Vector2<Long>): Vector2l =
-        Vector2l(x - other.x, y - other.y)
+        minus(other.x, other.y)
 
     override fun times(scalar: Long): Vector2l =
         Vector2l(x * scalar, y * scalar)

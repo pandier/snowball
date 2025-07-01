@@ -4,7 +4,7 @@ import io.github.pandier.snowball.command.CommandSource
 import io.github.pandier.snowball.entity.Entity
 import io.github.pandier.snowball.entity.Player
 import io.github.pandier.snowball.impl.Conversions
-import io.github.pandier.snowball.impl.SnowballAdapter
+import io.github.pandier.snowball.impl.adapter.SnowballAdapter
 import net.kyori.adventure.text.Component
 import net.minecraft.server.command.ServerCommandSource
 

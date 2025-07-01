@@ -11,11 +11,17 @@ public data class Vector2f(
         public val ZERO: Vector2f = Vector2f(0f, 0f)
     }
 
+    public fun plus(x: Float, y: Float): Vector2f =
+        Vector2f(this.x + x, this.y + y)
+
     override fun plus(other: Vector2<Float>): Vector2f =
-        Vector2f(x + other.x, y + other.y)
+        plus(other.x, other.y)
+
+    public fun minus(x: Float, y: Float): Vector2f =
+        Vector2f(this.x - x, this.y - y)
 
     override fun minus(other: Vector2<Float>): Vector2f =
-        Vector2f(x - other.x, y - other.y)
+        minus(other.x, other.y)
 
     override fun times(scalar: Float): Vector2f =
         Vector2f(x * scalar, y * scalar)

@@ -4,9 +4,12 @@ import io.github.pandier.snowball.Snowball
 import io.github.pandier.snowball.event.EventManager
 import io.github.pandier.snowball.impl.event.EventManagerImpl
 import io.github.pandier.snowball.impl.plugin.PluginManager
+import io.github.pandier.snowball.impl.registry.SnowballRegistriesImpl
+import io.github.pandier.snowball.registry.SnowballRegistries
 import io.github.pandier.snowball.server.Server
 
 object SnowballImpl : Snowball {
+    override val registries: SnowballRegistries = SnowballRegistriesImpl
     override val eventManager: EventManager = EventManagerImpl()
     override lateinit var server: Server
         internal set

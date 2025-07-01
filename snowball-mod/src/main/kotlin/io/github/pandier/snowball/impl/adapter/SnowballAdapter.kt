@@ -1,4 +1,4 @@
-package io.github.pandier.snowball.impl
+package io.github.pandier.snowball.impl.adapter
 
 abstract class SnowballAdapter(
     open val adaptee: Any

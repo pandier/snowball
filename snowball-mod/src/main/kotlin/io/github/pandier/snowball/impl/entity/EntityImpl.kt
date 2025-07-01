@@ -2,7 +2,7 @@ package io.github.pandier.snowball.impl.entity
 
 import io.github.pandier.snowball.entity.Entity
 import io.github.pandier.snowball.impl.Conversions
-import io.github.pandier.snowball.impl.SnowballAdapter
+import io.github.pandier.snowball.impl.adapter.SnowballAdapter
 import io.github.pandier.snowball.math.Vector2f
 import io.github.pandier.snowball.math.Vector3d
 import io.github.pandier.snowball.world.World
