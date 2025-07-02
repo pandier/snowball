@@ -2,6 +2,8 @@ package io.github.pandier.snowball.math
 
 import kotlin.math.floor
 import kotlin.math.ceil
+import kotlin.math.cos
+import kotlin.math.sin
 
 public data class Vector3d(
     override val x: Double,
@@ -38,6 +40,24 @@ public data class Vector3d(
 
     public fun ceil(): Vector3d =
         Vector3d(ceil(x), ceil(y), ceil(z))
+
+    public fun rotateX(angle: Double): Vector3d {
+        val cos = cos(angle)
+        val sin = sin(angle)
+        return Vector3d(this.x, this.y * cos + this.z * sin, this.z * cos - this.y * sin)
+    }
+
+    public fun rotateY(angle: Double): Vector3d {
+        val cos = cos(angle)
+        val sin = sin(angle)
+        return Vector3d(this.x * cos + this.z * sin, this.y, this.z * cos - this.x * sin)
+    }
+
+    public fun rotateZ(angle: Double): Vector3d {
+        val cos = cos(angle)
+        val sin = sin(angle)
+        return Vector3d(this.x * cos + this.y * sin, this.y * cos - this.x * sin, this.z)
+    }
 
     public fun toVector3i(): Vector3i =
         Vector3i(x.toInt(), y.toInt(), z.toInt())
