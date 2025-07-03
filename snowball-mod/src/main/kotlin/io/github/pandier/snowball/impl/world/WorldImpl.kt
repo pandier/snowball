@@ -19,18 +19,18 @@ class WorldImpl(
     override val adaptee: ServerWorld
 ) : SnowballAdapter(adaptee), World {
     override val entities: Iterable<Entity>
-        get() = Iterables.transform(adaptee.iterateEntities(), Conversions::entity)
+        get() = Iterables.transform(adaptee.iterateEntities(), Conversions::snowball)
 
     override fun getEntity(uuid: UUID): Entity? {
-        return adaptee.getEntity(uuid)?.let(Conversions::entity)
+        return adaptee.getEntity(uuid)?.let(Conversions::snowball)
     }
 
     override fun getEntity(id: Int): Entity? {
-        return adaptee.getEntityById(id)?.let(Conversions::entity)
+        return adaptee.getEntityById(id)?.let(Conversions::snowball)
     }
 
     override fun getBlockState(x: Int, y: Int, z: Int): BlockState {
-        return Conversions.blockState(adaptee.getBlockState(BlockPos(x, y, z)))
+        return Conversions.snowball(adaptee.getBlockState(BlockPos(x, y, z)))
     }
 
     override fun setBlockState(x: Int, y: Int, z: Int, state: BlockState) {

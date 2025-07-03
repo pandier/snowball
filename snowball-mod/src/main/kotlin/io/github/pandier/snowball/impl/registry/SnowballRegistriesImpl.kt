@@ -11,7 +11,7 @@ import net.minecraft.registry.Registry
 object SnowballRegistriesImpl : SnowballRegistries {
 
     override fun blockType(key: Key): RegistryReference<BlockType> {
-        return ref(Registries.BLOCK, key) { Conversions.blockType(it) }
+        return ref(Registries.BLOCK, key) { Conversions.snowball(it) }
     }
 
     private fun <T, V> ref(registry: Registry<T>, key: Key, transformer: (T) -> V): RegistryReference<V> {

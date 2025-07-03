@@ -18,7 +18,7 @@ open class EntityImpl(
         get() = adaptee.uuid
 
     override val world: World
-        get() = Conversions.world(adaptee.world as ServerWorld)
+        get() = Conversions.snowball(adaptee.world as ServerWorld)
 
     override var position: Vector3d
         get() = Vector3d(adaptee.x, adaptee.y, adaptee.z)

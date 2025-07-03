@@ -27,21 +27,21 @@ class ServerImpl(
     override val console: Console = ConsoleImpl()
 
     override val worlds: Iterable<World>
-        get() = Iterables.transform(adaptee.worlds, Conversions::world)
+        get() = Iterables.transform(adaptee.worlds, Conversions::snowball)
 
     override fun getWorld(key: Key): World? {
-        return adaptee.getWorld(Conversions.Adventure.registryKey(RegistryKeys.WORLD, key))?.let(Conversions::world)
+        return adaptee.getWorld(Conversions.Adventure.registryKey(RegistryKeys.WORLD, key))?.let(Conversions::snowball)
     }
 
     override val players: Iterable<Player>
-        get() = Iterables.transform(adaptee.playerManager.playerList, Conversions::player)
+        get() = Iterables.transform(adaptee.playerManager.playerList, Conversions::snowball)
 
     override fun getPlayer(uuid: UUID): Player? {
-        return adaptee.playerManager.getPlayer(uuid)?.let(Conversions::player)
+        return adaptee.playerManager.getPlayer(uuid)?.let(Conversions::snowball)
     }
 
     override fun getPlayer(name: String): Player? {
-        return adaptee.playerManager.getPlayer(name)?.let(Conversions::player)
+        return adaptee.playerManager.getPlayer(name)?.let(Conversions::snowball)
     }
 
     override fun audiences(): Iterable<Audience> {

@@ -7,13 +7,14 @@ import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Style.class)
 public interface StyleAccessor {
 
     @Invoker("<init>")
-    static Style init(
+    static Style snowball$init(
         @Nullable TextColor color,
 		@Nullable Integer shadowColor,
 		@Nullable Boolean bold,
@@ -28,4 +29,19 @@ public interface StyleAccessor {
     ) {
         throw new AssertionError();
     }
+
+	@Accessor("bold")
+	@Nullable Boolean snowball$getBold();
+
+	@Accessor("italic")
+	@Nullable Boolean snowball$getItalic();
+
+	@Accessor("underlined")
+	@Nullable Boolean snowball$getUnderlined();
+
+	@Accessor("strikethrough")
+	@Nullable Boolean snowball$getStrikethrough();
+
+	@Accessor("obfuscated")
+	@Nullable Boolean snowball$getObfuscated();
 }

@@ -11,7 +11,8 @@
     "MinecraftServerMixin",
     "ServerPlayerEntityMixin",
     "ServerWorldMixin",
-    "StyleAccessor"
+    "StyleAccessor",
+    "TextColorAccessor"
   ],
   "client": [
   ],

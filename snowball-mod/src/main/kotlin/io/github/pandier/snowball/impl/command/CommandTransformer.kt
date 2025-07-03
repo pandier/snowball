@@ -1,59 +1,52 @@
 package io.github.pandier.snowball.impl.command
 
-import com.mojang.brigadier.arguments.BoolArgumentType
-import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
+import io.github.pandier.snowball.command.Argument
 import io.github.pandier.snowball.command.Command
 import io.github.pandier.snowball.command.CommandBranch
+import io.github.pandier.snowball.command.CommandContext
+import io.github.pandier.snowball.command.CommandExecutor
 import io.github.pandier.snowball.command.type.ArgumentType
-import io.github.pandier.snowball.command.type.BooleanArgumentType
-import io.github.pandier.snowball.command.type.DoubleArgumentType
-import io.github.pandier.snowball.command.type.FloatArgumentType
-import io.github.pandier.snowball.command.type.GreedyStringArgumentType
-import io.github.pandier.snowball.command.type.IntArgumentType
-import io.github.pandier.snowball.command.type.LongArgumentType
-import io.github.pandier.snowball.command.type.StringArgumentType
-import io.github.pandier.snowball.command.type.WordArgumentType
+import net.minecraft.command.CommandRegistryAccess
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
 
-internal object CommandTransformer {
-
-    fun command(command: Command): LiteralArgumentBuilder<ServerCommandSource> {
+class CommandTransformer(
+    private val registryAccess: CommandRegistryAccess
+) {
+    fun transform(command: Command): LiteralArgumentBuilder<ServerCommandSource> {
         return CommandManager.literal(command.name).also {
-            branch(command, it)
+            transformBranch(command, it, listOf())
         }
     }
 
-    private fun branch(branch: CommandBranch, builder: ArgumentBuilder<ServerCommandSource, *>) {
+    private fun transformBranch(branch: CommandBranch, builder: ArgumentBuilder<ServerCommandSource, *>, previousArguments: List<Argument<*>>) {
+        val totalArguments = previousArguments + branch.arguments
+
         var lastBuilder = branch.arguments.lastOrNull()
-            ?.let { CommandManager.argument(it.name, argument(it.type)) }
+            ?.let { CommandManager.argument(it.name, getBrigadierType(it.type)) }
             ?: builder
 
-        val executor = branch.executor
-        if (executor != null) {
-            lastBuilder.executes {
-                executor.apply { CommandContextImpl(it).execute() }
-                return@executes 0
-            }
+        branch.executor?.let { executor ->
+            lastBuilder.executes(transformExecutor(executor, totalArguments))
         }
 
         for (child in branch.children) {
             val name = child.name
             if (name == null) {
-                branch(child, lastBuilder)
+                transformBranch(child, lastBuilder, totalArguments)
             } else {
-                lastBuilder.then(CommandManager.literal(name).also {
-                    branch(child, it)
-                })
+                val literal = CommandManager.literal(name)
+                transformBranch(child, literal, totalArguments)
+                lastBuilder.then(literal)
             }
         }
 
         if (branch.arguments.isNotEmpty()) {
             for (i in branch.arguments.size - 2 downTo 0) {
                 val argument = branch.arguments[i]
-                lastBuilder = CommandManager.argument(argument.name, argument(argument.type)).also {
+                lastBuilder = CommandManager.argument(argument.name, getBrigadierType(argument.type)).also {
                     it.then(lastBuilder)
                 }
             }
@@ -61,17 +54,27 @@ internal object CommandTransformer {
         }
     }
 
-    private fun argument(type: ArgumentType<*>): com.mojang.brigadier.arguments.ArgumentType<*> {
-        return when (type) {
-            is BooleanArgumentType -> BoolArgumentType.bool()
-            is IntArgumentType -> IntegerArgumentType.integer(type.min, type.max)
-            is LongArgumentType -> com.mojang.brigadier.arguments.LongArgumentType.longArg(type.min, type.max)
-            is FloatArgumentType -> com.mojang.brigadier.arguments.FloatArgumentType.floatArg(type.min, type.max)
-            is DoubleArgumentType -> com.mojang.brigadier.arguments.DoubleArgumentType.doubleArg(type.min, type.max)
-            is StringArgumentType -> com.mojang.brigadier.arguments.StringArgumentType.string()
-            is WordArgumentType -> com.mojang.brigadier.arguments.StringArgumentType.word()
-            is GreedyStringArgumentType -> com.mojang.brigadier.arguments.StringArgumentType.greedyString()
-            else -> error("Unrecognizable argument type: $type")
+    private fun transformExecutor(executor: CommandExecutor, arguments: List<Argument<*>>): com.mojang.brigadier.Command<ServerCommandSource> {
+        val transformers = arguments.associate { it.name to ArgumentTransformers.get(it.type) }
+        return com.mojang.brigadier.Command { context ->
+            executor.run { transformContext(context, transformers).execute().value }
         }
+    }
+
+    private fun transformContext(context: com.mojang.brigadier.context.CommandContext<ServerCommandSource>, transformers: Map<String, ArgumentTransformer<*, *, *>>): CommandContext {
+        val transformedArguments = mutableMapOf<String, Any?>()
+        for ((name, transformer) in transformers)
+            transformedArguments[name] = transformArgument(context, name, transformer)
+        return CommandContextImpl(context, transformedArguments)
+    }
+
+    private fun <T, A : ArgumentType<T>, B> transformArgument(context: com.mojang.brigadier.context.CommandContext<ServerCommandSource>, name: String, transformer: ArgumentTransformer<T, A, B>): T {
+        val originalValue = context.getArgument(name, transformer.brigadierClass)
+        val transformedValue = transformer.transform(context, originalValue)
+        return transformedValue
+    }
+
+    private fun getBrigadierType(type: ArgumentType<*>): com.mojang.brigadier.arguments.ArgumentType<*> {
+        return ArgumentTransformers.getBrigadierType(registryAccess, type)
     }
 }

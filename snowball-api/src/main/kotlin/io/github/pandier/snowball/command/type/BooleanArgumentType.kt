@@ -1,5 +1,3 @@
 package io.github.pandier.snowball.command.type
 
-public class BooleanArgumentType : ArgumentType<Boolean> {
-    override val clazz: Class<Boolean> = Boolean::class.java
-}
+public class BooleanArgumentType : ArgumentType<Boolean>

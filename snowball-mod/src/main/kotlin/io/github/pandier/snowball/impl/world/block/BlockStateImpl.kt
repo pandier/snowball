@@ -9,5 +9,5 @@ class BlockStateImpl(
     override val adaptee: net.minecraft.block.BlockState,
 ) : SnowballAdapter(adaptee), BlockState {
     override val type: BlockType
-        get() = Conversions.blockType(adaptee.block)
+        get() = Conversions.snowball(adaptee.block)
 }

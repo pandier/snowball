@@ -5,7 +5,6 @@ import io.github.pandier.snowball.event.server.CommandRegisterEvent
 import io.github.pandier.snowball.event.server.ServerStartedEvent
 import io.github.pandier.snowball.event.server.ServerStartingEvent
 import io.github.pandier.snowball.impl.command.CommandTransformer
-import io.github.pandier.snowball.impl.Conversions
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
@@ -31,18 +30,19 @@ class SnowballInitializer : ModInitializer {
 
     private fun registerListeners() {
         ServerLifecycleEvents.SERVER_STARTING.register {
-            val server = Conversions.server(it)
+            val server = Conversions.snowball(it)
             SnowballImpl.server = server
             SnowballImpl.eventManager.notify(ServerStartingEvent(server))
         }
 
         ServerLifecycleEvents.SERVER_STARTED.register {
-            SnowballImpl.eventManager.notify(ServerStartedEvent(Conversions.server(it)))
+            SnowballImpl.eventManager.notify(ServerStartedEvent(Conversions.snowball(it)))
         }
 
         CommandRegistrationCallback.EVENT.register { dispatcher, registryAccess, environment ->
+            val transformer = CommandTransformer(registryAccess)
             SnowballImpl.eventManager.notify(CommandRegisterEvent {
-                dispatcher.register(CommandTransformer.command(it))
+                dispatcher.register(transformer.transform(it))
             })
         }
     }

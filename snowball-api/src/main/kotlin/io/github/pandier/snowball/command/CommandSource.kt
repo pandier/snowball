@@ -8,6 +8,8 @@ import io.github.pandier.snowball.world.World
 import net.kyori.adventure.text.Component
 
 public interface CommandSource {
+    public val name: String
+    public val displayName: Component
     public val world: World
     public val position: Vector3d
     public val rotation: Vector2f
@@ -17,4 +19,12 @@ public interface CommandSource {
     public val playerOrNull: Player?
 
     public fun sendMessage(message: Component)
+
+    public fun sendError(message: Component)
+
+    public fun sendFeedback(message: Component, broadcast: Boolean)
+
+    public fun sendFeedback(message: Component) {
+        sendFeedback(message, false)
+    }
 }

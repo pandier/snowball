@@ -10,5 +10,5 @@ class BlockTypeImpl(
     override val adaptee: Block
 ) : SnowballAdapter(adaptee), BlockType {
     override val blockState: BlockState
-        get() = Conversions.blockState(adaptee.defaultState)
+        get() = Conversions.snowball(adaptee.defaultState)
 }
