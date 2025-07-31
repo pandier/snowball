@@ -2,9 +2,6 @@ package io.github.pandier.snowball.impl.entity
 
 import io.github.pandier.snowball.entity.Player
 import io.github.pandier.snowball.impl.Conversions
-import io.github.pandier.snowball.impl.adventure.AdventureSerializers
-import io.github.pandier.snowball.math.Vector2f
-import io.github.pandier.snowball.math.Vector3d
 import net.kyori.adventure.audience.MessageType
 import net.kyori.adventure.chat.ChatType
 import net.kyori.adventure.chat.SignedMessage
@@ -14,15 +11,10 @@ import net.kyori.adventure.sound.SoundStop
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.title.Title
 import net.kyori.adventure.title.TitlePart
-import net.minecraft.entity.player.PlayerPosition
-import net.minecraft.network.message.FilterMask
-import net.minecraft.network.message.MessageBody
-import net.minecraft.network.message.MessageLink
 import net.minecraft.network.message.SentMessage
 import net.minecraft.network.packet.s2c.play.ClearTitleS2CPacket
 import net.minecraft.network.packet.s2c.play.PlaySoundFromEntityS2CPacket
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket
-import net.minecraft.network.packet.s2c.play.PositionFlag
 import net.minecraft.network.packet.s2c.play.StopSoundS2CPacket
 import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket
 import net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket
@@ -30,8 +22,6 @@ import net.minecraft.network.packet.s2c.play.TitleS2CPacket
 import net.minecraft.registry.entry.RegistryEntry
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.sound.SoundEvent
-import net.minecraft.text.Text
-import java.util.Optional
 
 // TODO: Fully implement Audience
 open class PlayerImpl(
@@ -51,43 +41,19 @@ open class PlayerImpl(
 
     @Suppress("UnstableApiUsage", "OVERRIDE_DEPRECATION", "DEPRECATION")
     override fun sendMessage(source: Identity, message: Component, type: MessageType) {
-        when (type) {
-            MessageType.SYSTEM -> adaptee.sendMessage(Conversions.Adventure.vanilla(message))
-            MessageType.CHAT -> {
-                val content = AdventureSerializers.plain.serialize(message)
-                adaptee.sendChatMessage(
-                    SentMessage.of(net.minecraft.network.message.SignedMessage(
-                        MessageLink.of(source.uuid()),
-                        null,
-                        MessageBody.ofUnsigned(content),
-                        Conversions.Adventure.vanilla(message),
-                        FilterMask.PASS_THROUGH
-                    )),
-                    false,
-                    net.minecraft.network.message.MessageType.Parameters(
-                        adaptee.registryManager.getEntryOrThrow(net.minecraft.network.message.MessageType.CHAT),
-                        Text.literal(source.uuid().toString()),
-                        Optional.empty()
-                    )
-                )
-            }
-        }
+        sendMessage(message)
     }
 
     override fun sendMessage(message: Component, boundChatType: ChatType.Bound) {
         adaptee.sendChatMessage(
             SentMessage.Profileless(Conversions.Adventure.vanilla(message)),
-            false,
+            adaptee.shouldFilterText(),
             Conversions.Adventure.vanilla(boundChatType, adaptee.registryManager)
         )
     }
 
     override fun sendMessage(signedMessage: SignedMessage, boundChatType: ChatType.Bound) {
-        adaptee.sendChatMessage(
-            SentMessage.of(Conversions.Adventure.vanilla(signedMessage)),
-            false,
-            Conversions.Adventure.vanilla(boundChatType, adaptee.registryManager)
-        )
+        sendMessage(signedMessage.unsignedContent() ?: Component.text(signedMessage.message()), boundChatType)
     }
 
     override fun sendActionBar(message: Component) {

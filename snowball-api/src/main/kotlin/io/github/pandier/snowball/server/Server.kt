@@ -9,10 +9,12 @@ import java.util.UUID
 public interface Server : Audience {
     public val console: Console
 
+    // TODO: Make this a collection
     public val worlds: Iterable<World>
 
     public fun getWorld(key: Key): World?
 
+    // TODO: Make this a collection
     public val players: Iterable<Player>
 
     public fun getPlayer(uuid: UUID): Player?
