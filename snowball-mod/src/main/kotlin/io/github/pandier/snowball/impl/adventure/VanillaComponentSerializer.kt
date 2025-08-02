@@ -164,11 +164,11 @@ object VanillaComponentSerializer : ComponentSerializer<Component, Component, Te
             .build()
     }
 
-    private fun serialize(color: NamedTextColor): Formatting {
+    fun serialize(color: NamedTextColor): Formatting {
         return namedTextColorSerialize[color] ?: error("Unrecognizable named text color: $color")
     }
 
-    private fun deserialize(color: Formatting): NamedTextColor {
+    fun deserialize(color: Formatting): NamedTextColor {
         return namedTextColorDeserialize[color] ?: error("Unrecognizable color formatting: $color")
     }
 

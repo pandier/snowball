@@ -4,10 +4,10 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 public data class Vector3f(
-    override val x: Float,
-    override val y: Float,
-    override val z: Float
-) : Vector3<Float> {
+    public val x: Float,
+    public val y: Float,
+    public val z: Float
+) {
     public constructor(a: Float) : this(a, a, a)
 
     public companion object Constants {
@@ -18,19 +18,19 @@ public data class Vector3f(
     public fun plus(x: Float, y: Float, z: Float): Vector3f =
         Vector3f(this.x + x, this.y + y, this.z + z)
 
-    override fun plus(other: Vector3<Float>): Vector3f =
+    public operator fun plus(other: Vector3f): Vector3f =
         plus(other.x, other.y, other.z)
 
     public fun minus(x: Float, y: Float, z: Float): Vector3f =
         Vector3f(this.x - x, this.y - y, this.z - z)
 
-    override fun minus(other: Vector3<Float>): Vector3f =
+    public operator fun minus(other: Vector3f): Vector3f =
         Vector3f(x - other.x, y - other.y, z - other.z)
 
-    override fun times(scalar: Float): Vector3f =
+    public operator fun times(scalar: Float): Vector3f =
         Vector3f(x * scalar, y * scalar, z * scalar)
 
-    override fun div(scalar: Float): Vector3f =
+    public operator fun div(scalar: Float): Vector3f =
         Vector3f(x / scalar, y / scalar, z / scalar)
 
     public fun floor(): Vector3f =

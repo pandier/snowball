@@ -3,6 +3,7 @@ package io.github.pandier.snowball.impl.entity
 import io.github.pandier.snowball.entity.Entity
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.adapter.SnowballAdapter
+import io.github.pandier.snowball.math.Location
 import io.github.pandier.snowball.math.Vector2f
 import io.github.pandier.snowball.math.Vector3d
 import io.github.pandier.snowball.world.World
@@ -26,6 +27,12 @@ open class EntityImpl(
     override var rotation: Vector2f
         get() = Vector2f(adaptee.yaw, adaptee.pitch)
         set(value) = adaptee.rotate(value.x, value.y)
+    override var location: Location
+        get() = Location(adaptee.x, adaptee.y, adaptee.z, adaptee.yaw, adaptee.pitch)
+        set(value) {
+            position = value.position
+            rotation = value.rotation
+        }
 
     override val isRemoved: Boolean
         get() = adaptee.isRemoved

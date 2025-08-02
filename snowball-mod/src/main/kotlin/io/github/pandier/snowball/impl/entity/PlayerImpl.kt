@@ -2,6 +2,7 @@ package io.github.pandier.snowball.impl.entity
 
 import io.github.pandier.snowball.entity.Player
 import io.github.pandier.snowball.impl.Conversions
+import io.github.pandier.snowball.profile.GameProfile
 import net.kyori.adventure.audience.MessageType
 import net.kyori.adventure.chat.ChatType
 import net.kyori.adventure.chat.SignedMessage
@@ -27,6 +28,9 @@ import net.minecraft.sound.SoundEvent
 open class PlayerImpl(
     override val adaptee: ServerPlayerEntity
 ) : Player, LivingEntityImpl(adaptee) {
+    override val gameProfile: GameProfile
+        get() = Conversions.snowball(adaptee.gameProfile)
+
 //    override var rotation: Vector2f
 //        get() = super.rotation
 //        set(value) {

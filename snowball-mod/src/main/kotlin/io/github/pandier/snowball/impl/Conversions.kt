@@ -17,6 +17,8 @@ import net.kyori.adventure.chat.SignedMessage
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.util.Ticks
 import net.minecraft.block.Block
 import net.minecraft.network.message.FilterMask
@@ -34,6 +36,7 @@ import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundCategory
 import net.minecraft.text.Text
+import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import java.time.Duration
 import java.util.Optional
@@ -89,6 +92,14 @@ object Conversions {
 
         fun adventure(text: Text): Component {
             return VanillaComponentSerializer.deserialize(text)
+        }
+
+        fun vanilla(color: NamedTextColor): Formatting {
+            return VanillaComponentSerializer.serialize(color)
+        }
+
+        fun adventure(color: Formatting): NamedTextColor {
+            return VanillaComponentSerializer.deserialize(color)
         }
 
         fun vanilla(bound: ChatType.Bound, registryManager: DynamicRegistryManager): MessageType.Parameters {

@@ -1,5 +1,6 @@
 package io.github.pandier.snowball.entity
 
+import io.github.pandier.snowball.math.Location
 import io.github.pandier.snowball.math.Vector2f
 import io.github.pandier.snowball.math.Vector3d
 import io.github.pandier.snowball.world.World
@@ -14,6 +15,7 @@ public interface Entity : Sound.Emitter {
 
     public var position: Vector3d
     public var rotation: Vector2f
+    public var location: Location
 
     public val isRemoved: Boolean
     public val isAlive: Boolean

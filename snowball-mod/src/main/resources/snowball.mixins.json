@@ -9,12 +9,12 @@
     "EntityMixin",
     "LivingEntityMixin",
     "MinecraftServerMixin",
+    "PlayerManagerMixin",
     "ServerPlayerEntityMixin",
+    "ServerPlayNetworkHandlerMixin",
     "ServerWorldMixin",
     "StyleAccessor",
     "TextColorAccessor"
-  ],
-  "client": [
   ],
   "injectors": {
     "defaultRequire": 1

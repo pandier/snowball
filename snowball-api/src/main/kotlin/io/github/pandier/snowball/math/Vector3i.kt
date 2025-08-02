@@ -1,10 +1,10 @@
 package io.github.pandier.snowball.math
 
 public data class Vector3i(
-    override val x: Int,
-    override val y: Int,
-    override val z: Int
-) : Vector3<Int> {
+    public val x: Int,
+    public val y: Int,
+    public val z: Int
+) {
     public constructor(a: Int) : this(a, a, a)
 
     public companion object Constants {
@@ -15,19 +15,19 @@ public data class Vector3i(
     public fun plus(x: Int, y: Int, z: Int): Vector3i =
         Vector3i(this.x + x, this.y + y, this.z + z)
 
-    override fun plus(other: Vector3<Int>): Vector3i =
+    public operator fun plus(other: Vector3i): Vector3i =
         plus(other.x, other.y, other.z)
 
     public fun minus(x: Int, y: Int, z: Int): Vector3i =
         Vector3i(this.x - x, this.y - y, this.z - z)
 
-    override fun minus(other: Vector3<Int>): Vector3i =
+    public operator fun minus(other: Vector3i): Vector3i =
         Vector3i(x - other.x, y - other.y, z - other.z)
 
-    override fun times(scalar: Int): Vector3i =
+    public operator fun times(scalar: Int): Vector3i =
         Vector3i(x * scalar, y * scalar, z * scalar)
 
-    override fun div(scalar: Int): Vector3i =
+    public operator fun div(scalar: Int): Vector3i =
         Vector3i(x / scalar, y / scalar, z / scalar)
 
     public fun toVector3l(): Vector3l =

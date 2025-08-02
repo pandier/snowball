@@ -6,10 +6,10 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 public data class Vector3d(
-    override val x: Double,
-    override val y: Double,
-    override val z: Double
-) : Vector3<Double> {
+    public val x: Double,
+    public val y: Double,
+    public val z: Double
+) {
     public constructor(a: Double) : this(a, a, a)
 
     public companion object Constants {
@@ -20,19 +20,19 @@ public data class Vector3d(
     public fun plus(x: Double, y: Double, z: Double): Vector3d =
         Vector3d(this.x + x, this.y + y, this.z + z)
 
-    override fun plus(other: Vector3<Double>): Vector3d =
+    public operator fun plus(other: Vector3d): Vector3d =
         plus(other.x, other.y, other.z)
 
     public fun minus(x: Double, y: Double, z: Double): Vector3d =
         Vector3d(this.x - x, this.y - y, this.z - z)
 
-    override fun minus(other: Vector3<Double>): Vector3d =
+    public operator fun minus(other: Vector3d): Vector3d =
         Vector3d(x - other.x, y - other.y, z - other.z)
 
-    override fun times(scalar: Double): Vector3d =
+    public operator fun times(scalar: Double): Vector3d =
         Vector3d(x * scalar, y * scalar, z * scalar)
 
-    override fun div(scalar: Double): Vector3d =
+    public operator fun div(scalar: Double): Vector3d =
         Vector3d(x / scalar, y / scalar, z / scalar)
 
     public fun floor(): Vector3d =
