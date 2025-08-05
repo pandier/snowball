@@ -63,8 +63,13 @@ object VanillaComponentSerializer : ComponentSerializer<Component, Component, Te
     override fun serialize(component: Component): Text {
         val vanilla = when (component) {
             is TextComponent -> Text.literal(component.content())
-            is TranslatableComponent -> Text.translatableWithFallback(component.key(), component.fallback(),
-                component.arguments().map { serialize(it.asComponent()) })
+            is TranslatableComponent -> {
+                val args = component.arguments()
+                val vArgs = arrayOfNulls<Any>(args.size)
+                for ((index, arg) in args.withIndex())
+                    vArgs[index] = arg.value().let { if (it is Component) serialize(it) else it }
+                Text.translatableWithFallback(component.key(), component.fallback(), *vArgs)
+            }
             is KeybindComponent -> Text.keybind(component.keybind())
             is ScoreComponent -> Text.score(component.name(), component.objective())
             is SelectorComponent -> Text.selector(
