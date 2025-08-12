@@ -41,7 +41,7 @@ public class PlayerManagerMixin {
         final Location originalLocation = player.getLocation();
 
         final PlayerPrepareEvent event = new PlayerPrepareEvent(player.getGameProfile(), originalWorld, player.getLocation());
-        SnowballImpl.INSTANCE.getEventManager().notify(event);
+        SnowballImpl.INSTANCE.getEventManager().dispatch(event);
 
         final Location location = event.getLocation();
         final World world = event.getWorld();

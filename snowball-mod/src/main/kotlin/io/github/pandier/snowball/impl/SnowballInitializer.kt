@@ -35,16 +35,16 @@ class SnowballInitializer : ModInitializer {
         ServerLifecycleEvents.SERVER_STARTING.register {
             val server = Conversions.snowball(it)
             SnowballImpl.server = server
-            SnowballImpl.eventManager.notify(ServerStartingEvent(server))
+            SnowballImpl.eventManager.dispatch(ServerStartingEvent(server))
         }
 
         ServerLifecycleEvents.SERVER_STARTED.register {
-            SnowballImpl.eventManager.notify(ServerStartedEvent(Conversions.snowball(it)))
+            SnowballImpl.eventManager.dispatch(ServerStartedEvent(Conversions.snowball(it)))
         }
 
         CommandRegistrationCallback.EVENT.register { dispatcher, registryAccess, _ ->
             val transformer = CommandTransformer(registryAccess)
-            SnowballImpl.eventManager.notify(CommandRegisterEvent {
+            SnowballImpl.eventManager.dispatch(CommandRegisterEvent {
                 dispatcher.register(transformer.transform(it))
             })
         }
@@ -57,7 +57,7 @@ class SnowballInitializer : ModInitializer {
             (vPlayer as ServerPlayerEntityBridge).`snowball$setJoinMessage`(null)
 
             val event = PlayerJoinEvent(player, originalMessage, SnowballImpl.server)
-            SnowballImpl.eventManager.notify(event)
+            SnowballImpl.eventManager.dispatch(event)
 
             event.message?.let { message ->
                 event.audience.sendMessage(message)

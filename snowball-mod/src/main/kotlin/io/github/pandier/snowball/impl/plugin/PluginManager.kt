@@ -18,7 +18,9 @@ class PluginManager(
         plugins = FabricLoader.getInstance().getEntrypoints("snowball-plugin", SnowballPlugin::class.java)
 
         try {
-            eventManager.registerListeners(plugins)
+            for (plugin in plugins) {
+                eventManager.register(plugin)
+            }
         } catch (ex: Exception) {
             logger.error("Failed while registering plugins as listeners", ex)
         }
