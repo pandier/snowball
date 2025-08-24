@@ -1,12 +1,15 @@
 package io.github.pandier.snowball.server
 
 import io.github.pandier.snowball.entity.Player
+import io.github.pandier.snowball.scheduler.Scheduler
 import io.github.pandier.snowball.world.World
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.key.Key
 import java.util.UUID
 
 public interface Server : Audience {
+    public val scheduler: Scheduler
+
     public val console: Console
 
     // TODO: Make this a collection

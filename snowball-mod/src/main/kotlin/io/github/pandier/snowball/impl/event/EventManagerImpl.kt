@@ -62,8 +62,8 @@ class EventManagerImpl : EventManager {
                 try {
                     listener.executor.accept(event)
                 } catch (ex: Exception) {
-                    // TODO: Log the plugin's name instead?
-                    logger.error("Exception thrown while dispatching event ${event.javaClass.name} to listener", ex)
+                    // TODO: Log the plugin's name?
+                    logger.error("An error occurred while dispatching event ${event.javaClass.name} to listener", ex)
                 }
             }
         }
