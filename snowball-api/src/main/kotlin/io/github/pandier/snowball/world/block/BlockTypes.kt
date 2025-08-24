@@ -11,6 +11,6 @@ public object BlockTypes {
     public val GLASS: RegistryReference<BlockType> = ref("glass")
 
     private fun ref(id: String): RegistryReference<BlockType> {
-        return Snowball.get().registries.blockType(Key.key(Key.MINECRAFT_NAMESPACE, id))
+        return Snowball.registries.blockType(Key.key(Key.MINECRAFT_NAMESPACE, id))
     }
 }

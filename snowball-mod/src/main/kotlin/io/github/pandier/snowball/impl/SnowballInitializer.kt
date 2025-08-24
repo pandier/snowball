@@ -15,9 +15,9 @@ class SnowballInitializer : ModInitializer {
     @Suppress("JAVA_CLASS_ON_COMPANION")
     private fun injectInstance() {
         try {
-            val instanceField = Snowball.Holder::class.java.getDeclaredField("instance")
+            val instanceField = Snowball::class.java.getDeclaredField("instance")
             instanceField.isAccessible = true
-            instanceField.set(Snowball.Holder, SnowballImpl)
+            instanceField.set(Snowball, SnowballImpl)
         } catch (ex: Exception) {
             throw IllegalStateException("Failed to inject Snowball instance into holder", ex)
         }
