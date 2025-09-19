@@ -1,6 +1,8 @@
 package io.github.pandier.snowball.impl.server
 
+import com.google.common.collect.Collections2
 import com.google.common.collect.Iterables
+import com.google.common.collect.Sets
 import io.github.pandier.snowball.entity.Player
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.adapter.SnowballAdapter
@@ -17,6 +19,7 @@ import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.server.MinecraftServer
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
 import java.util.Optional
 import java.util.UUID
@@ -26,15 +29,19 @@ class ServerImpl(
 ) : SnowballAdapter(adaptee), Server, ForwardingAudience {
     override val console: Console = ConsoleImpl()
 
-    override val worlds: Iterable<World>
-        get() = Iterables.transform(adaptee.worlds, Conversions::snowball)
+    override val overworld: World
+        get() = adaptee.overworld.let(Conversions::snowball)
+
+    @Suppress("UNCHECKED_CAST")
+    override val worlds: Collection<World>
+        get() = Collections2.transform(adaptee.worlds as Collection<ServerWorld>, Conversions::snowball)
 
     override fun getWorld(key: Key): World? {
         return adaptee.getWorld(Conversions.Adventure.registryKey(RegistryKeys.WORLD, key))?.let(Conversions::snowball)
     }
 
-    override val players: Iterable<Player>
-        get() = Iterables.transform(adaptee.playerManager.playerList, Conversions::snowball)
+    override val players: Collection<Player>
+        get() = Collections2.transform(adaptee.playerManager.playerList, Conversions::snowball)
 
     override fun getPlayer(uuid: UUID): Player? {
         return adaptee.playerManager.getPlayer(uuid)?.let(Conversions::snowball)
