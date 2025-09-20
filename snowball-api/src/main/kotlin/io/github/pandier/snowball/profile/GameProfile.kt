@@ -12,8 +12,6 @@ public data class GameProfile(
     public val name: String,
     public val properties: List<GameProfileProperty> = emptyList(),
 ) : Identity {
-    override fun uuid(): UUID = uuid
-
     public companion object {
         @JvmStatic
         public fun of(uuid: UUID, name: String): GameProfile =
@@ -23,4 +21,6 @@ public data class GameProfile(
         public fun of(uuid: UUID, name: String, properties: List<GameProfileProperty>): GameProfile =
             GameProfile(uuid, name, properties)
     }
+
+    override fun uuid(): UUID = uuid
 }
