@@ -9,12 +9,15 @@ import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.*
 import net.kyori.adventure.text.format.Style
 import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.`object`.ObjectContents
+import net.kyori.adventure.text.`object`.SpriteObjectContents
 import net.kyori.adventure.text.serializer.ComponentSerializer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtElement
 import net.minecraft.nbt.NbtString
 import net.minecraft.registry.Registries
 import net.minecraft.text.*
+import net.minecraft.text.`object`.AtlasTextObjectContents
 import net.minecraft.util.Formatting
 import net.minecraft.util.Util
 import java.net.URISyntaxException
@@ -87,6 +90,11 @@ object VanillaComponentSerializer : ComponentSerializer<Component, Component, Te
                 Optional.ofNullable(component.separator()?.let(::serialize)),
                 StorageNbtDataSource(Adventure.vanilla(component.storage()))
             )
+            is ObjectComponent -> when (val contents = component.contents()) {
+                is SpriteObjectContents -> Text.`object`(AtlasTextObjectContents(
+                    Adventure.vanilla(contents.atlas()), Adventure.vanilla(contents.sprite())))
+                // TODO: Player head
+            }
             else -> error("Unrecognizable component class: ${component.javaClass}")
         }
 
@@ -123,6 +131,11 @@ object VanillaComponentSerializer : ComponentSerializer<Component, Component, Te
                     .nbtPath(content.path)
                     .interpret(content.shouldInterpret())
                     .separator(content.separator.orElse(null)?.let(Adventure::adventure))
+            }
+            is ObjectTextContent -> when (val objectContents = content.contents) {
+                is AtlasTextObjectContents -> Component.`object`()
+                    .contents(ObjectContents.sprite(objectContents.sprite.let(Adventure::adventure), objectContents.atlas.let(Adventure::adventure)))
+                // TODO: Player head
             }
             else -> error("Unrecognizable text content: ${content.javaClass}")
         }
@@ -165,7 +178,7 @@ object VanillaComponentSerializer : ComponentSerializer<Component, Component, Te
             .clickEvent(style.clickEvent?.let(::deserialize))
             .hoverEvent(style.hoverEvent?.let(::deserialize))
             .insertion(style.insertion)
-            .font(style.font?.let(Adventure::adventure))
+            .font((style.font as? StyleSpriteSource.Font)?.id?.let(Adventure::adventure))
             .build()
     }
 
@@ -206,6 +219,7 @@ object VanillaComponentSerializer : ComponentSerializer<Component, Component, Te
             ClickEvent.Action.SHOW_DIALOG -> error("SHOW_DIALOG click event action is not supported yet")
             ClickEvent.Action.CUSTOM -> {
                 val payload = event.payload() as ClickEvent.Payload.Custom
+                // TODO: Proper NBT api
                 net.minecraft.text.ClickEvent.Custom(Adventure.vanilla(payload.key()), Optional.of(NbtString.of(payload.data())))
             }
         }
@@ -220,6 +234,7 @@ object VanillaComponentSerializer : ComponentSerializer<Component, Component, Te
             is net.minecraft.text.ClickEvent.ChangePage -> ClickEvent.changePage(event.page)
             is net.minecraft.text.ClickEvent.CopyToClipboard -> ClickEvent.copyToClipboard(event.value)
             is net.minecraft.text.ClickEvent.ShowDialog -> ClickEvent.showDialog(DummyDialog)
+            // TODO: Proper NBT api
             is net.minecraft.text.ClickEvent.Custom -> ClickEvent.custom(Adventure.adventure(event.id), event.payload.flatMap(NbtElement::asString).orElse(""))
             else -> error("Unrecognizable click event: ${event.javaClass}")
         }

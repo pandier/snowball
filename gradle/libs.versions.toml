@@ -1,10 +1,10 @@
 [versions]
-minecraft = "1.21.8"
-yarn = "1.21.8+build.1"
-fabric-loader = "0.16.14"
-fabric-language-kotlin = "1.13.4+kotlin.2.2.0"
-fabric-api = "0.130.0+1.21.8"
-adventure = "4.22.0"
+minecraft = "1.21.9-pre2"
+yarn = "1.21.9-pre2+build.2"
+fabric-loader = "0.17.2"
+fabric-language-kotlin = "1.13.6+kotlin.2.2.20"
+fabric-api = "0.133.10+1.21.9"
+adventure = "mc1.21.9-dev-SNAPSHOT"
 log4j = "2.24.1"
 
 [libraries]
@@ -13,6 +13,6 @@ yarn = { module = "net.fabricmc:yarn", version.ref = "yarn" }
 fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
 fabric-language-kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric-language-kotlin" }
 fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
-adventure-api = { module = "net.kyori:adventure-api", version.ref = "adventure" }
-adventure-text-serializer-plain = { module = "net.kyori:adventure-text-serializer-plain", version.ref = "adventure" }
+adventure-api = { module = "io.papermc.adventure:adventure-api", version.ref = "adventure" }
+adventure-text-serializer-plain = { module = "io.papermc.adventure:adventure-text-serializer-plain", version.ref = "adventure" }
 log4j = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
