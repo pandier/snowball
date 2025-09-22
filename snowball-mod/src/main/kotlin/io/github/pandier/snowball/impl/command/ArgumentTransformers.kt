@@ -130,7 +130,7 @@ object ArgumentTransformers {
     }
 
     private inline fun <reified A : ArgumentType<*>> register(transformer: ArgumentTransformer<*, A, *>) {
-        registry.put(A::class.java, transformer)
+        registry[A::class.java] = transformer
     }
 
     private inline fun <reified A : ArgumentType<T>, T, reified B> register(

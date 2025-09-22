@@ -13,6 +13,8 @@ dependencies {
     modImplementation(libs.fabric.language.kotlin)
     modImplementation(libs.fabric.api)
     implementation(project(":snowball-api"))
+
+    testImplementation(kotlin("test"))
 }
 
 tasks.processResources {
@@ -35,4 +37,8 @@ tasks.jar {
     from("../LICENSE") {
         rename { "${it}_snowball" }
     }
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

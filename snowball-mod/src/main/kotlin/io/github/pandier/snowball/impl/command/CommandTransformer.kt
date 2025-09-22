@@ -28,7 +28,9 @@ class CommandTransformer(
             ?.let { CommandManager.argument(it.name, getBrigadierType(it.type)) }
             ?: builder
 
-        branch.executor?.let { executor ->
+        val executor = branch.executor
+
+        if (executor != null) {
             lastBuilder.executes(transformExecutor(executor, totalArguments))
         }
 
@@ -44,13 +46,29 @@ class CommandTransformer(
         }
 
         if (branch.arguments.isNotEmpty()) {
+            var parentArgument = branch.arguments.last()
+
             for (i in branch.arguments.size - 2 downTo 0) {
                 val argument = branch.arguments[i]
+
                 lastBuilder = CommandManager.argument(argument.name, getBrigadierType(argument.type)).also {
                     it.then(lastBuilder)
                 }
+
+                // Add an executor to the current argument node if the parent argument is optional
+                if (parentArgument.optional && executor != null) {
+                    lastBuilder.executes(transformExecutor(executor, previousArguments + branch.arguments.subList(0, i + 1)))
+                }
+
+                parentArgument = argument
             }
+
             builder.then(lastBuilder)
+
+            // Add an executor to the root node if the parent argument is optional and no executor was provided
+            if (parentArgument.optional && executor != null && builder.command == null) {
+                builder.executes(transformExecutor(executor, previousArguments))
+            }
         }
     }
 

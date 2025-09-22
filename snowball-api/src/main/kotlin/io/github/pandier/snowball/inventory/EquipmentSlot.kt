@@ -1,0 +1,12 @@
+package io.github.pandier.snowball.inventory
+
+public enum class EquipmentSlot {
+    MAIN_HAND,
+    OFF_HAND,
+    FEET,
+    LEGS,
+    CHEST,
+    HEAD,
+    BODY,
+    SADDLE,
+}

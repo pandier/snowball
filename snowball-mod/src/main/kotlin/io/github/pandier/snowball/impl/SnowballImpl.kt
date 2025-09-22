@@ -1,17 +1,20 @@
 package io.github.pandier.snowball.impl
 
-import io.github.pandier.snowball.Snowball
+import io.github.pandier.snowball.SnowballInterface
 import io.github.pandier.snowball.event.EventManager
+import io.github.pandier.snowball.factory.SnowballFactories
 import io.github.pandier.snowball.impl.event.EventManagerImpl
+import io.github.pandier.snowball.impl.factory.SnowballFactoriesImpl
 import io.github.pandier.snowball.impl.plugin.PluginManager
 import io.github.pandier.snowball.impl.registry.SnowballRegistriesImpl
+import io.github.pandier.snowball.impl.server.ServerImpl
 import io.github.pandier.snowball.registry.SnowballRegistries
-import io.github.pandier.snowball.server.Server
 
-object SnowballImpl : Snowball {
-    override val registries: SnowballRegistries = SnowballRegistriesImpl
+object SnowballImpl : SnowballInterface {
+    override val registries: SnowballRegistries = SnowballRegistriesImpl()
+    override val factories: SnowballFactories = SnowballFactoriesImpl()
     override val eventManager: EventManager = EventManagerImpl()
-    override lateinit var server: Server
+    override lateinit var server: ServerImpl
         internal set
     val pluginManager: PluginManager = PluginManager(eventManager)
 }

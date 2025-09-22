@@ -2,6 +2,9 @@ package io.github.pandier.snowball.impl.entity
 
 import io.github.pandier.snowball.entity.Player
 import io.github.pandier.snowball.impl.Conversions
+import io.github.pandier.snowball.impl.inventory.PlayerInventoryImpl
+import io.github.pandier.snowball.inventory.Inventory
+import io.github.pandier.snowball.inventory.PlayerInventory
 import io.github.pandier.snowball.profile.GameProfile
 import net.kyori.adventure.audience.MessageType
 import net.kyori.adventure.chat.ChatType
@@ -38,6 +41,8 @@ open class PlayerImpl(
 //                EnumSet.of(PositionFlag.X, PositionFlag.Y, PositionFlag.Z, PositionFlag.DELTA_X,
 //                    PositionFlag.DELTA_Y, PositionFlag.DELTA_Z, PositionFlag.ROTATE_DELTA))
 //        }
+
+    override val inventory: PlayerInventory = PlayerInventoryImpl(adaptee.inventory)
 
     override fun sendMessage(message: Component) {
         adaptee.sendMessage(Conversions.Adventure.vanilla(message))

@@ -14,6 +14,6 @@ abstract class SnowballAdapter(
     }
 
     override fun toString(): String {
-        return "SnowballAdapter($adaptee)"
+        return "${javaClass.name}($adaptee)"
     }
 }

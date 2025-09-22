@@ -26,7 +26,7 @@ public class ServerPlayNetworkHandlerMixin {
         final Component originalMessage = Conversions.Adventure.INSTANCE.adventure(vMessage);
 
         final PlayerLeaveEvent event = new PlayerLeaveEvent(player, originalMessage, SnowballImpl.INSTANCE.getServer());
-        SnowballImpl.INSTANCE.getEventManager().notify(event);
+        SnowballImpl.INSTANCE.getEventManager().dispatch(event);
 
         final Component message = event.getMessage();
         if (message != null) {
