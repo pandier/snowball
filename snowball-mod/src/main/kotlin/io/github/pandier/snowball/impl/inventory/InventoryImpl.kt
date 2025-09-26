@@ -7,6 +7,7 @@ import io.github.pandier.snowball.impl.item.ItemStackImpl
 import io.github.pandier.snowball.impl.item.ItemTypeImpl
 import io.github.pandier.snowball.inventory.Inventory
 import io.github.pandier.snowball.item.ItemStack
+import io.github.pandier.snowball.item.ItemStackView
 import io.github.pandier.snowball.item.ItemType
 
 open class InventoryImpl(
@@ -15,17 +16,20 @@ open class InventoryImpl(
     override val size: Int
         get() = adaptee.size()
 
+    override val maxStackCount: Int
+        get() = adaptee.maxCountPerStack
+
     override fun isEmpty(): Boolean =
         adaptee.isEmpty
 
-    override fun get(index: Int): ItemStack =
+    override fun get(index: Int): ItemStackView =
         adaptee.getStack(index).let(Conversions::snowball)
 
     override fun remove(index: Int): ItemStack =
         adaptee.removeStack(index).let(Conversions::snowball)
 
-    override fun set(index: Int, stack: ItemStack) =
-        adaptee.setStack(index, (stack as ItemStackImpl).adaptee)
+    override fun set(index: Int, stack: ItemStackView) =
+        adaptee.setStack(index, (stack.copy() as ItemStackImpl).adaptee)
 
     override fun isValid(index: Int, stack: ItemStack): Boolean =
         adaptee.isValid(index, (stack as ItemStackImpl).adaptee)

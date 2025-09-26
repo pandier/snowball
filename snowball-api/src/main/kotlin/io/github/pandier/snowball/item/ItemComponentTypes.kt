@@ -104,6 +104,6 @@ public object ItemComponentTypes {
     @JvmField public val SHULKER_COLOR: ItemComponentType<*> = ref<Unit>("shulker/color")
 
     private fun <T> ref(id: String): ItemComponentType<T> {
-        return Snowball.registries.itemComponentType<T>(Key.key(Key.MINECRAFT_NAMESPACE, id)).get()
+        return Snowball.registries.itemComponentType<T>(Key.key(Key.MINECRAFT_NAMESPACE, id))
     }
 }

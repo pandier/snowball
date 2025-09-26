@@ -1422,6 +1422,6 @@ public object ItemTypes {
     @JvmField public val OMINOUS_BOTTLE: ItemType = ref("ominous_bottle")
 
     private fun ref(id: String): ItemType {
-        return Snowball.registries.itemType(Key.key(Key.MINECRAFT_NAMESPACE, id)).get()
+        return Snowball.registries.itemType(Key.key(Key.MINECRAFT_NAMESPACE, id))
     }
 }

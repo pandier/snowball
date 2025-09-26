@@ -1111,6 +1111,6 @@ public object BlockTypes {
     @JvmField public val FIREFLY_BUSH: BlockType = ref("firefly_bush")
 
     private fun ref(id: String): BlockType {
-        return Snowball.registries.blockType(Key.key(Key.MINECRAFT_NAMESPACE, id)).get()
+        return Snowball.registries.blockType(Key.key(Key.MINECRAFT_NAMESPACE, id))
     }
 }

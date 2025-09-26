@@ -22,13 +22,13 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.Rarity
 import java.util.Collections
 import java.util.Optional
-import java.util.function.Function
 
 /**
  * A registry that properly handles [io.github.pandier.snowball.item.ItemComponentType]s.
  */
 class SnowballItemComponentTypeRegistry {
     private val entries = mutableMapOf<Key, ItemComponentType<*>>()
+    private val vanillaToSnowball = mutableMapOf<ComponentType<*>, ItemComponentType<*>>()
 
     fun registerDefaults(): SnowballItemComponentTypeRegistry {
         // TODO: Implement all unknowns
@@ -156,10 +156,21 @@ class SnowballItemComponentTypeRegistry {
             ?: throw IllegalArgumentException("An item component type with key '$key' is not registered in the vanilla registry")
         val entry = ItemComponentTypeImpl(vanillaEntry as ComponentType<V>, snowballMapper, vanillaMapper)
         entries[key] = entry
+        vanillaToSnowball[vanillaEntry] = entry
         return entry
     }
 
     fun get(key: Key): ItemComponentType<*>? {
         return entries[key]
+            ?: Registries.DATA_COMPONENT_TYPE.get(Conversions.Adventure.vanilla(key))
+                ?.let(::fallback)
+    }
+
+    fun get(vanilla: ComponentType<*>): ItemComponentType<*> {
+        return vanillaToSnowball[vanilla] ?: fallback(vanilla)
+    }
+
+    private fun fallback(vanilla: ComponentType<*>): ItemComponentType<*> {
+        return ItemComponentTypeImpl(vanilla, {}, { throw UnsupportedOperationException() })
     }
 }

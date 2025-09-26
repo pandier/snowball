@@ -8,10 +8,9 @@ import io.github.pandier.snowball.impl.factory.SnowballFactoriesImpl
 import io.github.pandier.snowball.impl.plugin.PluginManager
 import io.github.pandier.snowball.impl.registry.SnowballRegistriesImpl
 import io.github.pandier.snowball.impl.server.ServerImpl
-import io.github.pandier.snowball.registry.SnowballRegistries
 
 object SnowballImpl : SnowballInterface {
-    override val registries: SnowballRegistries = SnowballRegistriesImpl()
+    override val registries: SnowballRegistriesImpl = SnowballRegistriesImpl()
     override val factories: SnowballFactories = SnowballFactoriesImpl()
     override val eventManager: EventManager = EventManagerImpl()
     override lateinit var server: ServerImpl

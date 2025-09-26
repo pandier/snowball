@@ -9,6 +9,7 @@ import io.github.pandier.snowball.impl.entity.EntityImpl
 import io.github.pandier.snowball.impl.item.ItemStackImpl
 import io.github.pandier.snowball.inventory.EquipmentSlot
 import io.github.pandier.snowball.inventory.Inventory
+import io.github.pandier.snowball.item.ItemComponentType
 import io.github.pandier.snowball.item.ItemRarity
 import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemType
@@ -25,6 +26,8 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.util.Ticks
 import net.minecraft.block.Block
+import net.minecraft.component.ComponentMap
+import net.minecraft.component.ComponentType
 import net.minecraft.item.Item
 import net.minecraft.network.message.MessageType
 import net.minecraft.registry.DynamicRegistryManager
@@ -103,6 +106,8 @@ object Conversions {
             EquipmentSlot.SADDLE -> net.minecraft.entity.EquipmentSlot.SADDLE
         }
     }
+
+    fun snowball(type: ComponentType<*>): ItemComponentType<*> = SnowballImpl.registries.itemComponentType(type)
 
     fun snowball(stack: net.minecraft.item.ItemStack): ItemStack = ItemStackImpl(stack)
     fun snowball(inventory: net.minecraft.inventory.Inventory): Inventory = convertible(inventory)

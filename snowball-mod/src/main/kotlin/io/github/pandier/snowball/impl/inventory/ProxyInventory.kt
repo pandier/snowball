@@ -3,19 +3,23 @@ package io.github.pandier.snowball.impl.inventory
 import com.google.common.collect.Iterators
 import io.github.pandier.snowball.inventory.Inventory
 import io.github.pandier.snowball.item.ItemStack
+import io.github.pandier.snowball.item.ItemStackView
 
 open class ProxyInventory(
     val proxied: Inventory,
     val offset: Int,
     override val size: Int,
 ) : Inventory {
-    override fun get(index: Int): ItemStack =
+    override val maxStackCount: Int
+        get() = proxied.maxStackCount
+
+    override fun get(index: Int): ItemStackView =
         proxied[index + offset]
 
     override fun remove(index: Int): ItemStack =
         proxied.remove(index + offset)
 
-    override fun set(index: Int, stack: ItemStack) =
+    override fun set(index: Int, stack: ItemStackView) =
         proxied.set(index + offset, stack)
 
     override fun isValid(index: Int, stack: ItemStack): Boolean =

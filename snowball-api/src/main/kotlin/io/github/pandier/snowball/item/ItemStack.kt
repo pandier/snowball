@@ -5,8 +5,8 @@ import io.github.pandier.snowball.Snowball
 public interface ItemStack : ItemStackView {
     public companion object {
         @JvmStatic
-        public fun empty(): ItemStackView =
-            ItemStackView.empty()
+        public fun empty(): ItemStack =
+            Snowball.factories.emptyItemStack()
 
         @JvmStatic
         public fun of(type: ItemType, count: Int): ItemStack =
@@ -21,5 +21,15 @@ public interface ItemStack : ItemStackView {
 
     public fun <T> set(type: ItemComponentType<T>, value: T?): T?
 
+    public fun <T> reset(type: ItemComponentType<out T>): T?
+
     public fun <T> remove(type: ItemComponentType<out T>): T?
+
+    public fun increment(count: Int) {
+        this.count += count
+    }
+
+    public fun decrement(count: Int) {
+        this.count -= count
+    }
 }
