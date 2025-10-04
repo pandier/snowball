@@ -35,6 +35,12 @@ class PlayerInventoryImpl(
     override fun set(slot: EquipmentSlot, stack: ItemStack): ItemStack =
         (adaptee as PlayerInventoryAccessor).`snowball$getEquipment`().put(slot.let(Conversions::vanilla), (stack as ItemStackImpl).adaptee).let(Conversions::snowball)
 
+    override fun insert(stack: ItemStack): Int {
+        val originalCount = stack.count
+        adaptee.insertStack((stack as ItemStackImpl).adaptee)
+        return originalCount - stack.count
+    }
+
     override fun getEquipmentIndex(slot: EquipmentSlot): Int {
         return equipmentToIndex[slot] ?: run {
             if (slot == EquipmentSlot.MAIN_HAND) return hotbar.selectedIndex

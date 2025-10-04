@@ -24,12 +24,4 @@ public interface ItemStack : ItemStackView {
     public fun <T> reset(type: ItemComponentType<out T>): T?
 
     public fun <T> remove(type: ItemComponentType<out T>): T?
-
-    public fun increment(count: Int) {
-        this.count += count
-    }
-
-    public fun decrement(count: Int) {
-        this.count -= count
-    }
 }

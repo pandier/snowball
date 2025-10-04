@@ -22,6 +22,9 @@ open class ProxyInventory(
     override fun set(index: Int, stack: ItemStackView) =
         proxied.set(index + offset, stack)
 
+    override fun insert(stack: ItemStack): Int =
+        proxied.insert(stack)
+
     override fun isValid(index: Int, stack: ItemStack): Boolean =
         proxied.isValid(index + offset, stack)
 
