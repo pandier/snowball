@@ -8,24 +8,24 @@ import io.github.pandier.snowball.command.CommandBranch
 import io.github.pandier.snowball.command.CommandContext
 import io.github.pandier.snowball.command.CommandExecutor
 import io.github.pandier.snowball.command.type.ArgumentType
-import net.minecraft.command.CommandRegistryAccess
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandBuildContext
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
 
 class CommandTransformer(
-    private val registryAccess: CommandRegistryAccess
+    private val buildContext: CommandBuildContext
 ) {
-    fun transform(command: Command): LiteralArgumentBuilder<ServerCommandSource> {
-        return CommandManager.literal(command.name).also {
+    fun transform(command: Command): LiteralArgumentBuilder<CommandSourceStack> {
+        return Commands.literal(command.name).also {
             transformBranch(command, it, listOf())
         }
     }
 
-    private fun transformBranch(branch: CommandBranch, builder: ArgumentBuilder<ServerCommandSource, *>, previousArguments: List<Argument<*>>) {
+    private fun transformBranch(branch: CommandBranch, builder: ArgumentBuilder<CommandSourceStack, *>, previousArguments: List<Argument<*>>) {
         val totalArguments = previousArguments + branch.arguments
 
         var lastBuilder = branch.arguments.lastOrNull()
-            ?.let { CommandManager.argument(it.name, getBrigadierType(it.type)) }
+            ?.let { Commands.argument(it.name, getBrigadierType(it.type)) }
             ?: builder
 
         val executor = branch.executor
@@ -39,7 +39,7 @@ class CommandTransformer(
             if (name == null) {
                 transformBranch(child, lastBuilder, totalArguments)
             } else {
-                val literal = CommandManager.literal(name)
+                val literal = Commands.literal(name)
                 transformBranch(child, literal, totalArguments)
                 lastBuilder.then(literal)
             }
@@ -51,7 +51,7 @@ class CommandTransformer(
             for (i in branch.arguments.size - 2 downTo 0) {
                 val argument = branch.arguments[i]
 
-                lastBuilder = CommandManager.argument(argument.name, getBrigadierType(argument.type)).also {
+                lastBuilder = Commands.argument(argument.name, getBrigadierType(argument.type)).also {
                     it.then(lastBuilder)
                 }
 
@@ -72,27 +72,27 @@ class CommandTransformer(
         }
     }
 
-    private fun transformExecutor(executor: CommandExecutor, arguments: List<Argument<*>>): com.mojang.brigadier.Command<ServerCommandSource> {
+    private fun transformExecutor(executor: CommandExecutor, arguments: List<Argument<*>>): com.mojang.brigadier.Command<CommandSourceStack> {
         val transformers = arguments.associate { it.name to ArgumentTransformers.get(it.type) }
         return com.mojang.brigadier.Command { context ->
             executor.run { transformContext(context, transformers).execute().value }
         }
     }
 
-    private fun transformContext(context: com.mojang.brigadier.context.CommandContext<ServerCommandSource>, transformers: Map<String, ArgumentTransformer<*, *, *>>): CommandContext {
+    private fun transformContext(context: com.mojang.brigadier.context.CommandContext<CommandSourceStack>, transformers: Map<String, ArgumentTransformer<*, *, *>>): CommandContext {
         val transformedArguments = mutableMapOf<String, Any?>()
         for ((name, transformer) in transformers)
             transformedArguments[name] = transformArgument(context, name, transformer)
         return CommandContextImpl(context, transformedArguments)
     }
 
-    private fun <T, A : ArgumentType<T>, B> transformArgument(context: com.mojang.brigadier.context.CommandContext<ServerCommandSource>, name: String, transformer: ArgumentTransformer<T, A, B>): T {
+    private fun <T, A : ArgumentType<T>, B> transformArgument(context: com.mojang.brigadier.context.CommandContext<CommandSourceStack>, name: String, transformer: ArgumentTransformer<T, A, B>): T {
         val originalValue = context.getArgument(name, transformer.brigadierClass)
         val transformedValue = transformer.transform(context, originalValue)
         return transformedValue
     }
 
     private fun getBrigadierType(type: ArgumentType<*>): com.mojang.brigadier.arguments.ArgumentType<*> {
-        return ArgumentTransformers.getBrigadierType(registryAccess, type)
+        return ArgumentTransformers.getBrigadierType(buildContext, type)
     }
 }

@@ -9,7 +9,7 @@ import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemType
 
 open class ItemStackImpl(
-    override val adaptee: net.minecraft.item.ItemStack,
+    override val adaptee: net.minecraft.world.item.ItemStack,
 ) : SnowballAdapter(adaptee), ItemStack {
     override var count: Int
         get() = adaptee.count

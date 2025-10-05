@@ -7,28 +7,31 @@ import io.github.pandier.snowball.math.Location
 import io.github.pandier.snowball.math.Vector2f
 import io.github.pandier.snowball.math.Vector3d
 import io.github.pandier.snowball.world.World
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
 import java.util.UUID
 
 open class EntityImpl(
-    override val adaptee: net.minecraft.entity.Entity
+    adaptee: net.minecraft.world.entity.Entity
 ) : SnowballAdapter(adaptee), Entity {
+    @Suppress("CanBePrimaryConstructorProperty")
+    override val adaptee: net.minecraft.world.entity.Entity = adaptee
+
     override val id: Int
         get() = adaptee.id
     override val uuid: UUID
         get() = adaptee.uuid
 
     override val world: World
-        get() = Conversions.snowball(adaptee.world as ServerWorld)
+        get() = Conversions.snowball(adaptee.level() as ServerLevel)
 
     override var position: Vector3d
         get() = Vector3d(adaptee.x, adaptee.y, adaptee.z)
-        set(value) = adaptee.requestTeleport(value.x, value.y, value.z)
+        set(value) = adaptee.teleportTo(value.x, value.y, value.z)
     override var rotation: Vector2f
-        get() = Vector2f(adaptee.yaw, adaptee.pitch)
-        set(value) = adaptee.rotate(value.x, value.y)
+        get() = Vector2f(adaptee.xRot, adaptee.yRot)
+        set(value) = adaptee.forceSetRotation(value.x, false, value.y, false)
     override var location: Location
-        get() = Location(adaptee.x, adaptee.y, adaptee.z, adaptee.yaw, adaptee.pitch)
+        get() = Location(adaptee.x, adaptee.y, adaptee.z, adaptee.xRot, adaptee.yRot)
         set(value) {
             position = value.position
             rotation = value.rotation

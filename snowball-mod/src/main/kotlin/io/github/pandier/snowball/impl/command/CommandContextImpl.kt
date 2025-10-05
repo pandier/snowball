@@ -3,10 +3,10 @@ package io.github.pandier.snowball.impl.command
 import io.github.pandier.snowball.command.CommandContext
 import io.github.pandier.snowball.command.CommandSource
 import io.github.pandier.snowball.impl.adapter.SnowballAdapter
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandSourceStack
 
 class CommandContextImpl(
-    override val adaptee: com.mojang.brigadier.context.CommandContext<ServerCommandSource>,
+    override val adaptee: com.mojang.brigadier.context.CommandContext<CommandSourceStack>,
     private val transformedArguments: Map<String, Any?>,
 ) : SnowballAdapter(adaptee), CommandContext{
     override val source: CommandSource = CommandSourceImpl(adaptee.source)

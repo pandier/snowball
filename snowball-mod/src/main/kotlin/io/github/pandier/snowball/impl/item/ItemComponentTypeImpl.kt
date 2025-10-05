@@ -2,10 +2,10 @@ package io.github.pandier.snowball.impl.item
 
 import io.github.pandier.snowball.impl.adapter.SnowballAdapter
 import io.github.pandier.snowball.item.ItemComponentType
-import net.minecraft.component.ComponentType
+import net.minecraft.core.component.DataComponentType
 
 class ItemComponentTypeImpl<T, V>(
-    override val adaptee: ComponentType<V>,
+    override val adaptee: DataComponentType<V>,
     private val snowballMapper: (V) -> T,
     private val vanillaMapper: (T) -> V,
 ) : SnowballAdapter(adaptee), ItemComponentType<T> {

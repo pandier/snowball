@@ -13,6 +13,6 @@ class SnowballFactoriesImpl : SnowballFactories {
     }
 
     override fun itemStack(type: ItemType, count: Int): ItemStack {
-        return ItemStackImpl(net.minecraft.item.ItemStack((type as ItemTypeImpl).adaptee, count))
+        return ItemStackImpl(net.minecraft.world.item.ItemStack((type as ItemTypeImpl).adaptee, count))
     }
 }

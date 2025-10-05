@@ -98,8 +98,6 @@ public interface Inventory : Iterable<ItemStack> {
         return originalCount - stack.count
     }
 
-    public fun isValid(index: Int, stack: ItemStack): Boolean
-
     public fun count(type: ItemType): Int =
         sumOf { if (it.type == type) it.count else 0 }
 

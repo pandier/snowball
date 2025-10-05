@@ -7,21 +7,19 @@
     "BlockMixin",
     "BlockStateMixin",
     "EntityMixin",
-    "InventoryMixin",
+    "ContainerMixin",
     "ItemMixin",
     "ItemStackMixin",
     "LivingEntityAccessor",
     "LivingEntityMixin",
     "MergedComponentMapMixin",
     "MinecraftServerMixin",
-    "PlayerInventoryAccessor",
-    "PlayerInventoryMixin",
-    "PlayerManagerMixin",
-    "ServerPlayerEntityMixin",
-    "ServerPlayNetworkHandlerMixin",
-    "ServerWorldMixin",
-    "StyleAccessor",
-    "TextColorAccessor"
+    "InventoryAccessor",
+    "InventoryMixin",
+    "PlayerListMixin",
+    "ServerPlayerMixin",
+    "ServerGamePacketListenerImplMixin",
+    "ServerLevelMixin"
   ],
   "injectors": {
     "defaultRequire": 1

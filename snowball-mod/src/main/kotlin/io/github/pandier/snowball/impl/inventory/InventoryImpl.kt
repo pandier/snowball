@@ -9,12 +9,16 @@ import io.github.pandier.snowball.inventory.Inventory
 import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemStackView
 import io.github.pandier.snowball.item.ItemType
+import net.minecraft.world.Container
 
 open class InventoryImpl(
-    override val adaptee: net.minecraft.inventory.Inventory
+    adaptee: Container
 ) : SnowballAdapter(adaptee), Inventory {
+    @Suppress("CanBePrimaryConstructorProperty")
+    override val adaptee: Container = adaptee
+
     override val size: Int
-        get() = adaptee.size()
+        get() = adaptee.containerSize
 
     override val maxStackCount: Int
         get() = adaptee.maxCountPerStack
@@ -23,22 +27,19 @@ open class InventoryImpl(
         adaptee.isEmpty
 
     override fun get(index: Int): ItemStackView =
-        adaptee.getStack(index).let(Conversions::snowball)
+        adaptee.getItem(index).let(Conversions::snowball)
 
     override fun remove(index: Int): ItemStack =
-        adaptee.removeStack(index).let(Conversions::snowball)
+        adaptee.removeItemNoUpdate(index).let(Conversions::snowball)
 
     override fun set(index: Int, stack: ItemStackView) =
-        adaptee.setStack(index, (stack.copy() as ItemStackImpl).adaptee)
-
-    override fun isValid(index: Int, stack: ItemStack): Boolean =
-        adaptee.isValid(index, (stack as ItemStackImpl).adaptee)
+        adaptee.setItem(index, (stack.copy() as ItemStackImpl).adaptee)
 
     override fun count(type: ItemType): Int =
-        adaptee.count((type as ItemTypeImpl).adaptee)
+        adaptee.countItem((type as ItemTypeImpl).adaptee)
 
     override fun clear() =
-        adaptee.clear()
+        adaptee.clearContent()
 
     override fun iterator(): Iterator<ItemStack> =
         Iterators.transform(adaptee.iterator(), Conversions::snowball)

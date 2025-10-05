@@ -6,7 +6,7 @@ import io.github.pandier.snowball.event.server.ServerStartedEvent
 import io.github.pandier.snowball.event.server.ServerStartingEvent
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.SnowballImpl
-import io.github.pandier.snowball.impl.bridge.ServerPlayerEntityBridge
+import io.github.pandier.snowball.impl.bridge.ServerPlayerBridge
 import io.github.pandier.snowball.impl.bridge.SnowballConvertible
 import io.github.pandier.snowball.impl.command.CommandTransformer
 import io.github.pandier.snowball.impl.server.ServerImpl
@@ -49,9 +49,9 @@ object FabricListeners {
         ServerPlayerEvents.JOIN.register { vPlayer ->
             val player = Conversions.snowball(vPlayer)
 
-            val originalMessage = (vPlayer as ServerPlayerEntityBridge).`snowball$getJoinMessage`()
+            val originalMessage = (vPlayer as ServerPlayerBridge).`snowball$getJoinMessage`()
                 ?.let(Conversions.Adventure::adventure)
-            (vPlayer as ServerPlayerEntityBridge).`snowball$setJoinMessage`(null)
+            (vPlayer as ServerPlayerBridge).`snowball$setJoinMessage`(null)
 
             val event = PlayerJoinEvent(player, originalMessage, SnowballImpl.server)
             SnowballImpl.eventManager.dispatch(event)

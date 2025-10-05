@@ -2,10 +2,8 @@ package io.github.pandier.snowball.world
 
 import io.github.pandier.snowball.entity.Entity
 import io.github.pandier.snowball.math.Vector3i
-import io.github.pandier.snowball.world.block.BlockChangeFlag
 import io.github.pandier.snowball.world.block.BlockState
 import net.kyori.adventure.key.Keyed
-import java.util.EnumSet
 import java.util.UUID
 
 public interface World : Keyed {
@@ -25,10 +23,4 @@ public interface World : Keyed {
     }
 
     public fun setBlockState(x: Int, y: Int, z: Int, state: BlockState)
-
-    public fun setBlockState(pos: Vector3i, state: BlockState, flags: EnumSet<BlockChangeFlag>) {
-        setBlockState(pos.x, pos.y, pos.z, state, flags)
-    }
-
-    public fun setBlockState(x: Int, y: Int, z: Int, state: BlockState, flags: EnumSet<BlockChangeFlag>)
 }

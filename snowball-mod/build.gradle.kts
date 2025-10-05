@@ -3,12 +3,9 @@ plugins {
     id("fabric-loom") version "1.11-SNAPSHOT"
 }
 
-repositories {
-}
-
 dependencies {
     minecraft(libs.minecraft)
-    mappings(variantOf(libs.yarn) { classifier("v2") })
+    mappings(loom.officialMojangMappings())
     modImplementation(libs.fabric.loader)
     modImplementation(libs.fabric.language.kotlin)
     modImplementation(libs.fabric.api)

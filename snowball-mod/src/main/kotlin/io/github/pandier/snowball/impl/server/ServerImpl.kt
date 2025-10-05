@@ -12,9 +12,9 @@ import io.github.pandier.snowball.world.World
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.audience.ForwardingAudience
 import net.kyori.adventure.key.Key
-import net.minecraft.registry.RegistryKeys
+import net.minecraft.core.registries.Registries
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
 import java.util.UUID
 
 class ServerImpl(
@@ -25,25 +25,25 @@ class ServerImpl(
     override val console: Console = ConsoleImpl(this)
 
     override val overworld: World
-        get() = adaptee.overworld.let(Conversions::snowball)
+        get() = adaptee.overworld().let(Conversions::snowball)
 
     @Suppress("UNCHECKED_CAST")
     override val worlds: Collection<World>
-        get() = Collections2.transform(adaptee.worlds as Collection<ServerWorld>, Conversions::snowball)
+        get() = Collections2.transform(adaptee.worlds as Collection<ServerLevel>, Conversions::snowball)
 
     override fun getWorld(key: Key): World? {
-        return adaptee.getWorld(Conversions.Adventure.registryKey(RegistryKeys.WORLD, key))?.let(Conversions::snowball)
+        return adaptee.getLevel(Conversions.Adventure.resourceKey(Registries.DIMENSION, key))?.let(Conversions::snowball)
     }
 
     override val players: Collection<Player>
-        get() = Collections2.transform(adaptee.playerManager.playerList, Conversions::snowball)
+        get() = Collections2.transform(adaptee.playerList.players, Conversions::snowball)
 
     override fun getPlayer(uuid: UUID): Player? {
-        return adaptee.playerManager.getPlayer(uuid)?.let(Conversions::snowball)
+        return adaptee.playerList.getPlayer(uuid)?.let(Conversions::snowball)
     }
 
     override fun getPlayer(name: String): Player? {
-        return adaptee.playerManager.getPlayer(name)?.let(Conversions::snowball)
+        return adaptee.playerList.getPlayer(name)?.let(Conversions::snowball)
     }
 
     override fun audiences(): Iterable<Audience> {

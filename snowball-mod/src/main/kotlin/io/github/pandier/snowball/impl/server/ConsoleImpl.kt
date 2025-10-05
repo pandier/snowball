@@ -7,14 +7,13 @@ import net.kyori.adventure.chat.ChatType
 import net.kyori.adventure.chat.SignedMessage
 import net.kyori.adventure.identity.Identity
 import net.kyori.adventure.text.Component
-import net.minecraft.text.Text
 import java.util.Optional
 
 class ConsoleImpl(
     private val server: ServerImpl,
 ) : Console {
     override fun sendMessage(message: Component) {
-        server.adaptee.sendMessage(Conversions.Adventure.vanilla(message))
+        server.adaptee.sendSystemMessage(Conversions.Adventure.vanilla(message))
     }
 
     @Suppress("UnstableApiUsage", "OVERRIDE_DEPRECATION", "DEPRECATION")
@@ -23,9 +22,9 @@ class ConsoleImpl(
             MessageType.SYSTEM -> sendMessage(message)
             MessageType.CHAT -> server.adaptee.logChatMessage(
                 Conversions.Adventure.vanilla(message),
-                net.minecraft.network.message.MessageType.Parameters(
-                    server.adaptee.registryManager.getEntryOrThrow(net.minecraft.network.message.MessageType.CHAT),
-                    Text.literal(source.uuid().toString()),
+                net.minecraft.network.chat.ChatType.Bound(
+                    server.adaptee.registryAccess().getOrThrow(net.minecraft.network.chat.ChatType.CHAT),
+                    net.minecraft.network.chat.Component.literal(source.uuid().toString()),
                     Optional.empty()
                 ),
                 "Not Secure"
@@ -36,7 +35,7 @@ class ConsoleImpl(
     override fun sendMessage(message: Component, boundChatType: ChatType.Bound) {
         server.adaptee.logChatMessage(
             Conversions.Adventure.vanilla(message),
-            Conversions.Adventure.vanilla(boundChatType, server.adaptee.registryManager),
+            Conversions.Adventure.vanilla(boundChatType, server.adaptee.registryAccess()),
             "Not Secure"
         )
     }

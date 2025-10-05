@@ -25,23 +25,17 @@ import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.util.Ticks
-import net.minecraft.block.Block
-import net.minecraft.component.ComponentMap
-import net.minecraft.component.ComponentType
-import net.minecraft.item.Item
-import net.minecraft.network.message.MessageType
-import net.minecraft.registry.DynamicRegistryManager
-import net.minecraft.registry.Registry
-import net.minecraft.registry.RegistryKey
-import net.minecraft.registry.RegistryKeys
+import net.minecraft.ChatFormatting
+import net.minecraft.core.Registry
+import net.minecraft.core.RegistryAccess
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundCategory
-import net.minecraft.text.Text
-import net.minecraft.util.Formatting
-import net.minecraft.util.Identifier
-import net.minecraft.util.Rarity
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.Rarity
+import net.minecraft.world.level.block.Block
 import java.time.Duration
 import java.util.Optional
 
@@ -81,41 +75,40 @@ object Conversions {
         }
     }
 
-    fun snowball(slot: net.minecraft.entity.EquipmentSlot): EquipmentSlot {
+    fun snowball(slot: net.minecraft.world.entity.EquipmentSlot): EquipmentSlot {
         return when (slot) {
-            net.minecraft.entity.EquipmentSlot.MAINHAND -> EquipmentSlot.MAIN_HAND
-            net.minecraft.entity.EquipmentSlot.OFFHAND -> EquipmentSlot.OFF_HAND
-            net.minecraft.entity.EquipmentSlot.FEET -> EquipmentSlot.FEET
-            net.minecraft.entity.EquipmentSlot.LEGS -> EquipmentSlot.LEGS
-            net.minecraft.entity.EquipmentSlot.CHEST -> EquipmentSlot.CHEST
-            net.minecraft.entity.EquipmentSlot.HEAD -> EquipmentSlot.HEAD
-            net.minecraft.entity.EquipmentSlot.BODY -> EquipmentSlot.BODY
-            net.minecraft.entity.EquipmentSlot.SADDLE -> EquipmentSlot.SADDLE
+            net.minecraft.world.entity.EquipmentSlot.MAINHAND -> EquipmentSlot.MAIN_HAND
+            net.minecraft.world.entity.EquipmentSlot.OFFHAND -> EquipmentSlot.OFF_HAND
+            net.minecraft.world.entity.EquipmentSlot.FEET -> EquipmentSlot.FEET
+            net.minecraft.world.entity.EquipmentSlot.LEGS -> EquipmentSlot.LEGS
+            net.minecraft.world.entity.EquipmentSlot.CHEST -> EquipmentSlot.CHEST
+            net.minecraft.world.entity.EquipmentSlot.HEAD -> EquipmentSlot.HEAD
+            net.minecraft.world.entity.EquipmentSlot.BODY -> EquipmentSlot.BODY
+            net.minecraft.world.entity.EquipmentSlot.SADDLE -> EquipmentSlot.SADDLE
         }
     }
 
-    fun vanilla(slot: EquipmentSlot): net.minecraft.entity.EquipmentSlot {
+    fun vanilla(slot: EquipmentSlot): net.minecraft.world.entity.EquipmentSlot {
         return when (slot) {
-            EquipmentSlot.MAIN_HAND -> net.minecraft.entity.EquipmentSlot.MAINHAND
-            EquipmentSlot.OFF_HAND -> net.minecraft.entity.EquipmentSlot.OFFHAND
-            EquipmentSlot.FEET -> net.minecraft.entity.EquipmentSlot.FEET
-            EquipmentSlot.LEGS -> net.minecraft.entity.EquipmentSlot.LEGS
-            EquipmentSlot.CHEST -> net.minecraft.entity.EquipmentSlot.CHEST
-            EquipmentSlot.HEAD -> net.minecraft.entity.EquipmentSlot.HEAD
-            EquipmentSlot.BODY -> net.minecraft.entity.EquipmentSlot.BODY
-            EquipmentSlot.SADDLE -> net.minecraft.entity.EquipmentSlot.SADDLE
+            EquipmentSlot.MAIN_HAND -> net.minecraft.world.entity.EquipmentSlot.MAINHAND
+            EquipmentSlot.OFF_HAND -> net.minecraft.world.entity.EquipmentSlot.OFFHAND
+            EquipmentSlot.FEET -> net.minecraft.world.entity.EquipmentSlot.FEET
+            EquipmentSlot.LEGS -> net.minecraft.world.entity.EquipmentSlot.LEGS
+            EquipmentSlot.CHEST -> net.minecraft.world.entity.EquipmentSlot.CHEST
+            EquipmentSlot.HEAD -> net.minecraft.world.entity.EquipmentSlot.HEAD
+            EquipmentSlot.BODY -> net.minecraft.world.entity.EquipmentSlot.BODY
+            EquipmentSlot.SADDLE -> net.minecraft.world.entity.EquipmentSlot.SADDLE
         }
     }
 
     fun snowball(type: ComponentType<*>): ItemComponentType<*> = SnowballImpl.registries.itemComponentType(type)
-
-    fun snowball(stack: net.minecraft.item.ItemStack): ItemStack = ItemStackImpl(stack)
-    fun snowball(inventory: net.minecraft.inventory.Inventory): Inventory = convertible(inventory)
-    fun snowball(entity: net.minecraft.entity.Entity): Entity = convertible(entity)
-    fun snowball(player: ServerPlayerEntity): Player = convertible(player)
-    fun snowball(world: ServerWorld): World = convertible(world)
+    fun snowball(stack: net.minecraft.world.item.ItemStack): ItemStack = ItemStackImpl(stack)
+    fun snowball(container: Container): Inventory = convertible(container)
+    fun snowball(entity: net.minecraft.world.entity.Entity): Entity = convertible(entity)
+    fun snowball(player: ServerPlayer): Player = convertible(player)
+    fun snowball(level: ServerLevel): World = convertible(level)
     fun snowball(block: Block): BlockType = convertible(block)
-    fun snowball(state: net.minecraft.block.BlockState): BlockState = convertible(state)
+    fun snowball(state: net.minecraft.world.level.block.state.BlockState): BlockState = convertible(state)
     fun snowball(item: Item): ItemType = convertible(item)
     fun snowball(obj: MinecraftServer): Server = convertible(obj)
 
@@ -123,63 +116,63 @@ object Conversions {
     private inline fun <reified T> convertible(any: Any): T = (any as SnowballConvertible<T>).`snowball$get`()
 
     object Adventure {
-        fun vanilla(key: Key): Identifier {
-            return Identifier.of(key.namespace(), key.value())
+        fun vanilla(key: Key): ResourceLocation {
+            return ResourceLocation.fromNamespaceAndPath(key.namespace(), key.value())
         }
 
-        fun adventure(identifier: Identifier): Key {
+        fun adventure(identifier: ResourceLocation): Key {
             return Key.key(identifier.namespace, identifier.path)
         }
 
-        inline fun <reified T> registryKey(registry: RegistryKey<out Registry<T>>, key: Key): RegistryKey<T> {
-            return RegistryKey.of(registry, vanilla(key))
+        inline fun <reified T> resourceKey(registry: ResourceKey<out Registry<T>>, key: Key): ResourceKey<T> {
+            return ResourceKey.create(registry, vanilla(key))
         }
 
         fun toTicks(duration: Duration): Long {
             return duration.toMillis() / Ticks.SINGLE_TICK_DURATION_MS
         }
 
-        fun vanilla(component: Component): Text {
+        fun vanilla(component: Component): net.minecraft.network.chat.Component {
             return AdventureText(component)
         }
 
-        fun adventure(text: Text): Component {
+        fun adventure(text: net.minecraft.network.chat.Component): Component {
             return VanillaComponentSerializer.deserialize(text)
         }
 
-        fun vanilla(color: NamedTextColor): Formatting {
+        fun vanilla(color: NamedTextColor): ChatFormatting {
             return VanillaComponentSerializer.serialize(color)
         }
 
-        fun adventure(color: Formatting): NamedTextColor {
+        fun adventure(color: ChatFormatting): NamedTextColor {
             return VanillaComponentSerializer.deserialize(color)
         }
 
-        fun vanilla(bound: ChatType.Bound, registryManager: DynamicRegistryManager): MessageType.Parameters {
-            return MessageType.Parameters(
-                registryManager.getEntryOrThrow(registryKey(RegistryKeys.MESSAGE_TYPE, bound.type().key())),
+        fun vanilla(bound: ChatType.Bound, registryAccess: RegistryAccess): net.minecraft.network.chat.ChatType.Bound {
+            return net.minecraft.network.chat.ChatType.Bound(
+                registryAccess.getOrThrow(resourceKey(Registries.CHAT_TYPE, bound.type().key())),
                 vanilla(bound.name()),
                 Optional.ofNullable(bound.target()?.let(::vanilla)),
             )
         }
 
-        fun vanilla(source: Sound.Source): SoundCategory {
+        fun vanilla(source: Sound.Source): SoundSource {
             return when (source) {
-                Sound.Source.MASTER -> SoundCategory.MASTER
-                Sound.Source.MUSIC -> SoundCategory.MUSIC
-                Sound.Source.RECORD -> SoundCategory.RECORDS
-                Sound.Source.WEATHER -> SoundCategory.WEATHER
-                Sound.Source.BLOCK -> SoundCategory.BLOCKS
-                Sound.Source.HOSTILE -> SoundCategory.HOSTILE
-                Sound.Source.NEUTRAL -> SoundCategory.NEUTRAL
-                Sound.Source.PLAYER -> SoundCategory.PLAYERS
-                Sound.Source.AMBIENT -> SoundCategory.AMBIENT
-                Sound.Source.VOICE -> SoundCategory.VOICE
-                Sound.Source.UI -> SoundCategory.UI
+                Sound.Source.MASTER -> SoundSource.MASTER
+                Sound.Source.MUSIC -> SoundSource.MUSIC
+                Sound.Source.RECORD -> SoundSource.RECORDS
+                Sound.Source.WEATHER -> SoundSource.WEATHER
+                Sound.Source.BLOCK -> SoundSource.BLOCKS
+                Sound.Source.HOSTILE -> SoundSource.HOSTILE
+                Sound.Source.NEUTRAL -> SoundSource.NEUTRAL
+                Sound.Source.PLAYER -> SoundSource.PLAYERS
+                Sound.Source.AMBIENT -> SoundSource.AMBIENT
+                Sound.Source.VOICE -> SoundSource.VOICE
+                Sound.Source.UI -> SoundSource.UI
             }
         }
 
-        fun vanilla(emitter: Sound.Emitter, self: net.minecraft.entity.Entity): net.minecraft.entity.Entity {
+        fun vanilla(emitter: Sound.Emitter, self: net.minecraft.world.entity.Entity): net.minecraft.world.entity.Entity {
             if (emitter == Sound.Emitter.self()) return self
             if (emitter is EntityImpl) return emitter.adaptee
             error("Unrecognizable emitter: ${emitter.javaClass}")

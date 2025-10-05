@@ -3,7 +3,7 @@ package io.github.pandier.snowball.impl.mixin;
 import io.github.pandier.snowball.impl.adapter.SnowballAdapterHolder;
 import io.github.pandier.snowball.impl.bridge.SnowballConvertible;
 import io.github.pandier.snowball.impl.world.block.BlockTypeImpl;
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
