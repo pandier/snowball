@@ -37,7 +37,7 @@ class PlayerInventoryImpl(
 
     override fun insert(stack: ItemStack): Int {
         val originalCount = stack.count
-        adaptee.insertStack((stack as ItemStackImpl).adaptee)
+        adaptee.add((stack as ItemStackImpl).adaptee)
         return originalCount - stack.count
     }
 

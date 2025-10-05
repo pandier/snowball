@@ -32,7 +32,7 @@ class SnowballRegistriesImpl : SnowballRegistries {
 
     private fun <T, V> ref(registry: Registry<T>, key: Key, transformer: (T) -> V): V {
         val entry = registry.get(Conversions.Adventure.vanilla(key))
-            .orElseThrow { IllegalArgumentException("Unknown entry '$key' for registry '${registry.key}'") }
+            .orElseThrow { IllegalArgumentException("Unknown entry '$key' for registry '${registry.key()}'") }
         return transformer(entry.value())
     }
 }

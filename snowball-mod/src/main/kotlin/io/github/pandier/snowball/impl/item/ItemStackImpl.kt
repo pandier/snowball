@@ -7,6 +7,7 @@ import io.github.pandier.snowball.item.ItemComponentMap
 import io.github.pandier.snowball.item.ItemComponentType
 import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemType
+import java.util.Objects
 
 open class ItemStackImpl(
     override val adaptee: net.minecraft.world.item.ItemStack,
@@ -24,7 +25,7 @@ open class ItemStackImpl(
         get() = ItemComponentMapImpl(adaptee.components)
 
     override val defaultComponents: ItemComponentMap
-        get() = ItemComponentMapImpl(adaptee.defaultComponents)
+        get() = ItemComponentMapImpl(adaptee.prototype)
 
     override fun <T> set(type: ItemComponentType<T>, value: T?): T? =
         setInternal(type as ItemComponentTypeImpl<T, *>, value)
@@ -64,10 +65,9 @@ open class ItemStackImpl(
     override fun copy(): ItemStack =
         ItemStackImpl(adaptee.copy())
 
-    override fun equals(other: Any?): Boolean {
-        return other is ItemStackImpl && net.minecraft.item.ItemStack.areEqual(adaptee, other.adaptee)
-    }
+    override fun equals(other: Any?): Boolean =
+        other is ItemStackImpl && net.minecraft.world.item.ItemStack.matches(adaptee, other.adaptee)
 
     override fun hashCode(): Int =
-        net.minecraft.item.ItemStack.hashCode(adaptee)
+        Objects.hash(adaptee.item, adaptee.count, adaptee.components)
 }

@@ -27,7 +27,7 @@ import java.util.Optional
  */
 class SnowballItemComponentTypeRegistry {
     private val entries = mutableMapOf<Key, ItemComponentType<*>>()
-    private val vanillaToSnowball = mutableMapOf<ComponentType<*>, ItemComponentType<*>>()
+    private val vanillaToSnowball = mutableMapOf<DataComponentType<*>, ItemComponentType<*>>()
 
     fun registerDefaults(): SnowballItemComponentTypeRegistry {
         // TODO: Implement all unknowns
@@ -155,21 +155,21 @@ class SnowballItemComponentTypeRegistry {
             ?: throw IllegalArgumentException("An item component type with key '$key' is not registered in the vanilla registry")
         val entry = ItemComponentTypeImpl(vanilla as DataComponentType<V>, snowballMapper, vanillaMapper)
         entries[key] = entry
-        vanillaToSnowball[vanillaEntry] = entry
+        vanillaToSnowball[vanilla] = entry
         return entry
     }
 
     fun get(key: Key): ItemComponentType<*>? {
         return entries[key]
-            ?: Registries.DATA_COMPONENT_TYPE.get(Conversions.Adventure.vanilla(key))
+            ?: BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(Conversions.Adventure.vanilla(key))
                 ?.let(::fallback)
     }
 
-    fun get(vanilla: ComponentType<*>): ItemComponentType<*> {
+    fun get(vanilla: DataComponentType<*>): ItemComponentType<*> {
         return vanillaToSnowball[vanilla] ?: fallback(vanilla)
     }
 
-    private fun fallback(vanilla: ComponentType<*>): ItemComponentType<*> {
+    private fun fallback(vanilla: DataComponentType<*>): ItemComponentType<*> {
         return ItemComponentTypeImpl(vanilla, {}, { throw UnsupportedOperationException() })
     }
 }

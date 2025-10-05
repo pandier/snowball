@@ -7,7 +7,7 @@ import io.github.pandier.snowball.item.ItemTypes
 import org.jetbrains.annotations.ApiStatus
 
 @ApiStatus.Internal
-internal object EmptyItemStack : ItemStackImpl(net.minecraft.item.ItemStack.EMPTY) {
+internal object EmptyItemStack : ItemStackImpl(net.minecraft.world.item.ItemStack.EMPTY) {
     override var count: Int
         get() = 0
         set(value) {}

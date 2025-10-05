@@ -21,7 +21,7 @@ open class InventoryImpl(
         get() = adaptee.containerSize
 
     override val maxStackCount: Int
-        get() = adaptee.maxCountPerStack
+        get() = adaptee.maxStackSize
 
     override fun isEmpty(): Boolean =
         adaptee.isEmpty

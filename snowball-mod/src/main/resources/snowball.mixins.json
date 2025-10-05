@@ -12,7 +12,7 @@
     "ItemStackMixin",
     "LivingEntityAccessor",
     "LivingEntityMixin",
-    "MergedComponentMapMixin",
+    "PatchedDataComponentMapMixin",
     "MinecraftServerMixin",
     "InventoryAccessor",
     "InventoryMixin",

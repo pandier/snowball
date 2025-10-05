@@ -28,11 +28,15 @@ import net.kyori.adventure.util.Ticks
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Registry
 import net.minecraft.core.RegistryAccess
+import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
+import net.minecraft.world.Container
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.level.block.Block
@@ -101,7 +105,7 @@ object Conversions {
         }
     }
 
-    fun snowball(type: ComponentType<*>): ItemComponentType<*> = SnowballImpl.registries.itemComponentType(type)
+    fun snowball(type: DataComponentType<*>): ItemComponentType<*> = SnowballImpl.registries.itemComponentType(type)
     fun snowball(stack: net.minecraft.world.item.ItemStack): ItemStack = ItemStackImpl(stack)
     fun snowball(container: Container): Inventory = convertible(container)
     fun snowball(entity: net.minecraft.world.entity.Entity): Entity = convertible(entity)

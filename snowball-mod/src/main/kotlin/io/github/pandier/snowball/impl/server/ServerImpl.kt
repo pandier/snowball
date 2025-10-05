@@ -29,7 +29,7 @@ class ServerImpl(
 
     @Suppress("UNCHECKED_CAST")
     override val worlds: Collection<World>
-        get() = Collections2.transform(adaptee.worlds as Collection<ServerLevel>, Conversions::snowball)
+        get() = Collections2.transform(adaptee.allLevels as Collection<ServerLevel>, Conversions::snowball)
 
     override fun getWorld(key: Key): World? {
         return adaptee.getLevel(Conversions.Adventure.resourceKey(Registries.DIMENSION, key))?.let(Conversions::snowball)
