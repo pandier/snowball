@@ -10,8 +10,11 @@ import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemType
 
 open class InventoryImpl(
-    override val adaptee: net.minecraft.inventory.Inventory
+    adaptee: net.minecraft.inventory.Inventory
 ) : SnowballAdapter(adaptee), Inventory {
+    @Suppress("CanBePrimaryConstructorProperty")
+    override val adaptee: net.minecraft.inventory.Inventory = adaptee
+
     override val size: Int
         get() = adaptee.size()
 

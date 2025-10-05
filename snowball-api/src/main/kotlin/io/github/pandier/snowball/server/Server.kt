@@ -12,6 +12,8 @@ public interface Server : Audience {
 
     public val console: Console
 
+    public val overworld: World
+
     // TODO: Make this a collection
     public val worlds: Iterable<World>
 

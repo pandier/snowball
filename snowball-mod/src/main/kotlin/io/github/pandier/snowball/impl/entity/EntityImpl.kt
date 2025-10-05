@@ -11,8 +11,11 @@ import net.minecraft.server.world.ServerWorld
 import java.util.UUID
 
 open class EntityImpl(
-    override val adaptee: net.minecraft.entity.Entity
+    adaptee: net.minecraft.entity.Entity
 ) : SnowballAdapter(adaptee), Entity {
+    @Suppress("CanBePrimaryConstructorProperty")
+    override val adaptee: net.minecraft.entity.Entity = adaptee
+
     override val id: Int
         get() = adaptee.id
     override val uuid: UUID

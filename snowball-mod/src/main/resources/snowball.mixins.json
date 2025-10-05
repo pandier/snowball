@@ -17,9 +17,7 @@
     "PlayerManagerMixin",
     "ServerPlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
-    "ServerWorldMixin",
-    "StyleAccessor",
-    "TextColorAccessor"
+    "ServerWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -10,8 +10,11 @@ import io.github.pandier.snowball.inventory.EquipmentSlot
 import io.github.pandier.snowball.item.ItemStack
 
 open class LivingEntityImpl(
-    override val adaptee: net.minecraft.entity.LivingEntity
-) : LivingEntity, EntityImpl(adaptee) {
+    adaptee: net.minecraft.entity.LivingEntity
+) : EntityImpl(adaptee), LivingEntity {
+    @Suppress("CanBePrimaryConstructorProperty")
+    override val adaptee: net.minecraft.entity.LivingEntity = adaptee
+
     override val equipment: Equipment = EquipmentImpl((adaptee as LivingEntityAccessor).`snowball$getEquipment`())
 
     override fun equip(slot: EquipmentSlot, item: ItemStack) {

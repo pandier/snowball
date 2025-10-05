@@ -6,9 +6,7 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven(url = "https://repo.papermc.io/repository/maven-snapshots/") {
-        name = "sonatype-oss-snapshots"
-    }
+    maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 kotlin {

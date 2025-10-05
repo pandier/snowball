@@ -22,6 +22,9 @@ class ServerImpl(
 
     override val console: Console = ConsoleImpl(this)
 
+    override val overworld: World
+        get() = adaptee.overworld.let(Conversions::snowball)
+
     override val worlds: Iterable<World>
         get() = Iterables.transform(adaptee.worlds, Conversions::snowball)
 

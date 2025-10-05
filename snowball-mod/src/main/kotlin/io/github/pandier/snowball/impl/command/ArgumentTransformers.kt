@@ -78,13 +78,15 @@ object ArgumentTransformers {
             { access, _ -> net.minecraft.command.argument.TextArgumentType.text(access) },
             { ctx, value -> Conversions.Adventure.adventure(value) }
         )
+        // TODO: Replace GameProfile with PlayerEntry or something
         register<GameProfileArgumentType, GameProfile, net.minecraft.command.argument.GameProfileArgumentType.GameProfileArgument>(
             { _, _ -> net.minecraft.command.argument.GameProfileArgumentType.gameProfile() },
-            { ctx, value -> Conversions.snowball(value.getNames(ctx.source).first()) }
+            { ctx, value -> value.getNames(ctx.source).first().let { GameProfile(it.id, it.name) } }
         )
+        // TODO: Replace GameProfile with PlayerEntry or something
         register<GameProfileListArgumentType, List<GameProfile>, net.minecraft.command.argument.GameProfileArgumentType.GameProfileArgument>(
             { _, _ -> net.minecraft.command.argument.GameProfileArgumentType.gameProfile() },
-            { ctx, value -> value.getNames(ctx.source).map(Conversions::snowball) }
+            { ctx, value -> value.getNames(ctx.source).map { GameProfile(it.id, it.name) } }
         )
         register<NamedTextColorArgumentType, NamedTextColor, Formatting>(
             { _, _ -> net.minecraft.command.argument.ColorArgumentType.color() },

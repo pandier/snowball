@@ -9,9 +9,8 @@ import io.github.pandier.snowball.impl.world.WorldImpl;
 import io.github.pandier.snowball.math.Location;
 import io.github.pandier.snowball.world.World;
 import net.minecraft.network.ClientConnection;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
+import net.minecraft.server.network.ConnectedClientData;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -20,24 +19,20 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerManager.class)
 public class PlayerManagerMixin {
     @Shadow @Final private static Logger LOGGER;
 
-    @Redirect(method = "onPlayerConnect",
+    @Inject(method = "onPlayerConnect",
             at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/server/MinecraftServer;getWorld(Lnet/minecraft/registry/RegistryKey;)Lnet/minecraft/server/world/ServerWorld;"))
-    private ServerWorld redirect$onPlayerConnect$prepareEvent(MinecraftServer server, RegistryKey<net.minecraft.world.World> key, ClientConnection connection, ServerPlayerEntity vPlayer) {
-        ServerWorld vWorld = server.getWorld(key);
-        if (vWorld == null) {
-            LOGGER.warn("Player '{}' tried to connect with an unknown dimension {}, defaulting to overworld", vPlayer.getGameProfile().getName(), key);
-            vWorld = server.getOverworld();
-        }
-
+                    target = "Lnet/minecraft/server/network/ServerPlayerEntity;getEntityWorld()Lnet/minecraft/server/world/ServerWorld;"))
+    private void redirect$onPlayerConnect$prepareEvent(ClientConnection connection, ServerPlayerEntity vPlayer, ConnectedClientData clientData, CallbackInfo ci) {
         final Player player = Conversions.INSTANCE.snowball(vPlayer);
-        final World originalWorld = Conversions.INSTANCE.snowball(vWorld);
+        final World originalWorld = Conversions.INSTANCE.snowball(vPlayer.getEntityWorld());
         final Location originalLocation = player.getLocation();
 
         final PlayerPrepareEvent event = new PlayerPrepareEvent(player.getGameProfile(), originalWorld, player.getLocation());
@@ -50,7 +45,7 @@ public class PlayerManagerMixin {
             vPlayer.refreshPositionAndAngles(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         }
 
-        return ((WorldImpl) world).getAdaptee();
+        vPlayer.setServerWorld(((WorldImpl) world).getAdaptee());
     }
 
     @Redirect(method = "onPlayerConnect",

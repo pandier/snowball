@@ -3,7 +3,6 @@ package io.github.pandier.snowball.impl.entity
 import io.github.pandier.snowball.entity.Player
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.inventory.PlayerInventoryImpl
-import io.github.pandier.snowball.inventory.Inventory
 import io.github.pandier.snowball.inventory.PlayerInventory
 import io.github.pandier.snowball.profile.GameProfile
 import net.kyori.adventure.audience.MessageType
@@ -29,8 +28,11 @@ import net.minecraft.sound.SoundEvent
 
 // TODO: Fully implement Audience
 open class PlayerImpl(
-    override val adaptee: ServerPlayerEntity
-) : Player, LivingEntityImpl(adaptee) {
+    adaptee: ServerPlayerEntity
+) : LivingEntityImpl(adaptee), Player {
+    @Suppress("CanBePrimaryConstructorProperty")
+    override val adaptee: ServerPlayerEntity = adaptee
+
     override val gameProfile: GameProfile
         get() = Conversions.snowball(adaptee.gameProfile)
 
