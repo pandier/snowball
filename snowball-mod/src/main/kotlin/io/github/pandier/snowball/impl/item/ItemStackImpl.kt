@@ -7,10 +7,10 @@ import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemType
 
 class ItemStackImpl(
-    override val adaptee: net.minecraft.item.ItemStack,
+    override val adaptee: net.minecraft.world.item.ItemStack,
 ) : SnowballAdapter(adaptee), ItemStack {
     companion object {
-        @JvmField val EMPTY = ItemStackImpl(net.minecraft.item.ItemStack.EMPTY)
+        @JvmField val EMPTY = ItemStackImpl(net.minecraft.world.item.ItemStack.EMPTY)
     }
 
     override var count: Int

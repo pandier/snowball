@@ -39,12 +39,20 @@ import io.github.pandier.snowball.profile.GameProfile
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
-import net.minecraft.command.CommandRegistryAccess
-import net.minecraft.command.EntitySelector
-import net.minecraft.command.argument.PosArgument
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.text.Text
-import net.minecraft.util.Formatting
+import net.minecraft.ChatFormatting
+import net.minecraft.commands.CommandBuildContext
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.arguments.ColorArgument
+import net.minecraft.commands.arguments.ComponentArgument
+import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.commands.arguments.GameProfileArgument
+import net.minecraft.commands.arguments.HexColorArgument
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument
+import net.minecraft.commands.arguments.coordinates.ColumnPosArgument
+import net.minecraft.commands.arguments.coordinates.Coordinates
+import net.minecraft.commands.arguments.coordinates.Vec2Argument
+import net.minecraft.commands.arguments.coordinates.Vec3Argument
+import net.minecraft.commands.arguments.selector.EntitySelector
 
 object ArgumentTransformers {
     private val registry = mutableMapOf<Class<out ArgumentType<*>>, ArgumentTransformer<*, *, *>>()
@@ -59,66 +67,66 @@ object ArgumentTransformers {
         registerDirect<WordArgumentType, String> { _, _ -> com.mojang.brigadier.arguments.StringArgumentType.word() }
         registerDirect<GreedyStringArgumentType, String> { _, _ -> com.mojang.brigadier.arguments.StringArgumentType.greedyString() }
         register<EntityArgumentType, Entity, EntitySelector>(
-            { _, _ -> net.minecraft.command.argument.EntityArgumentType.entity() },
-            { ctx, value -> Conversions.snowball(value.getEntity(ctx.source)) }
+            { _, _ -> EntityArgument.entity() },
+            { ctx, value -> Conversions.snowball(value.findSingleEntity(ctx.source)) }
         )
         register<EntityListArgumentType, List<Entity>, EntitySelector>(
-            { _, _ -> net.minecraft.command.argument.EntityArgumentType.entities() },
-            { ctx, value -> value.getEntities(ctx.source).map { Conversions.snowball(it) } }
+            { _, _ -> EntityArgument.entities() },
+            { ctx, value -> value.findEntities(ctx.source).map { Conversions.snowball(it) } }
         )
         register<PlayerArgumentType, Player, EntitySelector>(
-            { _, _ -> net.minecraft.command.argument.EntityArgumentType.player() },
-            { ctx, value -> Conversions.snowball(value.getPlayer(ctx.source)) }
+            { _, _ -> EntityArgument.player() },
+            { ctx, value -> Conversions.snowball(value.findSinglePlayer(ctx.source)) }
         )
         register<PlayerListArgumentType, List<Player>, EntitySelector>(
-            { _, _ -> net.minecraft.command.argument.EntityArgumentType.players() },
-            { ctx, value -> value.getPlayers(ctx.source).map { Conversions.snowball(it) } }
+            { _, _ -> EntityArgument.players() },
+            { ctx, value -> value.findPlayers(ctx.source).map { Conversions.snowball(it) } }
         )
-        register<ComponentArgumentType, Component, Text>(
-            { access, _ -> net.minecraft.command.argument.TextArgumentType.text(access) },
-            { ctx, value -> Conversions.Adventure.adventure(value) }
+        register<ComponentArgumentType, Component, net.minecraft.network.chat.Component>(
+            { access, _ -> ComponentArgument.textComponent(access) },
+            { _, value -> Conversions.Adventure.adventure(value) }
         )
         // TODO: Replace GameProfile with PlayerEntry or something
-        register<GameProfileArgumentType, GameProfile, net.minecraft.command.argument.GameProfileArgumentType.GameProfileArgument>(
-            { _, _ -> net.minecraft.command.argument.GameProfileArgumentType.gameProfile() },
+        register<GameProfileArgumentType, GameProfile, GameProfileArgument.Result>(
+            { _, _ -> GameProfileArgument.gameProfile() },
             { ctx, value -> value.getNames(ctx.source).first().let { GameProfile(it.id, it.name) } }
         )
         // TODO: Replace GameProfile with PlayerEntry or something
-        register<GameProfileListArgumentType, List<GameProfile>, net.minecraft.command.argument.GameProfileArgumentType.GameProfileArgument>(
-            { _, _ -> net.minecraft.command.argument.GameProfileArgumentType.gameProfile() },
+        register<GameProfileListArgumentType, List<GameProfile>, GameProfileArgument.Result>(
+            { _, _ -> GameProfileArgument.gameProfile() },
             { ctx, value -> value.getNames(ctx.source).map { GameProfile(it.id, it.name) } }
         )
-        register<NamedTextColorArgumentType, NamedTextColor, Formatting>(
-            { _, _ -> net.minecraft.command.argument.ColorArgumentType.color() },
-            { ctx, value -> Conversions.Adventure.adventure(value) }
+        register<NamedTextColorArgumentType, NamedTextColor, ChatFormatting>(
+            { _, _ -> ColorArgument.color() },
+            { _, value -> Conversions.Adventure.adventure(value) }
         )
         register<TextColorArgumentType, TextColor, Int>(
-            { _, _ -> net.minecraft.command.argument.HexColorArgumentType.hexColor() },
-            { ctx, value -> TextColor.color(value) }
+            { _, _ -> HexColorArgument.hexColor() },
+            { _, value -> TextColor.color(value) }
         )
-        register<Vector2dArgumentType, Vector2d, PosArgument>(
-            { _, it -> net.minecraft.command.argument.Vec2ArgumentType.vec2(it.center) },
-            { ctx, value -> value.getPos(ctx.source).let { Vector2d(it.x, it.z)} }
+        register<Vector2dArgumentType, Vector2d, Coordinates>(
+            { _, it -> Vec2Argument.vec2(it.center) },
+            { ctx, value -> value.getPosition(ctx.source).let { Vector2d(it.x, it.z)} }
         )
-        register<Vector2fArgumentType, Vector2f, PosArgument>(
-            { _, it -> net.minecraft.command.argument.Vec2ArgumentType.vec2(it.center) },
-            { ctx, value -> value.getPos(ctx.source).let { Vector2f(it.x.toFloat(), it.z.toFloat()) } }
+        register<Vector2fArgumentType, Vector2f, Coordinates>(
+            { _, it -> Vec2Argument.vec2(it.center) },
+            { ctx, value -> value.getPosition(ctx.source).let { Vector2f(it.x.toFloat(), it.z.toFloat()) } }
         )
-        register<Vector2iArgumentType, Vector2i, PosArgument>(
-            { _, _ -> net.minecraft.command.argument.ColumnPosArgumentType.columnPos() },
-            { ctx, value -> value.toAbsoluteBlockPos(ctx.source).let { Vector2i(it.x, it.z) } }
+        register<Vector2iArgumentType, Vector2i, Coordinates>(
+            { _, _ -> ColumnPosArgument.columnPos() },
+            { ctx, value -> value.getBlockPos(ctx.source).let { Vector2i(it.x, it.z) } }
         )
-        register<Vector3dArgumentType, Vector3d, PosArgument>(
-            { _, it -> net.minecraft.command.argument.Vec3ArgumentType.vec3(it.center) },
-            { ctx, value -> value.getPos(ctx.source).let { Vector3d(it.x, it.y, it.z) } }
+        register<Vector3dArgumentType, Vector3d, Coordinates>(
+            { _, it -> Vec3Argument.vec3(it.center) },
+            { ctx, value -> value.getPosition(ctx.source).let { Vector3d(it.x, it.y, it.z) } }
         )
-        register<Vector3fArgumentType, Vector3f, PosArgument>(
-            { _, it -> net.minecraft.command.argument.Vec3ArgumentType.vec3(it.center) },
-            { ctx, value -> value.getPos(ctx.source).let { Vector3f(it.x.toFloat(), it.y.toFloat(), it.z.toFloat()) } }
+        register<Vector3fArgumentType, Vector3f, Coordinates>(
+            { _, it -> Vec3Argument.vec3(it.center) },
+            { ctx, value -> value.getPosition(ctx.source).let { Vector3f(it.x.toFloat(), it.y.toFloat(), it.z.toFloat()) } }
         )
-        register<Vector3iArgumentType, Vector3i, PosArgument>(
-            { _, _ -> net.minecraft.command.argument.BlockPosArgumentType.blockPos() },
-            { ctx, value -> value.toAbsoluteBlockPos(ctx.source).let { Vector3i(it.x, it.y, it.z) } }
+        register<Vector3iArgumentType, Vector3i, Coordinates>(
+            { _, _ -> BlockPosArgument.blockPos() },
+            { ctx, value -> value.getBlockPos(ctx.source).let { Vector3i(it.x, it.y, it.z) } }
         )
     }
 
@@ -127,7 +135,7 @@ object ArgumentTransformers {
         return (registry[type.javaClass] ?: error("Unrecognizable argument type: $type")) as ArgumentTransformer<T, A, *>
     }
 
-    fun <T, A : ArgumentType<T>> getBrigadierType(registryAccess: CommandRegistryAccess, type: A): com.mojang.brigadier.arguments.ArgumentType<*> {
+    fun <T, A : ArgumentType<T>> getBrigadierType(registryAccess: CommandBuildContext, type: A): com.mojang.brigadier.arguments.ArgumentType<*> {
         return get(type).brigadierType(registryAccess, type)
     }
 
@@ -136,14 +144,14 @@ object ArgumentTransformers {
     }
 
     private inline fun <reified A : ArgumentType<T>, T, reified B> register(
-        noinline brigadierTypeFactory: (CommandRegistryAccess, A) -> com.mojang.brigadier.arguments.ArgumentType<B>,
-        noinline transfomer: (com.mojang.brigadier.context.CommandContext<ServerCommandSource>, B) -> T
+        noinline brigadierTypeFactory: (CommandBuildContext, A) -> com.mojang.brigadier.arguments.ArgumentType<B>,
+        noinline transfomer: (com.mojang.brigadier.context.CommandContext<CommandSourceStack>, B) -> T
     ) {
         register(ArgumentTransformer(B::class.java, brigadierTypeFactory, transfomer))
     }
 
     private inline fun <reified A : ArgumentType<T>, reified T> registerDirect(
-        noinline brigadierTypeFactory: (CommandRegistryAccess, A) -> com.mojang.brigadier.arguments.ArgumentType<T>
+        noinline brigadierTypeFactory: (CommandBuildContext, A) -> com.mojang.brigadier.arguments.ArgumentType<T>
     ) {
         register<A, T, T>(brigadierTypeFactory) { _, value -> value }
     }

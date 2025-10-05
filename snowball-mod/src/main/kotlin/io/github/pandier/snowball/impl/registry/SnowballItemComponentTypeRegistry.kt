@@ -7,22 +7,20 @@ import io.github.pandier.snowball.item.ItemRarity
 import io.github.pandier.snowball.util.Color
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
-import net.minecraft.component.ComponentType
-import net.minecraft.component.type.BlockStateComponent
-import net.minecraft.component.type.DyedColorComponent
-import net.minecraft.component.type.LoreComponent
-import net.minecraft.component.type.MapColorComponent
-import net.minecraft.component.type.MapIdComponent
-import net.minecraft.component.type.OminousBottleAmplifierComponent
-import net.minecraft.component.type.WritableBookContentComponent
-import net.minecraft.registry.Registries
-import net.minecraft.text.RawFilteredPair
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
-import net.minecraft.util.Rarity
+import net.minecraft.core.component.DataComponentType
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.network.Filterable
+import net.minecraft.world.item.Rarity
+import net.minecraft.world.item.component.BlockItemStateProperties
+import net.minecraft.world.item.component.DyedItemColor
+import net.minecraft.world.item.component.ItemLore
+import net.minecraft.world.item.component.MapItemColor
+import net.minecraft.world.item.component.OminousBottleAmplifier
+import net.minecraft.world.item.component.WritableBookContent
+import net.minecraft.world.level.saveddata.maps.MapId
 import java.util.Collections
 import java.util.Optional
-import java.util.function.Function
 
 /**
  * A registry that properly handles [io.github.pandier.snowball.item.ItemComponentType]s.
@@ -37,10 +35,10 @@ class SnowballItemComponentTypeRegistry {
         registerMinecraftDirect<Int>("max_damage")
         registerMinecraftDirect<Int>("damage")
         registerMinecraft<Unit, net.minecraft.util.Unit>("unbreakable", {}, { net.minecraft.util.Unit.INSTANCE })
-        registerMinecraft<Component, Text>("custom_name", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
-        registerMinecraft<Component, Text>("item_name", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
-        registerMinecraft<Key, Identifier>("item_model", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
-        registerMinecraft<List<Component>, LoreComponent>("lore", { it.lines.map(Conversions.Adventure::adventure) }, { LoreComponent(it.map(Conversions.Adventure::vanilla)) })
+        registerMinecraft<Component, net.minecraft.network.chat.Component>("custom_name", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
+        registerMinecraft<Component, net.minecraft.network.chat.Component>("item_name", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
+        registerMinecraft<Key, ResourceLocation>("item_model", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
+        registerMinecraft<List<Component>, ItemLore>("lore", { it.lines.map(Conversions.Adventure::adventure) }, { ItemLore(it.map(Conversions.Adventure::vanilla)) })
         registerMinecraft<ItemRarity, Rarity>("rarity", Conversions::snowball, Conversions::vanilla)
         registerMinecraftUnknown("enchantments")
         registerMinecraftUnknown("can_place_on")
@@ -63,13 +61,13 @@ class SnowballItemComponentTypeRegistry {
         registerMinecraftUnknown("equippable")
         registerMinecraftUnknown("repairable")
         registerMinecraft<Unit, net.minecraft.util.Unit>("glider", {}, { net.minecraft.util.Unit.INSTANCE })
-        registerMinecraft<Key, Identifier>("tooltip_style", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
+        registerMinecraft<Key, ResourceLocation>("tooltip_style", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
         registerMinecraftUnknown("death_protection")
         registerMinecraftUnknown("blocks_attacks")
         registerMinecraftUnknown("stored_enchantments")
-        registerMinecraft<Color, DyedColorComponent>("dyed_color", { Color(it.rgb) }, { DyedColorComponent(it.rgb) })
-        registerMinecraft<Color, MapColorComponent>("map_color", { Color(it.rgb) }, { MapColorComponent(it.rgb) })
-        registerMinecraft<Int, MapIdComponent>("map_id", { it.id }, { MapIdComponent(it) })
+        registerMinecraft<Color, DyedItemColor>("dyed_color", { Color(it.rgb) }, { DyedItemColor(it.rgb) })
+        registerMinecraft<Color, MapItemColor>("map_color", { Color(it.rgb) }, { MapItemColor(it.rgb) })
+        registerMinecraft<Int, MapId>("map_id", { it.id }, { MapId(it) })
         registerMinecraftUnknown("map_decorations")
         registerMinecraftUnknown("map_post_processing")
         registerMinecraftUnknown("charged_projectiles")
@@ -77,7 +75,7 @@ class SnowballItemComponentTypeRegistry {
         registerMinecraftUnknown("potion_contents")
         registerMinecraftDirect<Float>("potion_duration_scale")
         registerMinecraftUnknown("suspicious_stew_effects")
-        registerMinecraft<List<String>, WritableBookContentComponent>("writable_book_content", { it.pages.map { page -> page.raw } }, { WritableBookContentComponent(it.map { page -> RawFilteredPair(page, Optional.empty()) }) })
+        registerMinecraft<List<String>, WritableBookContent>("writable_book_content", { it.pages().map { page -> page.raw } }, { WritableBookContent(it.map { page -> Filterable(page, Optional.empty()) }) })
         registerMinecraftUnknown("written_book_content")
         registerMinecraftUnknown("trim")
         registerMinecraftUnknown("debug_stick_state")
@@ -86,7 +84,7 @@ class SnowballItemComponentTypeRegistry {
         registerMinecraftUnknown("block_entity_data")
         registerMinecraftUnknown("instrument")
         registerMinecraftUnknown("provides_trim_material")
-        registerMinecraft<Int, OminousBottleAmplifierComponent>("ominous_bottle_amplifier", { it.value }, { OminousBottleAmplifierComponent(it) })
+        registerMinecraft<Int, OminousBottleAmplifier>("ominous_bottle_amplifier", { it.value }, { OminousBottleAmplifier(it) })
         registerMinecraftUnknown("jukebox_playable")
         registerMinecraftUnknown("provides_banner_patterns")
         registerMinecraftUnknown("recipes")
@@ -94,13 +92,13 @@ class SnowballItemComponentTypeRegistry {
         registerMinecraftUnknown("firework_explosion")
         registerMinecraftUnknown("fireworks")
         registerMinecraftUnknown("profile")
-        registerMinecraft<Key, Identifier>("note_block_sound", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
+        registerMinecraft<Key, ResourceLocation>("note_block_sound", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
         registerMinecraftUnknown("banner_patterns")
         registerMinecraftUnknown("base_color")
         registerMinecraftUnknown("pot_decorations")
         registerMinecraftUnknown("container")
         // TODO: BlockStateItemComponent instead of raw map
-        registerMinecraft<Map<String, String>, BlockStateComponent>("block_state", { Collections.unmodifiableMap(it.properties) }, { BlockStateComponent(it.toMap()) })
+        registerMinecraft<Map<String, String>, BlockItemStateProperties>("block_state", { Collections.unmodifiableMap(it.properties) }, { BlockItemStateProperties(it.toMap()) })
         registerMinecraftUnknown("bees")
         registerMinecraftUnknown("lock")
         registerMinecraftUnknown("container_loot")
@@ -152,9 +150,9 @@ class SnowballItemComponentTypeRegistry {
     fun <T, V> register(key: Key, snowballMapper: (V) -> T, vanillaMapper: (T) -> V): ItemComponentTypeImpl<T, V> {
         if (entries.containsKey(key))
             throw IllegalArgumentException("An item component type with key '$key' is already registered")
-        val vanillaEntry = Registries.DATA_COMPONENT_TYPE.get(Conversions.Adventure.vanilla(key))
+        val vanilla = BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(Conversions.Adventure.vanilla(key))
             ?: throw IllegalArgumentException("An item component type with key '$key' is not registered in the vanilla registry")
-        val entry = ItemComponentTypeImpl(vanillaEntry as ComponentType<V>, snowballMapper, vanillaMapper)
+        val entry = ItemComponentTypeImpl(vanilla as DataComponentType<V>, snowballMapper, vanillaMapper)
         entries[key] = entry
         return entry
     }

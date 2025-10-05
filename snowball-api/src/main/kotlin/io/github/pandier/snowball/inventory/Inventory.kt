@@ -15,8 +15,6 @@ public interface Inventory : Iterable<ItemStack> {
 
     public fun remove(index: Int): ItemStack
 
-    public fun isValid(index: Int, stack: ItemStack): Boolean
-
     public fun count(type: ItemType): Int =
         sumOf { if (it.type == type) it.count else 0 }
 

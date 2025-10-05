@@ -18,9 +18,6 @@ open class ProxyInventory(
     override fun set(index: Int, stack: ItemStack) =
         proxied.set(index + offset, stack)
 
-    override fun isValid(index: Int, stack: ItemStack): Boolean =
-        proxied.isValid(index + offset, stack)
-
     override fun clear() {
         for (i in 0 until size) {
             proxied.remove(i + offset)

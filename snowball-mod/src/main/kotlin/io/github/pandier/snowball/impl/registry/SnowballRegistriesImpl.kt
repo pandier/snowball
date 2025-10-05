@@ -7,8 +7,8 @@ import io.github.pandier.snowball.registry.RegistryReference
 import io.github.pandier.snowball.registry.SnowballRegistries
 import io.github.pandier.snowball.world.block.BlockType
 import net.kyori.adventure.key.Key
-import net.minecraft.registry.Registries
-import net.minecraft.registry.Registry
+import net.minecraft.core.Registry
+import net.minecraft.core.registries.BuiltInRegistries
 
 class SnowballRegistriesImpl : SnowballRegistries {
     val itemComponentTypes = SnowballItemComponentTypeRegistry().registerDefaults()
@@ -20,16 +20,16 @@ class SnowballRegistriesImpl : SnowballRegistries {
     }
 
     override fun itemType(key: Key): RegistryReference<ItemType> {
-        return ref(Registries.ITEM, key) { Conversions.snowball(it) }
+        return ref(BuiltInRegistries.ITEM, key) { Conversions.snowball(it) }
     }
 
     override fun blockType(key: Key): RegistryReference<BlockType> {
-        return ref(Registries.BLOCK, key) { Conversions.snowball(it) }
+        return ref(BuiltInRegistries.BLOCK, key) { Conversions.snowball(it) }
     }
 
     private fun <T, V> ref(registry: Registry<T>, key: Key, transformer: (T) -> V): RegistryReference<V> {
-        val entry = registry.getEntry(Conversions.Adventure.vanilla(key))
-            .orElseThrow { IllegalArgumentException("Unknown entry '$key' for registry '${registry.key}'") }
+        val entry = registry.get(Conversions.Adventure.vanilla(key))
+            .orElseThrow { IllegalArgumentException("Unknown entry '$key' for registry '${registry.key()}'") }
         return RegistryReference { transformer(entry.value()) }
     }
 }
