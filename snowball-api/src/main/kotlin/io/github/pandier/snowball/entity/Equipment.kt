@@ -1,4 +1,4 @@
-package io.github.pandier.snowball.inventory
+package io.github.pandier.snowball.entity
 
 import io.github.pandier.snowball.item.ItemStack
 

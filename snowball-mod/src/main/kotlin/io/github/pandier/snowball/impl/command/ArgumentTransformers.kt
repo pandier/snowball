@@ -27,7 +27,7 @@ import io.github.pandier.snowball.command.type.Vector3fArgumentType
 import io.github.pandier.snowball.command.type.Vector3iArgumentType
 import io.github.pandier.snowball.command.type.WordArgumentType
 import io.github.pandier.snowball.entity.Entity
-import io.github.pandier.snowball.entity.Player
+import io.github.pandier.snowball.entity.player.Player
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.math.Vector2d
 import io.github.pandier.snowball.math.Vector2f

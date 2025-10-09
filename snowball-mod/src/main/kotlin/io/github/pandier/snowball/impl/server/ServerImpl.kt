@@ -2,7 +2,7 @@ package io.github.pandier.snowball.impl.server
 
 import com.google.common.collect.Collections2
 import com.google.common.collect.Iterables
-import io.github.pandier.snowball.entity.Player
+import io.github.pandier.snowball.entity.player.Player
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.adapter.SnowballAdapter
 import io.github.pandier.snowball.impl.scheduler.SchedulerImpl

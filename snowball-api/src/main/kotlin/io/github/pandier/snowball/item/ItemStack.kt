@@ -21,6 +21,10 @@ public interface ItemStack : ItemStackView {
 
     public fun <T> set(type: ItemComponentType<T>, value: T?): T?
 
+    public fun set(type: ItemComponentType<Unit>): Unit? {
+        return set(type, Unit)
+    }
+
     public fun <T> reset(type: ItemComponentType<out T>): T?
 
     public fun <T> remove(type: ItemComponentType<out T>): T?

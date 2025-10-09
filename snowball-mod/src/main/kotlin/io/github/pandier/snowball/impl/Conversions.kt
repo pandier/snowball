@@ -1,13 +1,15 @@
 package io.github.pandier.snowball.impl
 
 import io.github.pandier.snowball.entity.Entity
-import io.github.pandier.snowball.entity.Player
+import io.github.pandier.snowball.entity.player.GameMode
+import io.github.pandier.snowball.entity.player.Player
 import io.github.pandier.snowball.impl.adventure.AdventureText
 import io.github.pandier.snowball.impl.adventure.VanillaComponentSerializer
 import io.github.pandier.snowball.impl.bridge.SnowballConvertible
 import io.github.pandier.snowball.impl.entity.EntityImpl
 import io.github.pandier.snowball.impl.item.ItemStackImpl
-import io.github.pandier.snowball.inventory.EquipmentSlot
+import io.github.pandier.snowball.entity.EquipmentSlot
+import io.github.pandier.snowball.entity.player.Hand
 import io.github.pandier.snowball.inventory.Inventory
 import io.github.pandier.snowball.item.ItemComponentType
 import io.github.pandier.snowball.item.ItemRarity
@@ -37,13 +39,39 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.Container
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Rarity
+import net.minecraft.world.level.GameType
 import net.minecraft.world.level.block.Block
 import java.time.Duration
 import java.util.Optional
 
 object Conversions {
+    fun snowball(gameMode: GameType): GameMode = when (gameMode) {
+        GameType.SURVIVAL -> GameMode.SURVIVAL
+        GameType.CREATIVE -> GameMode.CREATIVE
+        GameType.ADVENTURE -> GameMode.ADVENTURE
+        GameType.SPECTATOR -> GameMode.SPECTATOR
+    }
+
+    fun vanilla(gameMode: GameMode): GameType = when (gameMode) {
+        GameMode.SURVIVAL -> GameType.SURVIVAL
+        GameMode.CREATIVE -> GameType.CREATIVE
+        GameMode.ADVENTURE -> GameType.ADVENTURE
+        GameMode.SPECTATOR -> GameType.SPECTATOR
+    }
+
+    fun snowball(hand: InteractionHand): Hand = when (hand) {
+        InteractionHand.MAIN_HAND -> Hand.MAIN
+        InteractionHand.OFF_HAND -> Hand.OFF
+    }
+
+    fun vanilla(hand: Hand): InteractionHand = when (hand) {
+        Hand.MAIN -> InteractionHand.MAIN_HAND
+        Hand.OFF -> InteractionHand.OFF_HAND
+    }
+
     fun snowball(gameProfile: com.mojang.authlib.GameProfile): GameProfile =
         GameProfile(gameProfile.id, gameProfile.name, gameProfile.properties.values().map(::snowball))
 

@@ -20,4 +20,6 @@ public interface Entity : Sound.Emitter {
     public val isRemoved: Boolean
     public val isAlive: Boolean
     public val isDead: Boolean
+
+    public fun teleport(world: World, location: Location): Boolean
 }

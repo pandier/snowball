@@ -1,7 +1,7 @@
 package io.github.pandier.snowball.command
 
 import io.github.pandier.snowball.entity.Entity
-import io.github.pandier.snowball.entity.Player
+import io.github.pandier.snowball.entity.player.Player
 import io.github.pandier.snowball.math.Vector2f
 import io.github.pandier.snowball.math.Vector3d
 import io.github.pandier.snowball.world.World

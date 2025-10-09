@@ -1,6 +1,7 @@
 package io.github.pandier.snowball.impl.entity
 
-import io.github.pandier.snowball.entity.Player
+import io.github.pandier.snowball.entity.player.GameMode
+import io.github.pandier.snowball.entity.player.Player
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.inventory.PlayerInventoryImpl
 import io.github.pandier.snowball.inventory.PlayerInventory
@@ -35,6 +36,12 @@ open class PlayerImpl(
 
     override val gameProfile: GameProfile
         get() = Conversions.snowball(adaptee.gameProfile)
+
+    override var gameMode: GameMode
+        get() = adaptee.gameMode().let(Conversions::snowball)
+        set(value) {
+            adaptee.setGameMode(value.let(Conversions::vanilla))
+        }
 
 //    override var rotation: Vector2f
 //        get() = super.rotation

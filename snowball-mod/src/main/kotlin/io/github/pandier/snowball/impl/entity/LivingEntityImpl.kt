@@ -5,8 +5,8 @@ import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.inventory.EquipmentImpl
 import io.github.pandier.snowball.impl.item.ItemStackImpl
 import io.github.pandier.snowball.impl.mixin.LivingEntityAccessor
-import io.github.pandier.snowball.inventory.Equipment
-import io.github.pandier.snowball.inventory.EquipmentSlot
+import io.github.pandier.snowball.entity.Equipment
+import io.github.pandier.snowball.entity.EquipmentSlot
 import io.github.pandier.snowball.item.ItemStack
 
 open class LivingEntityImpl(

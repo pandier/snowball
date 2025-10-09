@@ -1,9 +1,9 @@
 package io.github.pandier.snowball.impl.mixin;
 
-import io.github.pandier.snowball.entity.Player;
+import io.github.pandier.snowball.Snowball;
+import io.github.pandier.snowball.entity.player.Player;
 import io.github.pandier.snowball.event.player.PlayerPrepareEvent;
 import io.github.pandier.snowball.impl.Conversions;
-import io.github.pandier.snowball.impl.SnowballImpl;
 import io.github.pandier.snowball.impl.bridge.ServerPlayerBridge;
 import io.github.pandier.snowball.impl.world.WorldImpl;
 import io.github.pandier.snowball.math.Location;
@@ -35,7 +35,7 @@ public class PlayerListMixin {
         final Location originalLocation = player.getLocation();
 
         final PlayerPrepareEvent event = new PlayerPrepareEvent(player.getGameProfile(), originalWorld, player.getLocation());
-        SnowballImpl.INSTANCE.getEventManager().dispatch(event);
+        Snowball.getEventManager().dispatch(event);
 
         final Location location = event.getLocation();
         final World world = event.getWorld();

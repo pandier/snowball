@@ -3,8 +3,8 @@ package io.github.pandier.snowball.impl.inventory
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.adapter.SnowballAdapter
 import io.github.pandier.snowball.impl.item.ItemStackImpl
-import io.github.pandier.snowball.inventory.Equipment
-import io.github.pandier.snowball.inventory.EquipmentSlot
+import io.github.pandier.snowball.entity.Equipment
+import io.github.pandier.snowball.entity.EquipmentSlot
 import io.github.pandier.snowball.item.ItemStack
 import net.minecraft.world.entity.EntityEquipment
 

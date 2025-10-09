@@ -3,7 +3,7 @@ package io.github.pandier.snowball.impl.inventory
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.item.ItemStackImpl
 import io.github.pandier.snowball.impl.mixin.InventoryAccessor
-import io.github.pandier.snowball.inventory.EquipmentSlot
+import io.github.pandier.snowball.entity.EquipmentSlot
 import io.github.pandier.snowball.inventory.Hotbar
 import io.github.pandier.snowball.inventory.Inventory
 import io.github.pandier.snowball.inventory.PlayerInventory

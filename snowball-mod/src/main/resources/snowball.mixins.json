@@ -4,22 +4,24 @@
   "package": "io.github.pandier.snowball.impl.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "BlockItemMixin",
     "BlockMixin",
     "BlockStateMixin",
-    "EntityMixin",
     "ContainerMixin",
+    "EntityMixin",
+    "InventoryAccessor",
+    "InventoryMixin",
     "ItemMixin",
     "ItemStackMixin",
     "LivingEntityAccessor",
     "LivingEntityMixin",
-    "PatchedDataComponentMapMixin",
     "MinecraftServerMixin",
-    "InventoryAccessor",
-    "InventoryMixin",
+    "PatchedDataComponentMapMixin",
     "PlayerListMixin",
-    "ServerPlayerMixin",
     "ServerGamePacketListenerImplMixin",
-    "ServerLevelMixin"
+    "ServerLevelMixin",
+    "ServerPlayerGameModeMixin",
+    "ServerPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

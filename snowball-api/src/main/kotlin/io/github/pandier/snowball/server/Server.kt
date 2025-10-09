@@ -1,6 +1,6 @@
 package io.github.pandier.snowball.server
 
-import io.github.pandier.snowball.entity.Player
+import io.github.pandier.snowball.entity.player.Player
 import io.github.pandier.snowball.scheduler.Scheduler
 import io.github.pandier.snowball.world.World
 import net.kyori.adventure.audience.Audience

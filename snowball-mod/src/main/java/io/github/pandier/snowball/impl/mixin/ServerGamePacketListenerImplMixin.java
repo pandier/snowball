@@ -1,6 +1,7 @@
 package io.github.pandier.snowball.impl.mixin;
 
-import io.github.pandier.snowball.entity.Player;
+import io.github.pandier.snowball.Snowball;
+import io.github.pandier.snowball.entity.player.Player;
 import io.github.pandier.snowball.event.player.PlayerLeaveEvent;
 import io.github.pandier.snowball.impl.Conversions;
 import io.github.pandier.snowball.impl.SnowballImpl;
@@ -25,7 +26,7 @@ public class ServerGamePacketListenerImplMixin {
         final Component originalMessage = Conversions.Adventure.INSTANCE.adventure(vMessage);
 
         final PlayerLeaveEvent event = new PlayerLeaveEvent(player, originalMessage, SnowballImpl.INSTANCE.getServer());
-        SnowballImpl.INSTANCE.getEventManager().dispatch(event);
+        Snowball.getEventManager().dispatch(event);
 
         final Component message = event.getMessage();
         if (message != null) {

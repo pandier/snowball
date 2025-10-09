@@ -1,5 +1,6 @@
 package io.github.pandier.snowball.inventory
 
+import io.github.pandier.snowball.entity.EquipmentSlot
 import io.github.pandier.snowball.item.ItemStack
 
 public interface PlayerInventory : Inventory {

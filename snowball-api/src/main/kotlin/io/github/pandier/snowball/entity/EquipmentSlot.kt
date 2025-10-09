@@ -1,4 +1,4 @@
-package io.github.pandier.snowball.inventory
+package io.github.pandier.snowball.entity
 
 public enum class EquipmentSlot {
     MAIN_HAND,

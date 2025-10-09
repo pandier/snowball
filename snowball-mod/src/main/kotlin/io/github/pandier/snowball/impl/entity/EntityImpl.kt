@@ -3,6 +3,7 @@ package io.github.pandier.snowball.impl.entity
 import io.github.pandier.snowball.entity.Entity
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.adapter.SnowballAdapter
+import io.github.pandier.snowball.impl.world.WorldImpl
 import io.github.pandier.snowball.math.Location
 import io.github.pandier.snowball.math.Vector2f
 import io.github.pandier.snowball.math.Vector3d
@@ -43,4 +44,10 @@ open class EntityImpl(
         get() = adaptee.isAlive
     override val isDead: Boolean
         get() = !isAlive
+
+    override fun teleport(world: World, location: Location): Boolean {
+        return adaptee.teleportTo((world as WorldImpl).adaptee,
+            location.position.x, location.position.y, location.position.z,
+            setOf(), location.yaw, location.pitch, false)
+    }
 }

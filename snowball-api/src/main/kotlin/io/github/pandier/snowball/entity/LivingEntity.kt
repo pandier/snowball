@@ -1,7 +1,5 @@
 package io.github.pandier.snowball.entity
 
-import io.github.pandier.snowball.inventory.Equipment
-import io.github.pandier.snowball.inventory.EquipmentSlot
 import io.github.pandier.snowball.item.ItemStack
 
 public interface LivingEntity : Entity {

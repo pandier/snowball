@@ -1,5 +1,6 @@
 package io.github.pandier.snowball.impl.fabric
 
+import io.github.pandier.snowball.Snowball
 import io.github.pandier.snowball.event.player.PlayerJoinEvent
 import io.github.pandier.snowball.event.server.CommandRegisterEvent
 import io.github.pandier.snowball.event.server.ServerStartedEvent
@@ -24,11 +25,11 @@ object FabricListeners {
             @Suppress("UNCHECKED_CAST")
             val server = (it as SnowballConvertible<ServerImpl>).`snowball$get`()
             SnowballImpl.server = server
-            SnowballImpl.eventManager.dispatch(ServerStartingEvent(server))
+            Snowball.eventManager.dispatch(ServerStartingEvent(server))
         }
 
         ServerLifecycleEvents.SERVER_STARTED.register {
-            SnowballImpl.eventManager.dispatch(ServerStartedEvent(Conversions.snowball(it)))
+            Snowball.eventManager.dispatch(ServerStartedEvent(Conversions.snowball(it)))
         }
 
         ServerTickEvents.START_SERVER_TICK.register {
@@ -39,7 +40,7 @@ object FabricListeners {
 
         CommandRegistrationCallback.EVENT.register { dispatcher, registryAccess, _ ->
             val transformer = CommandTransformer(registryAccess)
-            SnowballImpl.eventManager.dispatch(CommandRegisterEvent {
+            Snowball.eventManager.dispatch(CommandRegisterEvent {
                 dispatcher.register(transformer.transform(it))
             })
         }
@@ -54,7 +55,7 @@ object FabricListeners {
             (vPlayer as ServerPlayerBridge).`snowball$setJoinMessage`(null)
 
             val event = PlayerJoinEvent(player, originalMessage, SnowballImpl.server)
-            SnowballImpl.eventManager.dispatch(event)
+            Snowball.eventManager.dispatch(event)
 
             event.message?.let { message ->
                 event.audience.sendMessage(message)
