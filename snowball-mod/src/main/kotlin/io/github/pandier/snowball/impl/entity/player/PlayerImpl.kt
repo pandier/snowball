@@ -5,7 +5,10 @@ import io.github.pandier.snowball.entity.player.Player
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.entity.LivingEntityImpl
 import io.github.pandier.snowball.impl.inventory.PlayerInventoryImpl
+import io.github.pandier.snowball.impl.item.ItemStackImpl
 import io.github.pandier.snowball.inventory.PlayerInventory
+import io.github.pandier.snowball.item.ItemStack
+import io.github.pandier.snowball.item.ItemStackView
 import io.github.pandier.snowball.profile.GameProfile
 import net.kyori.adventure.audience.MessageType
 import net.kyori.adventure.chat.ChatType
@@ -18,15 +21,12 @@ import net.kyori.adventure.title.Title
 import net.kyori.adventure.title.TitlePart
 import net.minecraft.core.Holder
 import net.minecraft.network.chat.OutgoingChatMessage
-import net.minecraft.network.protocol.game.ClientboundClearTitlesPacket
-import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket
-import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket
-import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket
-import net.minecraft.network.protocol.game.ClientboundSoundEntityPacket
-import net.minecraft.network.protocol.game.ClientboundSoundPacket
-import net.minecraft.network.protocol.game.ClientboundStopSoundPacket
+import net.minecraft.network.protocol.game.*
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.entity.item.ItemEntity
 
 // TODO: Fully implement Audience
 open class PlayerImpl(
@@ -53,6 +53,29 @@ open class PlayerImpl(
 //        }
 
     override val inventory: PlayerInventory = PlayerInventoryImpl(adaptee.inventory)
+
+    override fun give(stack: ItemStack, silent: Boolean): Int {
+        val amount = inventory.insert(stack)
+        if (amount > 0 && !silent) {
+            adaptee.level().playSound(null, adaptee.x, adaptee.y, adaptee.z,
+                    SoundEvents.ITEM_PICKUP,  SoundSource.PLAYERS, 0.2f,
+                    ((adaptee.random.nextFloat() - adaptee.random.nextFloat()) * 0.7f + 1.0f) * 2.0f)
+        }
+        return amount
+    }
+
+    override fun giveOrDrop(stack: ItemStackView, silent: Boolean) {
+        val stack = stack.copy()
+        give(stack, silent)
+
+        if (stack.isEmpty()) return
+
+        val itemEntity = adaptee.drop((stack as ItemStackImpl).adaptee, false)
+        if (itemEntity != null) {
+            itemEntity.setNoPickUpDelay()
+            itemEntity.setTarget(adaptee.uuid)
+        }
+    }
 
     override fun sendMessage(message: Component) {
         adaptee.sendSystemMessage(Conversions.Adventure.vanilla(message))

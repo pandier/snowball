@@ -75,7 +75,7 @@ public interface DamageSource {
     public val directEntity: Entity?
 
     /**
-     * The position of the source of the damage.
+     * The position of the damage source.
      *
      * Used for knockback, for example.
      */
