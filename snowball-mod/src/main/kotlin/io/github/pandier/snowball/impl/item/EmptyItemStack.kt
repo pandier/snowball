@@ -13,7 +13,7 @@ internal object EmptyItemStack : ItemStackImpl(net.minecraft.world.item.ItemStac
         set(value) {}
 
     override val type: ItemType
-        get() = ItemTypes.AIR
+        get() = ItemTypes.AIR.get()
 
     override fun <T> set(type: ItemComponentType<T>, value: T?): T? {
         return null

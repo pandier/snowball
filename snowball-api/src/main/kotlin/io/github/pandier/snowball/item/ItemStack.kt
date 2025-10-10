@@ -1,6 +1,7 @@
 package io.github.pandier.snowball.item
 
 import io.github.pandier.snowball.Snowball
+import java.util.function.Supplier
 
 public interface ItemStack : ItemStackView {
     public companion object {
@@ -9,12 +10,20 @@ public interface ItemStack : ItemStackView {
             Snowball.factories.emptyItemStack()
 
         @JvmStatic
-        public fun of(type: ItemType, count: Int): ItemStack =
-            Snowball.factories.itemStack(type, count)
+        public fun of(type: Supplier<ItemType>): ItemStack =
+            of(type.get())
 
         @JvmStatic
         public fun of(type: ItemType): ItemStack =
             Snowball.factories.itemStack(type, 1)
+
+        @JvmStatic
+        public fun of(type: Supplier<ItemType>, count: Int): ItemStack =
+            of(type.get(), count)
+
+        @JvmStatic
+        public fun of(type: ItemType, count: Int): ItemStack =
+            Snowball.factories.itemStack(type, count)
     }
 
     public override var count: Int
