@@ -2,7 +2,7 @@ package io.github.pandier.snowball.impl.mixin;
 
 import io.github.pandier.snowball.Snowball;
 import io.github.pandier.snowball.entity.player.Player;
-import io.github.pandier.snowball.event.player.PlayerPrepareEvent;
+import io.github.pandier.snowball.event.entity.player.PlayerPrepareEvent;
 import io.github.pandier.snowball.impl.Conversions;
 import io.github.pandier.snowball.impl.bridge.ServerPlayerBridge;
 import io.github.pandier.snowball.impl.world.WorldImpl;

@@ -9,7 +9,7 @@ class TaskImpl(
     var nextTick: Long,
 ) : Task {
     @Volatile
-    override var cancelled: Boolean = false
+    override var canceled: Boolean = false
         private set
 
     fun execute() {
@@ -17,6 +17,6 @@ class TaskImpl(
     }
 
     override fun cancel() {
-        cancelled = true
+        canceled = true
     }
 }

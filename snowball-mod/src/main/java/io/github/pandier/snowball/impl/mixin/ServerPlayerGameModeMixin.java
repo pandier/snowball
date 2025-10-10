@@ -5,9 +5,9 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import io.github.pandier.snowball.Snowball;
 import io.github.pandier.snowball.entity.player.Player;
-import io.github.pandier.snowball.event.player.PlayerBlockBreakEvent;
+import io.github.pandier.snowball.event.entity.player.PlayerBlockBreakEvent;
 import io.github.pandier.snowball.impl.Conversions;
-import io.github.pandier.snowball.impl.event.player.PlayerBlockBreakEventImpl;
+import io.github.pandier.snowball.impl.event.entity.player.PlayerBlockBreakEventImpl;
 import io.github.pandier.snowball.math.Vector3i;
 import io.github.pandier.snowball.world.World;
 import io.github.pandier.snowball.world.block.BlockState;
@@ -44,7 +44,7 @@ public class ServerPlayerGameModeMixin {
         PlayerBlockBreakEvent.Allow allow = new PlayerBlockBreakEventImpl.Allow(player, world, position, blockState);
         Snowball.getEventManager().dispatch(allow);
 
-        if (!allow.isAllowed()) {
+        if (!allow.getAllowed()) {
             PlayerBlockBreakEvent.Canceled canceled = new PlayerBlockBreakEventImpl.Canceled(player, world, position, blockState);
             Snowball.getEventManager().dispatch(canceled);
 

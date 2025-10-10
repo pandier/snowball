@@ -2,7 +2,7 @@ package io.github.pandier.snowball.impl.mixin;
 
 import io.github.pandier.snowball.Snowball;
 import io.github.pandier.snowball.entity.player.Player;
-import io.github.pandier.snowball.event.player.PlayerLeaveEvent;
+import io.github.pandier.snowball.event.entity.player.PlayerLeaveEvent;
 import io.github.pandier.snowball.impl.Conversions;
 import io.github.pandier.snowball.impl.SnowballImpl;
 import net.kyori.adventure.text.Component;

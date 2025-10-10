@@ -9,7 +9,12 @@ import io.github.pandier.snowball.impl.bridge.SnowballConvertible
 import io.github.pandier.snowball.impl.entity.EntityImpl
 import io.github.pandier.snowball.impl.item.ItemStackImpl
 import io.github.pandier.snowball.entity.EquipmentSlot
+import io.github.pandier.snowball.entity.LivingEntity
+import io.github.pandier.snowball.entity.damage.DamageSource
+import io.github.pandier.snowball.entity.damage.DamageType
 import io.github.pandier.snowball.entity.player.Hand
+import io.github.pandier.snowball.impl.entity.damage.DamageSourceImpl
+import io.github.pandier.snowball.impl.inventory.InventoryImpl
 import io.github.pandier.snowball.inventory.Inventory
 import io.github.pandier.snowball.item.ItemComponentType
 import io.github.pandier.snowball.item.ItemRarity
@@ -135,8 +140,11 @@ object Conversions {
 
     fun snowball(type: DataComponentType<*>): ItemComponentType<*> = SnowballImpl.registries.itemComponentType(type)
     fun snowball(stack: net.minecraft.world.item.ItemStack): ItemStack = ItemStackImpl(stack)
-    fun snowball(container: Container): Inventory = convertible(container)
+    fun snowball(container: Container): Inventory = InventoryImpl(container)
+    fun snowball(source: net.minecraft.world.damagesource.DamageSource): DamageSource = DamageSourceImpl(source)
+    fun snowball(type: net.minecraft.world.damagesource.DamageType): DamageType = convertible(type)
     fun snowball(entity: net.minecraft.world.entity.Entity): Entity = convertible(entity)
+    fun snowball(entity: net.minecraft.world.entity.LivingEntity): LivingEntity = convertible(entity)
     fun snowball(player: ServerPlayer): Player = convertible(player)
     fun snowball(level: ServerLevel): World = convertible(level)
     fun snowball(block: Block): BlockType = convertible(block)

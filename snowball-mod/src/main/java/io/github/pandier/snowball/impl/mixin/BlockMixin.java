@@ -3,7 +3,7 @@ package io.github.pandier.snowball.impl.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import io.github.pandier.snowball.impl.adapter.SnowballAdapterHolder;
 import io.github.pandier.snowball.impl.bridge.SnowballConvertible;
-import io.github.pandier.snowball.impl.event.player.PlayerBlockBreakEventImpl;
+import io.github.pandier.snowball.impl.event.entity.player.PlayerBlockBreakEventImpl;
 import io.github.pandier.snowball.impl.world.block.BlockTypeImpl;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;

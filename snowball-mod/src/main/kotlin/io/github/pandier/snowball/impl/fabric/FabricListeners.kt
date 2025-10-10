@@ -1,7 +1,7 @@
 package io.github.pandier.snowball.impl.fabric
 
 import io.github.pandier.snowball.Snowball
-import io.github.pandier.snowball.event.player.PlayerJoinEvent
+import io.github.pandier.snowball.event.entity.player.PlayerJoinEvent
 import io.github.pandier.snowball.event.server.CommandRegisterEvent
 import io.github.pandier.snowball.event.server.ServerStartedEvent
 import io.github.pandier.snowball.event.server.ServerStartingEvent

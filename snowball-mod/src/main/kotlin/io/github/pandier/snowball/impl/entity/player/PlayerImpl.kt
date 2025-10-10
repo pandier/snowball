@@ -1,8 +1,9 @@
-package io.github.pandier.snowball.impl.entity
+package io.github.pandier.snowball.impl.entity.player
 
 import io.github.pandier.snowball.entity.player.GameMode
 import io.github.pandier.snowball.entity.player.Player
 import io.github.pandier.snowball.impl.Conversions
+import io.github.pandier.snowball.impl.entity.LivingEntityImpl
 import io.github.pandier.snowball.impl.inventory.PlayerInventoryImpl
 import io.github.pandier.snowball.inventory.PlayerInventory
 import io.github.pandier.snowball.profile.GameProfile
@@ -81,14 +82,22 @@ open class PlayerImpl(
     override fun <T> sendTitlePart(part: TitlePart<T?>, value: T & Any) {
         when (part) {
             TitlePart.TITLE -> adaptee.connection.send(ClientboundSetTitleTextPacket(Conversions.Adventure.vanilla(value as Component)))
-            TitlePart.SUBTITLE -> adaptee.connection.send(ClientboundSetSubtitleTextPacket(Conversions.Adventure.vanilla(value as Component)))
+            TitlePart.SUBTITLE -> adaptee.connection.send(
+                ClientboundSetSubtitleTextPacket(
+                    Conversions.Adventure.vanilla(
+                        value as Component
+                    )
+                )
+            )
             TitlePart.TIMES -> {
                 val times = value as Title.Times
-                adaptee.connection.send(ClientboundSetTitlesAnimationPacket(
-                    Conversions.Adventure.toTicks(times.fadeIn()).toInt(),
-                    Conversions.Adventure.toTicks(times.stay()).toInt(),
-                    Conversions.Adventure.toTicks(times.fadeOut()).toInt(),
-                ))
+                adaptee.connection.send(
+                    ClientboundSetTitlesAnimationPacket(
+                        Conversions.Adventure.toTicks(times.fadeIn()).toInt(),
+                        Conversions.Adventure.toTicks(times.stay()).toInt(),
+                        Conversions.Adventure.toTicks(times.fadeOut()).toInt(),
+                    )
+                )
             }
         }
     }
@@ -107,18 +116,38 @@ open class PlayerImpl(
 
     override fun playSound(sound: Sound, x: Double, y: Double, z: Double) {
         val entry = Holder.direct(SoundEvent.createVariableRangeEvent(Conversions.Adventure.vanilla(sound.name())))
-        adaptee.connection.send(ClientboundSoundPacket(entry, Conversions.Adventure.vanilla(sound.source()),
-            adaptee.x, adaptee.y, adaptee.z, sound.volume(), sound.pitch(), sound.seed().orElseGet { adaptee.random.nextLong() }))
+        adaptee.connection.send(
+            ClientboundSoundPacket(
+                entry,
+                Conversions.Adventure.vanilla(sound.source()),
+                adaptee.x,
+                adaptee.y,
+                adaptee.z,
+                sound.volume(),
+                sound.pitch(),
+                sound.seed().orElseGet { adaptee.random.nextLong() })
+        )
     }
 
     override fun playSound(sound: Sound, emitter: Sound.Emitter) {
         val entry = Holder.direct(SoundEvent.createVariableRangeEvent(Conversions.Adventure.vanilla(sound.name())))
-        adaptee.connection.send(ClientboundSoundEntityPacket(entry, Conversions.Adventure.vanilla(sound.source()),
-            Conversions.Adventure.vanilla(emitter, adaptee), sound.volume(), sound.pitch(), sound.seed().orElseGet { adaptee.random.nextLong() }))
+        adaptee.connection.send(
+            ClientboundSoundEntityPacket(
+                entry,
+                Conversions.Adventure.vanilla(sound.source()),
+                Conversions.Adventure.vanilla(emitter, adaptee),
+                sound.volume(),
+                sound.pitch(),
+                sound.seed().orElseGet { adaptee.random.nextLong() })
+        )
     }
 
     override fun stopSound(stop: SoundStop) {
-        adaptee.connection.send(ClientboundStopSoundPacket(stop.sound()?.let(Conversions.Adventure::vanilla),
-            stop.source()?.let(Conversions.Adventure::vanilla)))
+        adaptee.connection.send(
+            ClientboundStopSoundPacket(
+                stop.sound()?.let(Conversions.Adventure::vanilla),
+                stop.source()?.let(Conversions.Adventure::vanilla)
+            )
+        )
     }
 }

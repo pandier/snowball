@@ -1,7 +1,7 @@
-package io.github.pandier.snowball.impl.event.player
+package io.github.pandier.snowball.impl.event.entity.player
 
 import io.github.pandier.snowball.entity.player.Player
-import io.github.pandier.snowball.event.player.PlayerBlockBreakEvent
+import io.github.pandier.snowball.event.entity.player.PlayerBlockBreakEvent
 import io.github.pandier.snowball.impl.event.ActionEventImpl
 import io.github.pandier.snowball.impl.event.AllowEventImpl
 import io.github.pandier.snowball.math.Vector3i

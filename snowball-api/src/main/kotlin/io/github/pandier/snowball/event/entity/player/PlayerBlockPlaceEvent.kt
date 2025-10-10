@@ -1,4 +1,4 @@
-package io.github.pandier.snowball.event.player
+package io.github.pandier.snowball.event.entity.player
 
 import io.github.pandier.snowball.entity.player.Hand
 import io.github.pandier.snowball.entity.player.Player

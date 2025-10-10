@@ -6,6 +6,7 @@ import io.github.pandier.snowball.event.Event
 import io.github.pandier.snowball.event.EventManager
 import io.github.pandier.snowball.event.Listener
 import org.apache.logging.log4j.LogManager
+import java.lang.reflect.InvocationTargetException
 import java.util.function.Consumer
 
 private val logger = LogManager.getLogger()
@@ -33,7 +34,11 @@ class EventManagerImpl : EventManager {
                 }
 
                 val registeredListener = RegisteredListener(eventType) {
-                    method.invoke(container, it)
+                    try {
+                        method.invoke(container, it)
+                    } catch (ex: InvocationTargetException) {
+                        ex.cause?.let { cause -> throw cause }
+                    }
                 }
 
                 containers.put(container, registeredListener)

@@ -7,9 +7,9 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import io.github.pandier.snowball.Snowball;
 import io.github.pandier.snowball.entity.player.Hand;
 import io.github.pandier.snowball.entity.player.Player;
-import io.github.pandier.snowball.event.player.PlayerBlockPlaceEvent;
+import io.github.pandier.snowball.event.entity.player.PlayerBlockPlaceEvent;
 import io.github.pandier.snowball.impl.Conversions;
-import io.github.pandier.snowball.impl.event.player.PlayerBlockPlaceEventImpl;
+import io.github.pandier.snowball.impl.event.entity.player.PlayerBlockPlaceEventImpl;
 import io.github.pandier.snowball.impl.world.block.BlockStateImpl;
 import io.github.pandier.snowball.item.ItemStack;
 import io.github.pandier.snowball.math.Vector3i;
@@ -49,7 +49,7 @@ public class BlockItemMixin {
         PlayerBlockPlaceEvent.Allow allow = new PlayerBlockPlaceEventImpl.Allow(player, world, position, blockState, itemStack, hand);
         Snowball.getEventManager().dispatch(allow);
 
-        if (!allow.isAllowed()) {
+        if (!allow.getAllowed()) {
             PlayerBlockPlaceEvent.Canceled canceled = new PlayerBlockPlaceEventImpl.Canceled(player, world, position, blockState, itemStack, hand);
             Snowball.getEventManager().dispatch(canceled);
 

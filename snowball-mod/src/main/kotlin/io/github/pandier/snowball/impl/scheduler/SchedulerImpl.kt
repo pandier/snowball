@@ -35,7 +35,7 @@ class SchedulerImpl : Scheduler {
     }
 
     private fun tickTask(task: TaskImpl): Boolean {
-        if (task.cancelled) {
+        if (task.canceled) {
             return true
         }
 
@@ -50,7 +50,7 @@ class SchedulerImpl : Scheduler {
             }
 
             // If the task is repeating and not cancelled, set the next tick.
-            if (!task.cancelled && task.interval > 0) {
+            if (!task.canceled && task.interval > 0) {
                 task.nextTick = tick + task.interval
             } else {
                 return true

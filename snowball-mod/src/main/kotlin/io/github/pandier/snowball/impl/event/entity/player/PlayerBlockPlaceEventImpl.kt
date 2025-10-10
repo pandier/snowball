@@ -1,8 +1,8 @@
-package io.github.pandier.snowball.impl.event.player
+package io.github.pandier.snowball.impl.event.entity.player
 
 import io.github.pandier.snowball.entity.player.Hand
 import io.github.pandier.snowball.entity.player.Player
-import io.github.pandier.snowball.event.player.PlayerBlockPlaceEvent
+import io.github.pandier.snowball.event.entity.player.PlayerBlockPlaceEvent
 import io.github.pandier.snowball.impl.event.ActionEventImpl
 import io.github.pandier.snowball.impl.event.AllowEventImpl
 import io.github.pandier.snowball.item.ItemStack
