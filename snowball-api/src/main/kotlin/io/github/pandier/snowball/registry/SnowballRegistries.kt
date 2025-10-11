@@ -13,7 +13,8 @@ public interface SnowballRegistries {
     public fun blockType(key: Key): RegistryReference<BlockType>
     public fun blockType(entry: BlockType): RegistryReference<BlockType>
 
-    public fun <T> itemComponentType(key: Key): ItemComponentType<T>
+    public fun itemComponentType(key: Key): ItemComponentType<*>
+    public fun <T> itemComponentType(key: Key, type: Class<T>): ItemComponentType<T>
 
     public fun damageType(key: Key): RegistryReference<DamageType>
     public fun damageType(entry: DamageType): RegistryReference<DamageType>

@@ -6,6 +6,7 @@ import net.minecraft.core.component.DataComponentType
 
 class ItemComponentTypeImpl<T, V>(
     override val adaptee: DataComponentType<V>,
+    val type: Class<T>?,
     private val snowballMapper: (V) -> T,
     private val vanillaMapper: (T) -> V,
 ) : SnowballAdapter(adaptee), ItemComponentType<T> {

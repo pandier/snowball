@@ -26,8 +26,8 @@ import java.util.Optional
  * A registry that properly handles [io.github.pandier.snowball.item.ItemComponentType]s.
  */
 class SnowballItemComponentTypeRegistry {
-    private val entries = mutableMapOf<Key, ItemComponentType<*>>()
-    private val vanillaToSnowball = mutableMapOf<DataComponentType<*>, ItemComponentType<*>>()
+    private val entries = mutableMapOf<Key, ItemComponentTypeImpl<*, *>>()
+    private val vanillaToSnowball = mutableMapOf<DataComponentType<*>, ItemComponentTypeImpl<*, *>>()
 
     fun registerDefaults(): SnowballItemComponentTypeRegistry {
         // TODO: Implement all unknowns
@@ -131,45 +131,53 @@ class SnowballItemComponentTypeRegistry {
         return this
     }
 
-    private fun <T> registerMinecraftDirect(id: String): ItemComponentTypeImpl<T, T> {
+    private inline fun <reified T> registerMinecraftDirect(id: String): ItemComponentTypeImpl<T, T> {
         return registerDirect(Key.key(Key.MINECRAFT_NAMESPACE, id))
     }
 
-    fun <T> registerDirect(key: Key): ItemComponentTypeImpl<T, T> {
-        return register(key, { it }, { it })
+    inline fun <reified T> registerDirect(key: Key): ItemComponentTypeImpl<T, T> {
+        return registerDirect(key, T::class.java)
+    }
+
+    fun <T> registerDirect(key: Key, type: Class<T>): ItemComponentTypeImpl<T, T> {
+        return register(key, type, { it }, { it })
     }
 
     private fun registerMinecraftUnknown(id: String): ItemComponentTypeImpl<Unit, *> {
-        return registerMinecraft(id, {}, { throw UnsupportedOperationException() })
+        return registerMinecraft(id, null, {}, { throw UnsupportedOperationException() })
     }
 
-    private fun <T, V> registerMinecraft(id: String, snowballMapper: (V) -> T, vanillaMapper: (T) -> V): ItemComponentTypeImpl<T, V> {
-        return register(Key.key(Key.MINECRAFT_NAMESPACE, id), snowballMapper, vanillaMapper)
+    private inline fun <reified T, V> registerMinecraft(id: String, noinline snowballMapper: (V) -> T, noinline vanillaMapper: (T) -> V): ItemComponentTypeImpl<T, V> {
+        return registerMinecraft(id, T::class.java, snowballMapper, vanillaMapper)
+    }
+
+    private fun <T, V> registerMinecraft(id: String, type: Class<T>?, snowballMapper: (V) -> T, vanillaMapper: (T) -> V): ItemComponentTypeImpl<T, V> {
+        return register(Key.key(Key.MINECRAFT_NAMESPACE, id), type, snowballMapper, vanillaMapper)
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T, V> register(key: Key, snowballMapper: (V) -> T, vanillaMapper: (T) -> V): ItemComponentTypeImpl<T, V> {
+    fun <T, V> register(key: Key, type: Class<T>?, snowballMapper: (V) -> T, vanillaMapper: (T) -> V): ItemComponentTypeImpl<T, V> {
         if (entries.containsKey(key))
             throw IllegalArgumentException("An item component type with key '$key' is already registered")
         val vanilla = BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(Conversions.Adventure.vanilla(key))
             ?: throw IllegalArgumentException("An item component type with key '$key' is not registered in the vanilla registry")
-        val entry = ItemComponentTypeImpl(vanilla as DataComponentType<V>, snowballMapper, vanillaMapper)
+        val entry = ItemComponentTypeImpl(vanilla as DataComponentType<V>, type, snowballMapper, vanillaMapper)
         entries[key] = entry
         vanillaToSnowball[vanilla] = entry
         return entry
     }
 
-    fun get(key: Key): ItemComponentType<*>? {
+    fun get(key: Key): ItemComponentTypeImpl<*, *>? {
         return entries[key]
             ?: BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(Conversions.Adventure.vanilla(key))
                 ?.let(::fallback)
     }
 
-    fun get(vanilla: DataComponentType<*>): ItemComponentType<*> {
+    fun get(vanilla: DataComponentType<*>): ItemComponentTypeImpl<*, *> {
         return vanillaToSnowball[vanilla] ?: fallback(vanilla)
     }
 
-    private fun fallback(vanilla: DataComponentType<*>): ItemComponentType<*> {
-        return ItemComponentTypeImpl(vanilla, {}, { throw UnsupportedOperationException() })
+    private fun fallback(vanilla: DataComponentType<*>): ItemComponentTypeImpl<*, *> {
+        return ItemComponentTypeImpl(vanilla, null, {}, { throw UnsupportedOperationException() })
     }
 }

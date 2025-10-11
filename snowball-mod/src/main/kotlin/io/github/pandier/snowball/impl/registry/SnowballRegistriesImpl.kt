@@ -34,9 +34,16 @@ class SnowballRegistriesImpl : SnowballRegistries {
         return fromEntry(Registries.BLOCK, entry)
     }
 
+    override fun itemComponentType(key: Key): ItemComponentType<*> {
+        return itemComponentTypes.get(key) ?: throw IllegalArgumentException("Unknown entry '$key' for item component type registry")
+    }
+
     @Suppress("UNCHECKED_CAST")
-    override fun <T> itemComponentType(key: Key): ItemComponentType<T> {
-        return (itemComponentTypes.get(key) ?: throw IllegalArgumentException("Unknown entry '$key' for item component type registry")) as ItemComponentType<T>
+    override fun <T> itemComponentType(key: Key, type: Class<T>): ItemComponentType<T> {
+        val entry = itemComponentTypes.get(key) ?: throw IllegalArgumentException("Unknown entry '$key' for item component type registry")
+        if (entry.type == null || !type.isAssignableFrom(entry.type))
+            throw IllegalArgumentException("Type ${type.name} for item component type '$key' doesn't match type in registry (${entry.type?.name})")
+        return entry as ItemComponentType<T>
     }
 
     fun itemComponentType(vanilla: DataComponentType<*>): ItemComponentType<*> {
