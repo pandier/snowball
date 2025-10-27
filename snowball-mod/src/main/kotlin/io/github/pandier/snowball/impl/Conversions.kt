@@ -1,6 +1,7 @@
 package io.github.pandier.snowball.impl
 
 import io.github.pandier.snowball.entity.Entity
+import io.github.pandier.snowball.entity.EntityType
 import io.github.pandier.snowball.entity.player.GameMode
 import io.github.pandier.snowball.entity.player.Player
 import io.github.pandier.snowball.impl.adventure.AdventureText
@@ -143,6 +144,7 @@ object Conversions {
     fun snowball(container: Container): Inventory = InventoryImpl(container)
     fun snowball(source: net.minecraft.world.damagesource.DamageSource): DamageSource = DamageSourceImpl(source)
     fun snowball(type: net.minecraft.world.damagesource.DamageType): DamageType = convertible(type)
+    fun snowball(entityType: net.minecraft.world.entity.EntityType<*>): EntityType<*> = convertible(entityType)
     fun snowball(entity: net.minecraft.world.entity.Entity): Entity = convertible(entity)
     fun snowball(entity: net.minecraft.world.entity.LivingEntity): LivingEntity = convertible(entity)
     fun snowball(player: ServerPlayer): Player = convertible(player)

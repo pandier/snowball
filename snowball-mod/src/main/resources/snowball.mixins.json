@@ -10,6 +10,7 @@
     "DamageSourceAccessor",
     "DamageTypeMixin",
     "EntityMixin",
+    "EntityTypeMixin",
     "InventoryAccessor",
     "InventoryMixin",
     "ItemMixin",

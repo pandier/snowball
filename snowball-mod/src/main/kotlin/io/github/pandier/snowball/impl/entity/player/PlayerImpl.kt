@@ -26,7 +26,6 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
-import net.minecraft.world.entity.item.ItemEntity
 
 // TODO: Fully implement Audience
 open class PlayerImpl(
@@ -172,5 +171,9 @@ open class PlayerImpl(
                 stop.source()?.let(Conversions.Adventure::vanilla)
             )
         )
+    }
+
+    override fun remove() {
+        error("A player cannot be removed")
     }
 }

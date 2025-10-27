@@ -50,4 +50,8 @@ open class EntityImpl(
             location.position.x, location.position.y, location.position.z,
             setOf(), location.yaw, location.pitch, false)
     }
+
+    override fun remove() {
+        adaptee.remove(net.minecraft.world.entity.Entity.RemovalReason.DISCARDED)
+    }
 }

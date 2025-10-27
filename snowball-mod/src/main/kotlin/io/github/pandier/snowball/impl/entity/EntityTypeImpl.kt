@@ -1,0 +1,25 @@
+package io.github.pandier.snowball.impl.entity
+
+import io.github.pandier.snowball.entity.Entity
+import io.github.pandier.snowball.entity.EntityType
+import io.github.pandier.snowball.impl.adapter.SnowballAdapter
+import io.github.pandier.snowball.impl.bridge.SnowballConvertible
+import io.github.pandier.snowball.math.Vector3d
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.EntitySpawnReason
+
+class EntityTypeImpl<T : Entity, V : net.minecraft.world.entity.Entity>(
+    override val adaptee: net.minecraft.world.entity.EntityType<V>,
+) : SnowballAdapter(adaptee), EntityType<T> {
+
+    @Suppress("UNCHECKED_CAST")
+    fun create(level: ServerLevel, position: Vector3d): T {
+        if (adaptee == net.minecraft.world.entity.EntityType.PLAYER)
+            throw IllegalArgumentException("A player entity cannot be created")
+        val vEntity = adaptee.create(level, EntitySpawnReason.EVENT)
+            ?: error("EntityType#create returned null")
+        vEntity.snapTo(position.x, position.y, position.z)
+        // TODO: Make this type safe
+        return (vEntity as SnowballConvertible<*>).`snowball$get`() as T
+    }
+}
