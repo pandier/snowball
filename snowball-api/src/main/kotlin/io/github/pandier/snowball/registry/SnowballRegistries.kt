@@ -1,5 +1,7 @@
 package io.github.pandier.snowball.registry
 
+import io.github.pandier.snowball.entity.Entity
+import io.github.pandier.snowball.entity.EntityType
 import io.github.pandier.snowball.entity.damage.DamageType
 import io.github.pandier.snowball.item.ItemComponentType
 import io.github.pandier.snowball.item.ItemType
@@ -18,4 +20,7 @@ public interface SnowballRegistries {
 
     public fun damageType(key: Key): RegistryReference<DamageType>
     public fun damageType(entry: DamageType): RegistryReference<DamageType>
+
+    public fun <T : Entity> entityType(entry: EntityType<T>): RegistryReference<EntityType<T>>
+    public fun <T : Entity> entityType(key: Key): RegistryReference<EntityType<T>>
 }

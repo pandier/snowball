@@ -1,5 +1,7 @@
 package io.github.pandier.snowball.impl.registry
 
+import io.github.pandier.snowball.entity.Entity
+import io.github.pandier.snowball.entity.EntityType
 import io.github.pandier.snowball.entity.damage.DamageType
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.SnowballImpl
@@ -56,6 +58,16 @@ class SnowballRegistriesImpl : SnowballRegistries {
 
     override fun damageType(entry: DamageType): RegistryReference<DamageType> {
         return fromEntry(Registries.DAMAGE_TYPE, entry)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : Entity> entityType(key: Key): RegistryReference<EntityType<T>> {
+        // TODO: Type safety
+        return RegistryReferenceImpl.Lazy(Registries.ENTITY_TYPE, key) { Conversions.snowball(it) as EntityType<T> }
+    }
+
+    override fun <T : Entity> entityType(entry: EntityType<T>): RegistryReference<EntityType<T>> {
+        return fromEntry(Registries.ENTITY_TYPE, entry)
     }
 
     @Suppress("UNCHECKED_CAST")
