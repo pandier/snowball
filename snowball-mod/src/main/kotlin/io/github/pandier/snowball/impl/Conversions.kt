@@ -166,7 +166,7 @@ object Conversions {
             return Key.key(identifier.namespace, identifier.path)
         }
 
-        inline fun <reified T> resourceKey(registry: ResourceKey<out Registry<T>>, key: Key): ResourceKey<T> {
+        inline fun <reified T : Any> resourceKey(registry: ResourceKey<out Registry<T>>, key: Key): ResourceKey<T> {
             return ResourceKey.create(registry, vanilla(key))
         }
 

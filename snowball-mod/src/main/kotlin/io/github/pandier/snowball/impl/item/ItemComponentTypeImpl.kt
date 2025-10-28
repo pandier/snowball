@@ -4,7 +4,7 @@ import io.github.pandier.snowball.impl.adapter.SnowballAdapter
 import io.github.pandier.snowball.item.ItemComponentType
 import net.minecraft.core.component.DataComponentType
 
-class ItemComponentTypeImpl<T, V>(
+class ItemComponentTypeImpl<T, V : Any>(
     override val adaptee: DataComponentType<V>,
     val type: Class<T>?,
     private val snowballMapper: (V) -> T,

@@ -19,7 +19,7 @@ tasks.processResources {
     filesMatching("fabric.mod.json") {
         expand(
             "version" to project.version,
-            "minecraft_version" to libs.versions.minecraft.modversion.get(),
+            "minecraft_version" to libs.versions.minecraft.mod.get(),
             "loader_version" to libs.versions.fabric.loader.get(),
             "kotlin_loader_version" to libs.versions.fabric.language.kotlin.get()
         )

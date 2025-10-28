@@ -130,15 +130,15 @@ class SnowballItemComponentTypeRegistry {
         return this
     }
 
-    private inline fun <reified T> registerMinecraftDirect(id: String): ItemComponentTypeImpl<T, T> {
+    private inline fun <reified T : Any> registerMinecraftDirect(id: String): ItemComponentTypeImpl<T, T> {
         return registerDirect(Key.key(Key.MINECRAFT_NAMESPACE, id))
     }
 
-    inline fun <reified T> registerDirect(key: Key): ItemComponentTypeImpl<T, T> {
+    inline fun <reified T : Any> registerDirect(key: Key): ItemComponentTypeImpl<T, T> {
         return registerDirect(key, T::class.java)
     }
 
-    fun <T> registerDirect(key: Key, type: Class<T>): ItemComponentTypeImpl<T, T> {
+    fun <T : Any> registerDirect(key: Key, type: Class<T>): ItemComponentTypeImpl<T, T> {
         return register(key, type, { it }, { it })
     }
 
@@ -146,16 +146,16 @@ class SnowballItemComponentTypeRegistry {
         return registerMinecraft(id, null, {}, { throw UnsupportedOperationException() })
     }
 
-    private inline fun <reified T, V> registerMinecraft(id: String, noinline snowballMapper: (V) -> T, noinline vanillaMapper: (T) -> V): ItemComponentTypeImpl<T, V> {
+    private inline fun <reified T, V : Any> registerMinecraft(id: String, noinline snowballMapper: (V) -> T, noinline vanillaMapper: (T) -> V): ItemComponentTypeImpl<T, V> {
         return registerMinecraft(id, T::class.java, snowballMapper, vanillaMapper)
     }
 
-    private fun <T, V> registerMinecraft(id: String, type: Class<T>?, snowballMapper: (V) -> T, vanillaMapper: (T) -> V): ItemComponentTypeImpl<T, V> {
+    private fun <T, V : Any> registerMinecraft(id: String, type: Class<T>?, snowballMapper: (V) -> T, vanillaMapper: (T) -> V): ItemComponentTypeImpl<T, V> {
         return register(Key.key(Key.MINECRAFT_NAMESPACE, id), type, snowballMapper, vanillaMapper)
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T, V> register(key: Key, type: Class<T>?, snowballMapper: (V) -> T, vanillaMapper: (T) -> V): ItemComponentTypeImpl<T, V> {
+    fun <T, V : Any> register(key: Key, type: Class<T>?, snowballMapper: (V) -> T, vanillaMapper: (T) -> V): ItemComponentTypeImpl<T, V> {
         if (entries.containsKey(key))
             throw IllegalArgumentException("An item component type with key '$key' is already registered")
         val vanilla = BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(Conversions.Adventure.vanilla(key))

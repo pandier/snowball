@@ -30,7 +30,7 @@ open class ItemStackImpl(
     override fun <T> set(type: ItemComponentType<T>, value: T?): T? =
         setInternal(type as ItemComponentTypeImpl<T, *>, value)
 
-    private fun <T, V> setInternal(impl: ItemComponentTypeImpl<T, V>, value: T?): T? =
+    private fun <T, V : Any> setInternal(impl: ItemComponentTypeImpl<T, V>, value: T?): T? =
         adaptee.set(impl.adaptee, value?.let(impl::vanilla))
             ?.takeIf { !isEmpty() } // Return null if empty
             ?.let(impl::snowball)
@@ -39,7 +39,7 @@ open class ItemStackImpl(
         resetInternal(type as ItemComponentTypeImpl<T, *>)
 
     @Suppress("CAST_NEVER_SUCCEEDS")
-    private fun <T, V> resetInternal(impl: ItemComponentTypeImpl<T, V>): T? =
+    private fun <T, V : Any> resetInternal(impl: ItemComponentTypeImpl<T, V>): T? =
         (adaptee as ResetableComponentAccessBridge)
             .`snowball$reset`(impl.adaptee)
             ?.takeIf { !isEmpty() } // Return null if empty
@@ -48,7 +48,7 @@ open class ItemStackImpl(
     override fun <T> remove(type: ItemComponentType<out T>): T? =
         removeInternal(type as ItemComponentTypeImpl<T, *>)
 
-    private fun <T, V> removeInternal(impl: ItemComponentTypeImpl<T, V>): T? =
+    private fun <T, V : Any> removeInternal(impl: ItemComponentTypeImpl<T, V>): T? =
         adaptee.remove(impl.adaptee)
             ?.takeIf { !isEmpty() } // Return null if empty
             ?.let(impl::snowball)
@@ -56,7 +56,7 @@ open class ItemStackImpl(
     override fun <T> get(type: ItemComponentType<out T>): T? =
         getInternal(type as ItemComponentTypeImpl<T, *>)
 
-    private fun <T, V> getInternal(impl: ItemComponentTypeImpl<T, V>): T? =
+    private fun <T, V : Any> getInternal(impl: ItemComponentTypeImpl<T, V>): T? =
         adaptee.get(impl.adaptee)?.let(impl::snowball)
 
     override fun isEmpty(): Boolean =

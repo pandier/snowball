@@ -7,11 +7,11 @@ import net.kyori.adventure.key.Key
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
 
-sealed class RegistryReferenceImpl<out T, out V>(
+sealed class RegistryReferenceImpl<out T, out V : Any>(
     protected val registryKey: ResourceKey<out Registry<out V>>,
     override val key: Key,
 ) : RegistryReference<T> {
-    class Lazy<out T, out V>(
+    class Lazy<out T, out V : Any>(
         registryKey: ResourceKey<out Registry<out V>>,
         key: Key,
         transformer: (V) -> T,
@@ -28,7 +28,7 @@ sealed class RegistryReferenceImpl<out T, out V>(
         override fun get(): T = value.value
     }
 
-    class Direct<out T, out V>(
+    class Direct<out T, out V : Any>(
         registryKey: ResourceKey<out Registry<out V>>,
         key: Key,
         private val value: T

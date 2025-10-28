@@ -18,7 +18,7 @@ class ItemComponentMapImpl(
     override fun <T> get(type: ItemComponentType<out T>): T? =
         getInternal(type as ItemComponentTypeImpl<T, *>)
 
-    private fun <T, V> getInternal(impl: ItemComponentTypeImpl<T, V>): T? =
+    private fun <T, V : Any> getInternal(impl: ItemComponentTypeImpl<T, V>): T? =
         adaptee.get(impl.adaptee)?.let(impl::snowball)
 
     override fun contains(type: ItemComponentType<*>): Boolean =
