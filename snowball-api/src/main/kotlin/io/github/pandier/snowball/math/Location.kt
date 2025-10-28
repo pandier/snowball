@@ -18,33 +18,49 @@ public data class Location(
     val position: Vector3d get() = Vector3d(x, y, z)
     val rotation: Vector2f get() = Vector2f(yaw, pitch)
 
-    public fun plus(x: Double, y: Double, z: Double, yaw: Float, pitch: Float): Location =
+    public fun add(x: Double, y: Double, z: Double, yaw: Float, pitch: Float): Location =
         Location(this.x + x, this.y + y, this.z + z, this.yaw + yaw, this.pitch + pitch)
 
-    public fun plus(x: Double, y: Double, z: Double): Location =
-        plus(x, y, z, 0f, 0f)
+    public fun add(x: Double, y: Double, z: Double): Location =
+        add(x, y, z, 0f, 0f)
+
+    public fun add(other: Location): Location =
+        add(other.x, other.y, other.z, other.yaw, other.pitch)
+
+    public fun add(other: Vector3d): Location =
+        add(other.x, other.y, other.z)
 
     public operator fun plus(other: Location): Location =
-        plus(other.x, other.y, other.z, other.yaw, other.pitch)
+        add(other.x, other.y, other.z, other.yaw, other.pitch)
 
     public operator fun plus(other: Vector3d): Location =
-        plus(other.x, other.y, other.z)
+        add(other.x, other.y, other.z)
 
-    public fun minus(x: Double, y: Double, z: Double, yaw: Float, pitch: Float): Location =
+    public fun sub(x: Double, y: Double, z: Double, yaw: Float, pitch: Float): Location =
         Location(this.x - x, this.y - y, this.z - z, this.yaw - yaw, this.pitch - pitch)
 
-    public fun minus(x: Double, y: Double, z: Double): Location =
-        minus(x, y, z, 0f, 0f)
+    public fun sub(x: Double, y: Double, z: Double): Location =
+        sub(x, y, z, 0f, 0f)
+
+    public fun sub(other: Location): Location =
+        sub(other.x, other.y, other.z, other.yaw, other.pitch)
+
+    public fun sub(other: Vector3d): Location =
+        sub(other.x, other.y, other.z)
 
     public operator fun minus(other: Location): Location =
-        minus(other.x, other.y, other.z, other.yaw, other.pitch)
+        sub(other.x, other.y, other.z, other.yaw, other.pitch)
 
     public operator fun minus(other: Vector3d): Location =
-        minus(other.x, other.y, other.z)
+        sub(other.x, other.y, other.z)
+
+    public fun mul(scalar: Double): Location =
+        Location(x * scalar, y * scalar, z * scalar, yaw, pitch)
 
     public operator fun times(scalar: Double): Location =
-        Location(x * scalar, y * scalar, z * scalar, yaw, pitch)
+        mul(scalar)
 
     public operator fun div(scalar: Double): Location =
         Location(x / scalar, y / scalar, z / scalar, yaw, pitch)
+
 }

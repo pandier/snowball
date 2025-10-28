@@ -1,7 +1,7 @@
 package io.github.pandier.snowball.item
 
 import io.github.pandier.snowball.Snowball
-import io.github.pandier.snowball.util.Color
+import io.github.pandier.snowball.math.Color
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 

@@ -2,9 +2,8 @@ package io.github.pandier.snowball.impl.registry
 
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.item.ItemComponentTypeImpl
-import io.github.pandier.snowball.item.ItemComponentType
 import io.github.pandier.snowball.item.ItemRarity
-import io.github.pandier.snowball.util.Color
+import io.github.pandier.snowball.math.Color
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.minecraft.core.component.DataComponentType

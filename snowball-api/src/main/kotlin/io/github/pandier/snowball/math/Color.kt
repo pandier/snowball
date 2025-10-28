@@ -1,4 +1,4 @@
-package io.github.pandier.snowball.util
+package io.github.pandier.snowball.math
 
 import net.kyori.adventure.util.RGBLike
 import org.jetbrains.annotations.Range
