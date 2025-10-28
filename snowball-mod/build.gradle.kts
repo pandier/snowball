@@ -1,6 +1,6 @@
 plugins {
     id("snowball.kotlin-conventions")
-    id("fabric-loom") version "1.11-SNAPSHOT"
+    id("fabric-loom") version "1.12-SNAPSHOT"
 }
 
 dependencies {
