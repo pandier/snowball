@@ -1,10 +1,10 @@
 [versions]
-minecraft = "25w41a"
-minecraft-modversion = "1.21.11-alpha.25.41.a"
+minecraft = "25w43a"
+minecraft-modversion = "1.21.11-alpha.25.43.a"
 fabric-loader = "0.17.3"
-fabric-language-kotlin = "1.13.6+kotlin.2.2.20"
-fabric-api = "0.135.1+1.21.11"
-adventure = "4.25.0-SNAPSHOT"
+fabric-language-kotlin = "1.13.7+kotlin.2.2.21"
+fabric-api = "0.136.1+1.21.11"
+adventure = "4.25.0"
 log4j = "2.24.1"
 
 [libraries]
