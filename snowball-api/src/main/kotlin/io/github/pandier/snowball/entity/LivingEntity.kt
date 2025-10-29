@@ -47,4 +47,14 @@ public interface LivingEntity : Entity {
     public fun getAttribute(type: Supplier<AttributeType>): Attribute? {
         return getAttribute(type.get())
     }
+
+    /**
+     * Clears attribute modifiers for the given [type] and resets its base value.
+     */
+    public fun resetAttribute(type: AttributeType): Boolean
+
+    /**
+     * Resets just the base value of the attribute for the given [type].
+     */
+    public fun resetAttributeBaseValue(type: AttributeType): Boolean
 }

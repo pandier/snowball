@@ -12,6 +12,7 @@ import io.github.pandier.snowball.entity.EquipmentSlot
 import io.github.pandier.snowball.entity.damage.DamageSource
 import io.github.pandier.snowball.impl.entity.damage.DamageSourceImpl
 import io.github.pandier.snowball.item.ItemStack
+import net.minecraft.core.Holder
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.server.level.ServerLevel
 
@@ -50,6 +51,19 @@ open class LivingEntityImpl(
     }
 
     override fun getAttribute(type: AttributeType): Attribute? =
-        adaptee.getAttribute(BuiltInRegistries.ATTRIBUTE.wrapAsHolder((type as AttributeTypeImpl).adaptee))
-            ?.let(Conversions::snowball)
+        adaptee.getAttribute(getAttributeHolder(type))?.let(Conversions::snowball)
+
+    override fun resetAttribute(type: AttributeType): Boolean {
+        val attribute = getAttribute(type) ?: return false
+        attribute.clearModifiers()
+        resetAttributeBaseValue(type)
+        return true
+    }
+
+    override fun resetAttributeBaseValue(type: AttributeType): Boolean {
+        return adaptee.attributes.resetBaseValue(getAttributeHolder(type))
+    }
+
+    private fun getAttributeHolder(type: AttributeType): Holder<net.minecraft.world.entity.ai.attributes.Attribute> =
+        BuiltInRegistries.ATTRIBUTE.wrapAsHolder((type as AttributeTypeImpl).adaptee)
 }

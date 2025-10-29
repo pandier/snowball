@@ -10,6 +10,12 @@ import net.kyori.adventure.key.Key
  * An attribute can have multiple modifiers identified by a [Key].
  * These modifiers execute [operations][AttributeModifier.Operation] on the base value of the attribute
  * to calculate the final [value]. Modifiers are executed in order of operations.
+ *
+ * ### Resetting
+ *
+ * The whole attribute can be reset using [LivingEntity.resetAttribute] or just the base value
+ * using [LivingEntity.resetAttributeBaseValue]. The method is defined there, because each entity
+ * can have its own default base value.
  */
 public interface Attribute {
 
