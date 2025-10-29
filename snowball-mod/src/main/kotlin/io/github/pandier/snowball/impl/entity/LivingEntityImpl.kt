@@ -1,5 +1,7 @@
 package io.github.pandier.snowball.impl.entity
 
+import io.github.pandier.snowball.entity.Attribute
+import io.github.pandier.snowball.entity.AttributeType
 import io.github.pandier.snowball.entity.LivingEntity
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.inventory.EquipmentImpl
@@ -10,6 +12,7 @@ import io.github.pandier.snowball.entity.EquipmentSlot
 import io.github.pandier.snowball.entity.damage.DamageSource
 import io.github.pandier.snowball.impl.entity.damage.DamageSourceImpl
 import io.github.pandier.snowball.item.ItemStack
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.server.level.ServerLevel
 
 open class LivingEntityImpl(
@@ -45,4 +48,8 @@ open class LivingEntityImpl(
         val level = adaptee.level() as? ServerLevel ?: return
         adaptee.kill(level)
     }
+
+    override fun getAttribute(type: AttributeType): Attribute? =
+        adaptee.getAttribute(BuiltInRegistries.ATTRIBUTE.wrapAsHolder((type as AttributeTypeImpl).adaptee))
+            ?.let(Conversions::snowball)
 }
