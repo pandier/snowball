@@ -1,5 +1,8 @@
 package io.github.pandier.snowball.impl
 
+import io.github.pandier.snowball.entity.Attribute
+import io.github.pandier.snowball.entity.AttributeModifier
+import io.github.pandier.snowball.entity.AttributeType
 import io.github.pandier.snowball.entity.Entity
 import io.github.pandier.snowball.entity.EntityType
 import io.github.pandier.snowball.entity.player.GameMode
@@ -14,6 +17,7 @@ import io.github.pandier.snowball.entity.LivingEntity
 import io.github.pandier.snowball.entity.damage.DamageSource
 import io.github.pandier.snowball.entity.damage.DamageType
 import io.github.pandier.snowball.entity.player.Hand
+import io.github.pandier.snowball.impl.entity.AttributeImpl
 import io.github.pandier.snowball.impl.entity.damage.DamageSourceImpl
 import io.github.pandier.snowball.impl.inventory.InventoryImpl
 import io.github.pandier.snowball.inventory.Inventory
@@ -46,6 +50,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.Container
 import net.minecraft.world.InteractionHand
+import net.minecraft.world.entity.ai.attributes.AttributeInstance
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.level.GameType
@@ -139,6 +144,28 @@ object Conversions {
         }
     }
 
+    fun snowball(modifier: net.minecraft.world.entity.ai.attributes.AttributeModifier): AttributeModifier =
+        AttributeModifier(Adventure.adventure(modifier.id), modifier.amount, snowball(modifier.operation))
+
+    fun vanilla(modifier: AttributeModifier): net.minecraft.world.entity.ai.attributes.AttributeModifier =
+        net.minecraft.world.entity.ai.attributes.AttributeModifier(Adventure.vanilla(modifier.key), modifier.amount, vanilla(modifier.operation))
+
+    fun snowball(operation: net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation): AttributeModifier.Operation {
+        return when (operation) {
+            net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE -> AttributeModifier.Operation.ADD_VALUE
+            net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_BASE -> AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+            net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL -> AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+        }
+    }
+
+    fun vanilla(operation: AttributeModifier.Operation): net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation {
+        return when (operation) {
+            AttributeModifier.Operation.ADD_VALUE -> net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE
+            AttributeModifier.Operation.ADD_MULTIPLIED_BASE -> net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+            AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL -> net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+        }
+    }
+
     fun snowball(type: DataComponentType<*>): ItemComponentType<*> = SnowballImpl.registries.itemComponentType(type)
     fun snowball(stack: net.minecraft.world.item.ItemStack): ItemStack = ItemStackImpl(stack)
     fun snowball(container: Container): Inventory = InventoryImpl(container)
@@ -148,6 +175,8 @@ object Conversions {
     fun snowball(entity: net.minecraft.world.entity.Entity): Entity = convertible(entity)
     fun snowball(entity: net.minecraft.world.entity.LivingEntity): LivingEntity = convertible(entity)
     fun snowball(player: ServerPlayer): Player = convertible(player)
+    fun snowball(attribute: net.minecraft.world.entity.ai.attributes.Attribute): AttributeType = convertible(attribute)
+    fun snowball(instance: AttributeInstance): Attribute = AttributeImpl(instance)
     fun snowball(level: ServerLevel): World = convertible(level)
     fun snowball(block: Block): BlockType = convertible(block)
     fun snowball(state: net.minecraft.world.level.block.state.BlockState): BlockState = convertible(state)

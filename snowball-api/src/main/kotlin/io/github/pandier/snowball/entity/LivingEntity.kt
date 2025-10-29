@@ -2,6 +2,7 @@ package io.github.pandier.snowball.entity
 
 import io.github.pandier.snowball.entity.damage.DamageSource
 import io.github.pandier.snowball.item.ItemStack
+import java.util.function.Supplier
 
 /**
  * An [Entity] that can be damaged.
@@ -37,4 +38,13 @@ public interface LivingEntity : Entity {
      * Kills the entity.
      */
     public fun kill()
+
+    /**
+     * Gets an [Attribute] instance for the given [type].
+     */
+    public fun getAttribute(type: AttributeType): Attribute?
+
+    public fun getAttribute(type: Supplier<AttributeType>): Attribute? {
+        return getAttribute(type.get())
+    }
 }

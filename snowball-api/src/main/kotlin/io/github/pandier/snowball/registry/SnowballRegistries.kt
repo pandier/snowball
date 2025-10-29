@@ -1,5 +1,6 @@
 package io.github.pandier.snowball.registry
 
+import io.github.pandier.snowball.entity.AttributeType
 import io.github.pandier.snowball.entity.Entity
 import io.github.pandier.snowball.entity.EntityType
 import io.github.pandier.snowball.entity.damage.DamageType
@@ -23,4 +24,7 @@ public interface SnowballRegistries {
 
     public fun <T : Entity> entityType(entry: EntityType<T>): RegistryReference<EntityType<T>>
     public fun <T : Entity> entityType(key: Key): RegistryReference<EntityType<T>>
+
+    public fun attributeType(key: Key): RegistryReference<AttributeType>
+    public fun attributeType(entry: AttributeType): RegistryReference<AttributeType>
 }
