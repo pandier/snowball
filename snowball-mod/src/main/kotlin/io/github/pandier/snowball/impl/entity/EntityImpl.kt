@@ -81,7 +81,6 @@ open class EntityImpl(
         get() = !isAlive
 
     override fun teleport(world: World, location: Location): Boolean {
-        adaptee.displayName
         return adaptee.teleportTo((world as WorldImpl).adaptee,
             location.position.x, location.position.y, location.position.z,
             setOf(), location.yaw, location.pitch, false)
