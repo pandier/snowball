@@ -1,3 +1,7 @@
 package io.github.pandier.snowball.entity
 
-public interface EntityType<T : Entity>
+import net.kyori.adventure.text.Component
+
+public interface EntityType<T : Entity> {
+    public val name: Component
+}

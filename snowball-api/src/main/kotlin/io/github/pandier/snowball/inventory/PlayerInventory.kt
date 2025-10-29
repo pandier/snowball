@@ -2,6 +2,7 @@ package io.github.pandier.snowball.inventory
 
 import io.github.pandier.snowball.entity.EquipmentSlot
 import io.github.pandier.snowball.item.ItemStack
+import io.github.pandier.snowball.item.ItemStackView
 
 public interface PlayerInventory : Inventory {
 
@@ -32,7 +33,7 @@ public interface PlayerInventory : Inventory {
 
     public operator fun get(slot: EquipmentSlot): ItemStack
 
-    public operator fun set(slot: EquipmentSlot, stack: ItemStack): ItemStack
+    public operator fun set(slot: EquipmentSlot, stack: ItemStackView): ItemStack
 
     public fun getEquipmentIndex(slot: EquipmentSlot): Int
 }

@@ -1,6 +1,7 @@
 package io.github.pandier.snowball.impl.entity
 
 import io.github.pandier.snowball.entity.Entity
+import io.github.pandier.snowball.entity.EntityType
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.adapter.SnowballAdapter
 import io.github.pandier.snowball.impl.world.WorldImpl
@@ -8,7 +9,9 @@ import io.github.pandier.snowball.math.Location
 import io.github.pandier.snowball.math.Vector2f
 import io.github.pandier.snowball.math.Vector3d
 import io.github.pandier.snowball.world.World
+import net.kyori.adventure.text.Component
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.phys.Vec3
 import java.util.UUID
 
 open class EntityImpl(
@@ -21,6 +24,8 @@ open class EntityImpl(
         get() = adaptee.id
     override val uuid: UUID
         get() = adaptee.uuid
+    override val type: EntityType<*>
+        get() = Conversions.snowball(adaptee.type)
 
     override val world: World
         get() = Conversions.snowball(adaptee.level() as ServerLevel)
@@ -38,6 +43,36 @@ open class EntityImpl(
             rotation = value.rotation
         }
 
+    override var velocity: Vector3d
+        get() = adaptee.deltaMovement.let { Vector3d(it.x, it.y, it.z) }
+        set(value) { adaptee.deltaMovement = Vec3(value.x, value.y, value.z) }
+
+    override var hasGravity: Boolean
+        get() = !adaptee.isNoGravity
+        set(value) { adaptee.isNoGravity = !value }
+
+    override var isInvulnerable: Boolean
+        get() = adaptee.isInvulnerable
+        set(value) { adaptee.isInvulnerable = value }
+
+    override var isGlowing: Boolean
+        get() = adaptee.hasGlowingTag()
+        set(value) { adaptee.setGlowingTag(value) }
+
+    override var isCustomNameVisible: Boolean
+        get() = adaptee.isCustomNameVisible
+        set(value) { adaptee.isCustomNameVisible = value }
+
+    override var customName: Component?
+        get() = adaptee.customName?.let(Conversions.Adventure::adventure)
+        set(value) { adaptee.customName = value?.let(Conversions.Adventure::vanilla) }
+
+    override val name: Component
+        get() = adaptee.name.let(Conversions.Adventure::adventure)
+
+    override val formattedName: Component
+        get() = adaptee.displayName.let(Conversions.Adventure::adventure)
+
     override val isRemoved: Boolean
         get() = adaptee.isRemoved
     override val isAlive: Boolean
@@ -46,6 +81,7 @@ open class EntityImpl(
         get() = !isAlive
 
     override fun teleport(world: World, location: Location): Boolean {
+        adaptee.displayName
         return adaptee.teleportTo((world as WorldImpl).adaptee,
             location.position.x, location.position.y, location.position.z,
             setOf(), location.yaw, location.pitch, false)

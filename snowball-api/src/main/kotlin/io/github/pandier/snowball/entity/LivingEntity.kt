@@ -3,6 +3,9 @@ package io.github.pandier.snowball.entity
 import io.github.pandier.snowball.entity.damage.DamageSource
 import io.github.pandier.snowball.item.ItemStack
 
+/**
+ * An [Entity] that can be damaged.
+ */
 public interface LivingEntity : Entity {
 
     /**
