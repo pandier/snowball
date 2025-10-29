@@ -8,6 +8,7 @@ import io.github.pandier.snowball.inventory.Hotbar
 import io.github.pandier.snowball.inventory.Inventory
 import io.github.pandier.snowball.inventory.PlayerInventory
 import io.github.pandier.snowball.item.ItemStack
+import io.github.pandier.snowball.item.ItemStackView
 import net.minecraft.world.entity.player.Inventory.SELECTION_SIZE
 import net.minecraft.world.entity.player.Inventory.INVENTORY_SIZE
 
@@ -32,8 +33,8 @@ class PlayerInventoryImpl(
     override fun get(slot: EquipmentSlot): ItemStack =
         (adaptee as InventoryAccessor).`snowball$getEquipment`().get(slot.let(Conversions::vanilla)).let(Conversions::snowball)
 
-    override fun set(slot: EquipmentSlot, stack: ItemStack): ItemStack =
-        (adaptee as InventoryAccessor).`snowball$getEquipment`().set(slot.let(Conversions::vanilla), (stack as ItemStackImpl).adaptee).let(Conversions::snowball)
+    override fun set(slot: EquipmentSlot, stack: ItemStackView): ItemStack =
+        (adaptee as InventoryAccessor).`snowball$getEquipment`().set(slot.let(Conversions::vanilla), (stack.copy() as ItemStackImpl).adaptee).let(Conversions::snowball)
 
     override fun insert(stack: ItemStack): Int {
         val originalCount = stack.count

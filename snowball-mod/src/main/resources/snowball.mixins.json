@@ -18,6 +18,8 @@
     "LivingEntityAccessor",
     "LivingEntityMixin",
     "MinecraftServerMixin",
+    "MobAccessor",
+    "MobMixin",
     "PatchedDataComponentMapMixin",
     "PlayerListMixin",
     "PlayerMixin",
