@@ -16,13 +16,17 @@ dependencies {
 
 tasks.processResources {
     filteringCharset = "UTF-8"
+
+    val properties = arrayOf(
+        "version" to project.version,
+        "minecraft_version" to libs.versions.minecraft.get(),
+        "loader_version" to libs.versions.fabric.loader.get(),
+        "kotlin_loader_version" to libs.versions.fabric.language.kotlin.get()
+    )
+
+    inputs.properties(*properties)
     filesMatching("fabric.mod.json") {
-        expand(
-            "version" to project.version,
-            "minecraft_version" to libs.versions.minecraft.get(),
-            "loader_version" to libs.versions.fabric.loader.get(),
-            "kotlin_loader_version" to libs.versions.fabric.language.kotlin.get()
-        )
+        expand(*properties)
     }
 }
 
