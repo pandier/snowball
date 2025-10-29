@@ -9,6 +9,7 @@ import io.github.pandier.snowball.impl.item.ItemStackImpl
 import io.github.pandier.snowball.inventory.PlayerInventory
 import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemStackView
+import io.github.pandier.snowball.math.Vector3d
 import io.github.pandier.snowball.profile.GameProfile
 import net.kyori.adventure.audience.MessageType
 import net.kyori.adventure.chat.ChatType
@@ -26,6 +27,9 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
+import net.minecraft.world.entity.PositionMoveRotation
+import net.minecraft.world.entity.Relative
+import net.minecraft.world.phys.Vec3
 
 // TODO: Fully implement Audience
 open class PlayerImpl(
@@ -50,6 +54,15 @@ open class PlayerImpl(
 //                EnumSet.of(PositionFlag.X, PositionFlag.Y, PositionFlag.Z, PositionFlag.DELTA_X,
 //                    PositionFlag.DELTA_Y, PositionFlag.DELTA_Z, PositionFlag.ROTATE_DELTA))
 //        }
+
+    override var velocity: Vector3d
+        get() = super.velocity
+        set(value) {
+            adaptee.connection.teleport(
+                PositionMoveRotation(Vec3.ZERO, Vec3(value.x, value.y, value.z), 0f, 0f),
+                setOf(Relative.X, Relative.Y, Relative.Z, Relative.X_ROT, Relative.Y_ROT, Relative.ROTATE_DELTA)
+            )
+        }
 
     override val inventory: PlayerInventory = PlayerInventoryImpl(adaptee.inventory)
 
