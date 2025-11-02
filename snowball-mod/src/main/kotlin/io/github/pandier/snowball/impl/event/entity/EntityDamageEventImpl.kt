@@ -1,4 +1,4 @@
-package io.github.pandier.snowball.impl.event.entity.player
+package io.github.pandier.snowball.impl.event.entity
 
 import io.github.pandier.snowball.entity.LivingEntity
 import io.github.pandier.snowball.entity.damage.DamageSource
