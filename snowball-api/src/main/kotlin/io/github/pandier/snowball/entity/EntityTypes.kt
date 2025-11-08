@@ -78,7 +78,7 @@ public object EntityTypes {
     @JvmField public val ILLUSIONER: RegistryReference<EntityType<Mob>> = ref("illusioner")
     @JvmField public val INTERACTION: RegistryReference<EntityType<Entity>> = ref("interaction")
     @JvmField public val IRON_GOLEM: RegistryReference<EntityType<Mob>> = ref("iron_golem")
-    @JvmField public val ITEM: RegistryReference<EntityType<Entity>> = ref("item")
+    @JvmField public val ITEM: RegistryReference<EntityType<ItemEntity>> = ref("item")
     @JvmField public val ITEM_DISPLAY: RegistryReference<EntityType<Entity>> = ref("item_display")
     @JvmField public val ITEM_FRAME: RegistryReference<EntityType<Entity>> = ref("item_frame")
     @JvmField public val JUNGLE_BOAT: RegistryReference<EntityType<Entity>> = ref("jungle_boat")

@@ -21,10 +21,12 @@ class EntityTypeImpl<T : Entity, V : net.minecraft.world.entity.Entity>(
     fun create(level: ServerLevel, position: Vector3d): T {
         if (adaptee == net.minecraft.world.entity.EntityType.PLAYER)
             throw IllegalArgumentException("A player entity cannot be created")
-        val vEntity = adaptee.create(level, EntitySpawnReason.EVENT)
+
+        val entity = adaptee.create(level, EntitySpawnReason.EVENT)
             ?: error("EntityType#create returned null")
-        vEntity.snapTo(position.x, position.y, position.z)
+        entity.snapTo(position.x, position.y, position.z)
+
         // TODO: Make this type safe
-        return (vEntity as SnowballConvertible<*>).`snowball$get`() as T
+        return (entity as SnowballConvertible<*>).`snowball$get`() as T
     }
 }

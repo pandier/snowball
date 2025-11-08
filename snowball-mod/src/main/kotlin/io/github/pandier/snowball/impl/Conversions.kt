@@ -13,6 +13,7 @@ import io.github.pandier.snowball.impl.bridge.SnowballConvertible
 import io.github.pandier.snowball.impl.entity.EntityImpl
 import io.github.pandier.snowball.impl.item.ItemStackImpl
 import io.github.pandier.snowball.entity.EquipmentSlot
+import io.github.pandier.snowball.entity.ItemEntity
 import io.github.pandier.snowball.entity.LivingEntity
 import io.github.pandier.snowball.entity.damage.DamageSource
 import io.github.pandier.snowball.entity.damage.DamageType
@@ -174,6 +175,7 @@ object Conversions {
     fun snowball(entityType: net.minecraft.world.entity.EntityType<*>): EntityType<*> = convertible(entityType)
     fun snowball(entity: net.minecraft.world.entity.Entity): Entity = convertible(entity)
     fun snowball(entity: net.minecraft.world.entity.LivingEntity): LivingEntity = convertible(entity)
+    fun snowball(entity: net.minecraft.world.entity.item.ItemEntity): ItemEntity = convertible(entity)
     fun snowball(player: ServerPlayer): Player = convertible(player)
     fun snowball(attribute: net.minecraft.world.entity.ai.attributes.Attribute): AttributeType = convertible(attribute)
     fun snowball(instance: AttributeInstance): Attribute = AttributeImpl(instance)
