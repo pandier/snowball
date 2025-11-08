@@ -20,7 +20,7 @@ class WorldImpl(
     override val adaptee: ServerLevel
 ) : SnowballAdapter(adaptee), World {
     override val key: Key
-        get() = Conversions.Adventure.adventure(adaptee.dimension().location())
+        get() = Conversions.Adventure.adventure(adaptee.dimension().identifier())
 
     override val entities: Iterable<Entity>
         get() = Iterables.transform(adaptee.allEntities, Conversions::snowball)

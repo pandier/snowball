@@ -43,8 +43,8 @@ import net.minecraft.core.Registry
 import net.minecraft.core.RegistryAccess
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.registries.Registries
+import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -189,11 +189,11 @@ object Conversions {
     private inline fun <reified T> convertible(any: Any): T = (any as SnowballConvertible<T>).`snowball$get`()
 
     object Adventure {
-        fun vanilla(key: Key): ResourceLocation {
-            return ResourceLocation.fromNamespaceAndPath(key.namespace(), key.value())
+        fun vanilla(key: Key): Identifier {
+            return Identifier.fromNamespaceAndPath(key.namespace(), key.value())
         }
 
-        fun adventure(identifier: ResourceLocation): Key {
+        fun adventure(identifier: Identifier): Key {
             return Key.key(identifier.namespace, identifier.path)
         }
 

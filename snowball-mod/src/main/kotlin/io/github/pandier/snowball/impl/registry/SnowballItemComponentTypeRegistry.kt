@@ -8,7 +8,7 @@ import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.network.Filterable
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.item.component.BlockItemStateProperties
@@ -37,7 +37,7 @@ class SnowballItemComponentTypeRegistry {
         registerMinecraft<Unit, net.minecraft.util.Unit>("unbreakable", {}, { net.minecraft.util.Unit.INSTANCE })
         registerMinecraft<Component, net.minecraft.network.chat.Component>("custom_name", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
         registerMinecraft<Component, net.minecraft.network.chat.Component>("item_name", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
-        registerMinecraft<Key, ResourceLocation>("item_model", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
+        registerMinecraft<Key, Identifier>("item_model", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
         registerMinecraft<List<Component>, ItemLore>("lore", { it.lines.map(Conversions.Adventure::adventure) }, { ItemLore(it.map(Conversions.Adventure::vanilla)) })
         registerMinecraft<ItemRarity, Rarity>("rarity", Conversions::snowball, Conversions::vanilla)
         registerMinecraftUnknown("enchantments")
@@ -61,7 +61,7 @@ class SnowballItemComponentTypeRegistry {
         registerMinecraftUnknown("equippable")
         registerMinecraftUnknown("repairable")
         registerMinecraft<Unit, net.minecraft.util.Unit>("glider", {}, { net.minecraft.util.Unit.INSTANCE })
-        registerMinecraft<Key, ResourceLocation>("tooltip_style", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
+        registerMinecraft<Key, Identifier>("tooltip_style", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
         registerMinecraftUnknown("death_protection")
         registerMinecraftUnknown("blocks_attacks")
         registerMinecraftUnknown("stored_enchantments")
@@ -92,7 +92,7 @@ class SnowballItemComponentTypeRegistry {
         registerMinecraftUnknown("firework_explosion")
         registerMinecraftUnknown("fireworks")
         registerMinecraftUnknown("profile")
-        registerMinecraft<Key, ResourceLocation>("note_block_sound", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
+        registerMinecraft<Key, Identifier>("note_block_sound", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
         registerMinecraftUnknown("banner_patterns")
         registerMinecraftUnknown("base_color")
         registerMinecraftUnknown("pot_decorations")
