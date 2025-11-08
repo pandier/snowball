@@ -61,7 +61,7 @@ public abstract class LivingEntityMixin extends EntityMixin {
             at = @At("LOAD"),
             argsOnly = true,
             slice = @Slice(
-                    from = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;awardStat(Lnet/minecraft/resources/ResourceLocation;I)V"),
+                    from = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;awardStat(Lnet/minecraft/resources/Identifier;I)V"),
                     to = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getCombatTracker()Lnet/minecraft/world/damagesource/CombatTracker;")))
     public float modify$actuallyHurt$damageEvent(float value, ServerLevel level, DamageSource damageSource) {
         return snowball$callDamageEvent(value, damageSource);
