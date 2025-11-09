@@ -3,6 +3,7 @@ package io.github.pandier.snowball.impl.entity.player
 import io.github.pandier.snowball.entity.player.GameMode
 import io.github.pandier.snowball.entity.player.Player
 import io.github.pandier.snowball.impl.Conversions
+import io.github.pandier.snowball.impl.adventure.SnowballBossBarImplementation
 import io.github.pandier.snowball.impl.entity.LivingEntityImpl
 import io.github.pandier.snowball.impl.inventory.PlayerInventoryImpl
 import io.github.pandier.snowball.impl.item.ItemStackImpl
@@ -12,6 +13,8 @@ import io.github.pandier.snowball.item.ItemStackView
 import io.github.pandier.snowball.math.Vector3d
 import io.github.pandier.snowball.profile.GameProfile
 import net.kyori.adventure.audience.MessageType
+import net.kyori.adventure.bossbar.BossBar
+import net.kyori.adventure.bossbar.BossBarImplementation
 import net.kyori.adventure.chat.ChatType
 import net.kyori.adventure.chat.SignedMessage
 import net.kyori.adventure.identity.Identity
@@ -30,6 +33,9 @@ import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.PositionMoveRotation
 import net.minecraft.world.entity.Relative
 import net.minecraft.world.phys.Vec3
+import org.jetbrains.annotations.ApiStatus
+import org.jetbrains.annotations.UnmodifiableView
+import java.util.Collections
 
 // TODO: Fully implement Audience
 open class PlayerImpl(
@@ -37,6 +43,8 @@ open class PlayerImpl(
 ) : LivingEntityImpl(adaptee), Player {
     @Suppress("CanBePrimaryConstructorProperty")
     override val adaptee: ServerPlayer = adaptee
+
+    private var bossBars: MutableList<BossBar>? = null
 
     override val gameProfile: GameProfile
         get() = Conversions.snowball(adaptee.gameProfile)
@@ -184,6 +192,43 @@ open class PlayerImpl(
                 stop.source()?.let(Conversions.Adventure::vanilla)
             )
         )
+    }
+
+    @Suppress("UnstableApiUsage")
+    override fun showBossBar(bar: BossBar) {
+        BossBarImplementation.get(bar, SnowballBossBarImplementation::class.java)
+            .addPlayer(adaptee)
+
+        val bossBars = this.bossBars ?: mutableListOf<BossBar>().also { this.bossBars = it }
+        bossBars.add(bar)
+    }
+
+    @Suppress("UnstableApiUsage")
+    override fun hideBossBar(bar: BossBar) {
+        BossBarImplementation.get(bar, SnowballBossBarImplementation::class.java)
+            .removePlayer(adaptee)
+
+        val bossBars = this.bossBars
+        if (bossBars != null) {
+            bossBars.remove(bar)
+            if (bossBars.isEmpty()) {
+                this.bossBars = null
+            }
+        }
+    }
+
+    override fun activeBossBars(): @UnmodifiableView Iterable<BossBar> {
+        return this.bossBars?.let(Collections::unmodifiableList) ?: Collections.emptyList()
+    }
+
+    /**
+     * Called when the player disconnects.
+     */
+    @ApiStatus.Internal
+    fun disconnect() {
+        for (bar in activeBossBars().toList()) {
+            hideBossBar(bar)
+        }
     }
 
     override fun remove() {

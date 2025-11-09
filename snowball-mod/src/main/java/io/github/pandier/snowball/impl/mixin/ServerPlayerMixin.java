@@ -98,4 +98,9 @@ public abstract class ServerPlayerMixin extends PlayerMixin implements ServerPla
             this.connection.send(new ClientboundPlayerCombatKillPacket(this.getId(), message));
         }
     }
+
+    @Inject(method = "disconnect", at = @At("TAIL"))
+    public void inject$disconnet(CallbackInfo ci) {
+        ((PlayerImpl) snowball$get()).disconnect();
+    }
 }

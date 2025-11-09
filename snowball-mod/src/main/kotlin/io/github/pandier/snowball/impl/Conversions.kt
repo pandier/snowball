@@ -32,6 +32,7 @@ import io.github.pandier.snowball.server.Server
 import io.github.pandier.snowball.world.World
 import io.github.pandier.snowball.world.block.BlockState
 import io.github.pandier.snowball.world.block.BlockType
+import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.chat.ChatType
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
@@ -49,6 +50,7 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
+import net.minecraft.world.BossEvent
 import net.minecraft.world.Container
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.ai.attributes.AttributeInstance
@@ -164,6 +166,28 @@ object Conversions {
             AttributeModifier.Operation.ADD_VALUE -> net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE
             AttributeModifier.Operation.ADD_MULTIPLIED_BASE -> net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_BASE
             AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL -> net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+        }
+    }
+
+    fun vanilla(color: BossBar.Color): BossEvent.BossBarColor {
+        return when (color) {
+            BossBar.Color.PINK -> BossEvent.BossBarColor.PINK
+            BossBar.Color.RED -> BossEvent.BossBarColor.RED
+            BossBar.Color.BLUE -> BossEvent.BossBarColor.BLUE
+            BossBar.Color.GREEN -> BossEvent.BossBarColor.GREEN
+            BossBar.Color.YELLOW -> BossEvent.BossBarColor.YELLOW
+            BossBar.Color.PURPLE -> BossEvent.BossBarColor.PURPLE
+            BossBar.Color.WHITE -> BossEvent.BossBarColor.WHITE
+        }
+    }
+
+    fun vanilla(color: BossBar.Overlay): BossEvent.BossBarOverlay {
+        return when (color) {
+            BossBar.Overlay.PROGRESS -> BossEvent.BossBarOverlay.PROGRESS
+            BossBar.Overlay.NOTCHED_6 -> BossEvent.BossBarOverlay.NOTCHED_6
+            BossBar.Overlay.NOTCHED_10 -> BossEvent.BossBarOverlay.NOTCHED_10
+            BossBar.Overlay.NOTCHED_12 -> BossEvent.BossBarOverlay.NOTCHED_12
+            BossBar.Overlay.NOTCHED_20 -> BossEvent.BossBarOverlay.NOTCHED_20
         }
     }
 
