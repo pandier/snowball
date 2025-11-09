@@ -6,6 +6,7 @@ import io.github.pandier.snowball.entity.player.Player
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.adapter.SnowballAdapter
 import io.github.pandier.snowball.impl.scheduler.SchedulerImpl
+import io.github.pandier.snowball.scoreboard.Scoreboard
 import io.github.pandier.snowball.server.Console
 import io.github.pandier.snowball.server.Server
 import io.github.pandier.snowball.world.World
@@ -45,6 +46,9 @@ class ServerImpl(
     override fun getPlayer(name: String): Player? {
         return adaptee.playerList.getPlayer(name)?.let(Conversions::snowball)
     }
+
+    override val scoreboard: Scoreboard
+        get() = adaptee.scoreboard.let(Conversions::snowball)
 
     override fun audiences(): Iterable<Audience> {
         return Iterables.concat(listOf(console), players)

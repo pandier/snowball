@@ -28,6 +28,10 @@ import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemType
 import io.github.pandier.snowball.profile.GameProfile
 import io.github.pandier.snowball.profile.GameProfileProperty
+import io.github.pandier.snowball.scoreboard.CollisionRule
+import io.github.pandier.snowball.scoreboard.Scoreboard
+import io.github.pandier.snowball.scoreboard.Team
+import io.github.pandier.snowball.scoreboard.Visibility
 import io.github.pandier.snowball.server.Server
 import io.github.pandier.snowball.world.World
 import io.github.pandier.snowball.world.block.BlockState
@@ -58,6 +62,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.scores.PlayerTeam
 import java.time.Duration
 import java.util.Optional
 
@@ -169,28 +174,44 @@ object Conversions {
         }
     }
 
-    fun vanilla(color: BossBar.Color): BossEvent.BossBarColor {
-        return when (color) {
-            BossBar.Color.PINK -> BossEvent.BossBarColor.PINK
-            BossBar.Color.RED -> BossEvent.BossBarColor.RED
-            BossBar.Color.BLUE -> BossEvent.BossBarColor.BLUE
-            BossBar.Color.GREEN -> BossEvent.BossBarColor.GREEN
-            BossBar.Color.YELLOW -> BossEvent.BossBarColor.YELLOW
-            BossBar.Color.PURPLE -> BossEvent.BossBarColor.PURPLE
-            BossBar.Color.WHITE -> BossEvent.BossBarColor.WHITE
+    fun snowball(visiblity: net.minecraft.world.scores.Team.Visibility): Visibility {
+        return when (visiblity) {
+            net.minecraft.world.scores.Team.Visibility.ALWAYS -> Visibility.ALWAYS
+            net.minecraft.world.scores.Team.Visibility.HIDE_FOR_OTHER_TEAMS -> Visibility.HIDE_FOR_OTHER_TEAMS
+            net.minecraft.world.scores.Team.Visibility.HIDE_FOR_OWN_TEAM -> Visibility.HIDE_FOR_OWN_TEAM
+            net.minecraft.world.scores.Team.Visibility.NEVER -> Visibility.NEVER
         }
     }
 
-    fun vanilla(color: BossBar.Overlay): BossEvent.BossBarOverlay {
-        return when (color) {
-            BossBar.Overlay.PROGRESS -> BossEvent.BossBarOverlay.PROGRESS
-            BossBar.Overlay.NOTCHED_6 -> BossEvent.BossBarOverlay.NOTCHED_6
-            BossBar.Overlay.NOTCHED_10 -> BossEvent.BossBarOverlay.NOTCHED_10
-            BossBar.Overlay.NOTCHED_12 -> BossEvent.BossBarOverlay.NOTCHED_12
-            BossBar.Overlay.NOTCHED_20 -> BossEvent.BossBarOverlay.NOTCHED_20
+    fun vanilla(visiblity: Visibility): net.minecraft.world.scores.Team.Visibility {
+        return when (visiblity) {
+            Visibility.ALWAYS -> net.minecraft.world.scores.Team.Visibility.ALWAYS
+            Visibility.HIDE_FOR_OTHER_TEAMS -> net.minecraft.world.scores.Team.Visibility.HIDE_FOR_OTHER_TEAMS
+            Visibility.HIDE_FOR_OWN_TEAM -> net.minecraft.world.scores.Team.Visibility.HIDE_FOR_OWN_TEAM
+            Visibility.NEVER -> net.minecraft.world.scores.Team.Visibility.NEVER
         }
     }
 
+    fun snowball(rule: net.minecraft.world.scores.Team.CollisionRule): CollisionRule {
+        return when (rule) {
+            net.minecraft.world.scores.Team.CollisionRule.ALWAYS -> CollisionRule.ALWAYS
+            net.minecraft.world.scores.Team.CollisionRule.PUSH_OTHER_TEAMS -> CollisionRule.PUSH_OTHER_TEAMS
+            net.minecraft.world.scores.Team.CollisionRule.PUSH_OWN_TEAM -> CollisionRule.PUSH_OWN_TEAM
+            net.minecraft.world.scores.Team.CollisionRule.NEVER -> CollisionRule.NEVER
+        }
+    }
+
+    fun vanilla(rule: CollisionRule): net.minecraft.world.scores.Team.CollisionRule {
+        return when (rule) {
+            CollisionRule.ALWAYS -> net.minecraft.world.scores.Team.CollisionRule.ALWAYS
+            CollisionRule.PUSH_OTHER_TEAMS -> net.minecraft.world.scores.Team.CollisionRule.PUSH_OTHER_TEAMS
+            CollisionRule.PUSH_OWN_TEAM -> net.minecraft.world.scores.Team.CollisionRule.PUSH_OWN_TEAM
+            CollisionRule.NEVER -> net.minecraft.world.scores.Team.CollisionRule.NEVER
+        }
+    }
+
+    fun snowball(scoreboard: net.minecraft.world.scores.Scoreboard): Scoreboard = convertible(scoreboard)
+    fun snowball(team: PlayerTeam): Team = convertible(team)
     fun snowball(type: DataComponentType<*>): ItemComponentType<*> = SnowballImpl.registries.itemComponentType(type)
     fun snowball(stack: net.minecraft.world.item.ItemStack): ItemStack = ItemStackImpl(stack)
     fun snowball(container: Container): Inventory = InventoryImpl(container)
@@ -245,6 +266,10 @@ object Conversions {
             return VanillaComponentSerializer.deserialize(color)
         }
 
+        fun adventureOrNull(color: ChatFormatting): NamedTextColor? {
+            return VanillaComponentSerializer.deserializeOrNull(color)
+        }
+
         fun vanilla(bound: ChatType.Bound, registryAccess: RegistryAccess): net.minecraft.network.chat.ChatType.Bound {
             return net.minecraft.network.chat.ChatType.Bound(
                 registryAccess.getOrThrow(resourceKey(Registries.CHAT_TYPE, bound.type().key())),
@@ -273,6 +298,28 @@ object Conversions {
             if (emitter == Sound.Emitter.self()) return self
             if (emitter is EntityImpl) return emitter.adaptee
             error("Unrecognizable emitter: ${emitter.javaClass}")
+        }
+
+        fun vanilla(color: BossBar.Color): BossEvent.BossBarColor {
+            return when (color) {
+                BossBar.Color.PINK -> BossEvent.BossBarColor.PINK
+                BossBar.Color.RED -> BossEvent.BossBarColor.RED
+                BossBar.Color.BLUE -> BossEvent.BossBarColor.BLUE
+                BossBar.Color.GREEN -> BossEvent.BossBarColor.GREEN
+                BossBar.Color.YELLOW -> BossEvent.BossBarColor.YELLOW
+                BossBar.Color.PURPLE -> BossEvent.BossBarColor.PURPLE
+                BossBar.Color.WHITE -> BossEvent.BossBarColor.WHITE
+            }
+        }
+
+        fun vanilla(color: BossBar.Overlay): BossEvent.BossBarOverlay {
+            return when (color) {
+                BossBar.Overlay.PROGRESS -> BossEvent.BossBarOverlay.PROGRESS
+                BossBar.Overlay.NOTCHED_6 -> BossEvent.BossBarOverlay.NOTCHED_6
+                BossBar.Overlay.NOTCHED_10 -> BossEvent.BossBarOverlay.NOTCHED_10
+                BossBar.Overlay.NOTCHED_12 -> BossEvent.BossBarOverlay.NOTCHED_12
+                BossBar.Overlay.NOTCHED_20 -> BossEvent.BossBarOverlay.NOTCHED_20
+            }
         }
     }
 }

@@ -77,7 +77,6 @@ public abstract class ServerPlayerMixin extends PlayerMixin implements ServerPla
                 this.snowball$deathTracker.setAudience(Snowball.getServer());
             } else if (team.getDeathMessageVisibility() == Team.Visibility.HIDE_FOR_OTHER_TEAMS) {
                 ServerPlayer self = (ServerPlayer) (Object) this;
-                // TODO: This could probably just be a team when the Team API is available
                 Audience audience = Audience.audience(this.server.getPlayerList().getPlayers().stream()
                         .filter(player -> player.getTeam() == team && player != self)
                         .map(Conversions.INSTANCE::snowball)

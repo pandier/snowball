@@ -17,8 +17,8 @@ class SnowballBossBarImplementation(private val bossBar: BossBar) : BossBarImple
         val vanilla = this.vanilla ?: run {
             ServerBossEvent(
                 bossBar.name().let(Conversions.Adventure::vanilla),
-                bossBar.color().let(Conversions::vanilla),
-                bossBar.overlay().let(Conversions::vanilla),
+                bossBar.color().let(Conversions.Adventure::vanilla),
+                bossBar.overlay().let(Conversions.Adventure::vanilla),
             ).also {
                 this.vanilla = it
 
@@ -67,11 +67,11 @@ class SnowballBossBarImplementation(private val bossBar: BossBar) : BossBarImple
     }
 
     override fun bossBarColorChanged(bar: BossBar, oldColor: BossBar.Color, newColor: BossBar.Color) {
-        vanilla?.setColor(newColor.let(Conversions::vanilla))
+        vanilla?.setColor(newColor.let(Conversions.Adventure::vanilla))
     }
 
     override fun bossBarOverlayChanged(bar: BossBar, oldOverlay: BossBar.Overlay, newOverlay: BossBar.Overlay) {
-        vanilla?.setOverlay(newOverlay.let(Conversions::vanilla))
+        vanilla?.setOverlay(newOverlay.let(Conversions.Adventure::vanilla))
     }
 
     override fun bossBarFlagsChanged(bar: BossBar, flagsAdded: Set<BossBar.Flag>, flagsRemoved: Set<BossBar.Flag>) {

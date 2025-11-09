@@ -73,6 +73,9 @@ open class EntityImpl(
     override val formattedName: Component
         get() = adaptee.displayName.let(Conversions.Adventure::adventure)
 
+    override val scoreboardName: String
+        get() = adaptee.scoreboardName
+
     override val isRemoved: Boolean
         get() = adaptee.isRemoved
     override val isAlive: Boolean

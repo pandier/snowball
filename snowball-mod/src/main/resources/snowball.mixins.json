@@ -26,6 +26,8 @@
     "PatchedDataComponentMapMixin",
     "PlayerListMixin",
     "PlayerMixin",
+    "PlayerTeamMixin",
+    "ScoreboardMixin",
     "ServerGamePacketListenerImplMixin",
     "ServerLevelMixin",
     "ServerPlayerGameModeMixin",
