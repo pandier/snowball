@@ -21,6 +21,7 @@ import net.kyori.adventure.identity.Identity
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.sound.SoundStop
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.`object`.PlayerHeadObjectContents
 import net.kyori.adventure.title.Title
 import net.kyori.adventure.title.TitlePart
 import net.minecraft.core.Holder
@@ -32,6 +33,7 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.PositionMoveRotation
 import net.minecraft.world.entity.Relative
+import net.minecraft.world.entity.player.PlayerModelPart
 import net.minecraft.world.phys.Vec3
 import org.jetbrains.annotations.ApiStatus
 import org.jetbrains.annotations.UnmodifiableView
@@ -219,6 +221,16 @@ open class PlayerImpl(
 
     override fun activeBossBars(): @UnmodifiableView Iterable<BossBar> {
         return this.bossBars?.let(Collections::unmodifiableList) ?: Collections.emptyList()
+    }
+
+    @Suppress("UnstableApiUsage")
+    override fun applySkinToPlayerHeadContents(builder: PlayerHeadObjectContents.Builder) {
+        builder.name(adaptee.gameProfile.name)
+        builder.id(adaptee.gameProfile.id)
+        builder.profileProperties(adaptee.gameProfile.properties.values().map {
+            PlayerHeadObjectContents.property(it.name, it.value, it.signature)
+        })
+        builder.hat(adaptee.isModelPartShown(PlayerModelPart.HAT))
     }
 
     /**

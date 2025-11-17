@@ -56,11 +56,5 @@ public object DamageTypes {
     @JvmField public val WITHER: RegistryReference<DamageType> = ref("wither")
     @JvmField public val WITHER_SKULL: RegistryReference<DamageType> = ref("wither_skull")
 
-    public fun ref(entry: DamageType): RegistryReference<DamageType> {
-        return Snowball.registries.damageType(entry)
-    }
-
-    private fun ref(id: String): RegistryReference<DamageType> {
-        return Snowball.registries.damageType(Key.key(Key.MINECRAFT_NAMESPACE, id))
-    }
+    private fun ref(id: String): RegistryReference<DamageType> = Snowball.registries.damageType(Key.key(Key.MINECRAFT_NAMESPACE, id))
 }

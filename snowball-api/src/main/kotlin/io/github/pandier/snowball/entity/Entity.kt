@@ -36,8 +36,7 @@ public interface Entity : Sound.Emitter {
     public var customName: Component?
 
     /**
-     * Returns the custom name stripped of click events
-     * or the [EntityType.name] if a custom name is not set.
+     * Returns [EntityType.name] or the custom name stripped of click events.
      */
     public val name: Component
 

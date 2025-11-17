@@ -1,5 +1,6 @@
 package io.github.pandier.snowball.impl.registry
 
+import com.google.common.base.Suppliers
 import io.github.pandier.snowball.entity.AttributeType
 import io.github.pandier.snowball.entity.Entity
 import io.github.pandier.snowball.entity.EntityType
@@ -11,12 +12,15 @@ import io.github.pandier.snowball.item.ItemComponentType
 import io.github.pandier.snowball.item.ItemType
 import io.github.pandier.snowball.registry.RegistryReference
 import io.github.pandier.snowball.registry.SnowballRegistries
+import io.github.pandier.snowball.scoreboard.Criterion
 import io.github.pandier.snowball.world.block.BlockType
 import net.kyori.adventure.key.Key
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
+import net.minecraft.world.scores.criteria.ObjectiveCriteria
+import java.util.function.Supplier
 
 class SnowballRegistriesImpl : SnowballRegistries {
     private val itemComponentTypes = SnowballItemComponentTypeRegistry().registerDefaults()
@@ -77,6 +81,14 @@ class SnowballRegistriesImpl : SnowballRegistries {
 
     override fun attributeType(entry: AttributeType): RegistryReference<AttributeType> {
         return fromEntry(Registries.ATTRIBUTE, entry)
+    }
+
+    override fun criterion(name: String): Supplier<Criterion> {
+        return Suppliers.memoize {
+            ObjectiveCriteria.byName(name)
+                .orElseThrow { IllegalArgumentException("Unknown criterion '$name'") }
+                .let(Conversions::snowball)
+        }
     }
 
     @Suppress("UNCHECKED_CAST")

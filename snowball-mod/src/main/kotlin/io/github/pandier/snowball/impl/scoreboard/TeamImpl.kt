@@ -59,12 +59,12 @@ class TeamImpl(
         get() = Collections.unmodifiableCollection(adaptee.players)
 
     override fun addMember(name: String) {
-        if (isRemoved()) error("This team has been removed")
+        if (isRemoved()) error("Cannot modify team '$name' because it has been removed")
         adaptee.scoreboard.addPlayerToTeam(name, adaptee)
     }
 
     override fun removeMember(name: String) {
-        if (isRemoved()) error("This team has been removed")
+        if (isRemoved()) error("Cannot modify team '$name' because it has been removed")
         adaptee.scoreboard.removePlayerFromTeam(name, adaptee)
     }
 

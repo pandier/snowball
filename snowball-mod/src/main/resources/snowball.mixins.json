@@ -23,6 +23,7 @@
     "MinecraftServerMixin",
     "MobAccessor",
     "MobMixin",
+    "ObjectiveMixin",
     "PatchedDataComponentMapMixin",
     "PlayerListMixin",
     "PlayerMixin",

@@ -21,6 +21,9 @@ import io.github.pandier.snowball.entity.player.Hand
 import io.github.pandier.snowball.impl.entity.AttributeImpl
 import io.github.pandier.snowball.impl.entity.damage.DamageSourceImpl
 import io.github.pandier.snowball.impl.inventory.InventoryImpl
+import io.github.pandier.snowball.impl.scoreboard.CriterionImpl
+import io.github.pandier.snowball.impl.scoreboard.ExtendedScoreAccess
+import io.github.pandier.snowball.impl.scoreboard.ScoreImpl
 import io.github.pandier.snowball.inventory.Inventory
 import io.github.pandier.snowball.item.ItemComponentType
 import io.github.pandier.snowball.item.ItemRarity
@@ -29,6 +32,11 @@ import io.github.pandier.snowball.item.ItemType
 import io.github.pandier.snowball.profile.GameProfile
 import io.github.pandier.snowball.profile.GameProfileProperty
 import io.github.pandier.snowball.scoreboard.CollisionRule
+import io.github.pandier.snowball.scoreboard.Criterion
+import io.github.pandier.snowball.scoreboard.DisplaySlot
+import io.github.pandier.snowball.scoreboard.NumberFormat
+import io.github.pandier.snowball.scoreboard.Objective
+import io.github.pandier.snowball.scoreboard.Score
 import io.github.pandier.snowball.scoreboard.Scoreboard
 import io.github.pandier.snowball.scoreboard.Team
 import io.github.pandier.snowball.scoreboard.Visibility
@@ -42,12 +50,16 @@ import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.Style
 import net.kyori.adventure.util.Ticks
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Registry
 import net.minecraft.core.RegistryAccess
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.registries.Registries
+import net.minecraft.network.chat.numbers.BlankFormat
+import net.minecraft.network.chat.numbers.FixedFormat
+import net.minecraft.network.chat.numbers.StyledFormat
 import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
@@ -63,6 +75,7 @@ import net.minecraft.world.item.Rarity
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.scores.PlayerTeam
+import net.minecraft.world.scores.criteria.ObjectiveCriteria
 import java.time.Duration
 import java.util.Optional
 
@@ -210,6 +223,90 @@ object Conversions {
         }
     }
 
+    // TODO: Make this a registry?
+    fun snowball(format: net.minecraft.network.chat.numbers.NumberFormat): NumberFormat {
+        return when (format) {
+            is BlankFormat -> NumberFormat.Blank
+            is FixedFormat -> NumberFormat.Fixed(format.value.let(Adventure::adventure))
+            is StyledFormat -> NumberFormat.Styled(format.style.let(Adventure::adventure))
+            else -> error("Unrecognizable number format: $format")
+        }
+    }
+
+    fun vanilla(format: NumberFormat): net.minecraft.network.chat.numbers.NumberFormat {
+        return when (format) {
+            is NumberFormat.Blank -> BlankFormat.INSTANCE
+            is NumberFormat.Fixed -> FixedFormat(format.text.let(Adventure::vanilla))
+            is NumberFormat.Styled -> StyledFormat(format.style.let(Adventure::vanilla))
+            else -> error("Unrecognizable number format: $format")
+        }
+    }
+
+    fun snowball(slot: net.minecraft.world.scores.DisplaySlot): DisplaySlot {
+        return when (slot) {
+            net.minecraft.world.scores.DisplaySlot.LIST -> DisplaySlot.LIST
+            net.minecraft.world.scores.DisplaySlot.SIDEBAR -> DisplaySlot.SIDEBAR
+            net.minecraft.world.scores.DisplaySlot.BELOW_NAME -> DisplaySlot.BELOW_NAME
+            net.minecraft.world.scores.DisplaySlot.TEAM_BLACK -> DisplaySlot.SIDEBAR_TEAM_BLACK
+            net.minecraft.world.scores.DisplaySlot.TEAM_DARK_BLUE -> DisplaySlot.SIDEBAR_TEAM_DARK_BLUE
+            net.minecraft.world.scores.DisplaySlot.TEAM_DARK_GREEN -> DisplaySlot.SIDEBAR_TEAM_DARK_GREEN
+            net.minecraft.world.scores.DisplaySlot.TEAM_DARK_AQUA -> DisplaySlot.SIDEBAR_TEAM_DARK_AQUA
+            net.minecraft.world.scores.DisplaySlot.TEAM_DARK_RED -> DisplaySlot.SIDEBAR_TEAM_DARK_RED
+            net.minecraft.world.scores.DisplaySlot.TEAM_DARK_PURPLE -> DisplaySlot.SIDEBAR_TEAM_DARK_PURPLE
+            net.minecraft.world.scores.DisplaySlot.TEAM_GOLD -> DisplaySlot.SIDEBAR_TEAM_GOLD
+            net.minecraft.world.scores.DisplaySlot.TEAM_GRAY -> DisplaySlot.SIDEBAR_TEAM_GRAY
+            net.minecraft.world.scores.DisplaySlot.TEAM_DARK_GRAY -> DisplaySlot.SIDEBAR_TEAM_DARK_GRAY
+            net.minecraft.world.scores.DisplaySlot.TEAM_BLUE -> DisplaySlot.SIDEBAR_TEAM_BLUE
+            net.minecraft.world.scores.DisplaySlot.TEAM_GREEN -> DisplaySlot.SIDEBAR_TEAM_GREEN
+            net.minecraft.world.scores.DisplaySlot.TEAM_AQUA -> DisplaySlot.SIDEBAR_TEAM_AQUA
+            net.minecraft.world.scores.DisplaySlot.TEAM_RED -> DisplaySlot.SIDEBAR_TEAM_RED
+            net.minecraft.world.scores.DisplaySlot.TEAM_LIGHT_PURPLE -> DisplaySlot.SIDEBAR_TEAM_LIGHT_PURPLE
+            net.minecraft.world.scores.DisplaySlot.TEAM_YELLOW -> DisplaySlot.SIDEBAR_TEAM_YELLOW
+            net.minecraft.world.scores.DisplaySlot.TEAM_WHITE -> DisplaySlot.SIDEBAR_TEAM_WHITE
+        }
+    }
+
+    fun vanilla(slot: DisplaySlot): net.minecraft.world.scores.DisplaySlot {
+        return when (slot) {
+            DisplaySlot.LIST -> net.minecraft.world.scores.DisplaySlot.LIST
+            DisplaySlot.SIDEBAR -> net.minecraft.world.scores.DisplaySlot.SIDEBAR
+            DisplaySlot.BELOW_NAME -> net.minecraft.world.scores.DisplaySlot.BELOW_NAME
+            DisplaySlot.SIDEBAR_TEAM_BLACK -> net.minecraft.world.scores.DisplaySlot.TEAM_BLACK
+            DisplaySlot.SIDEBAR_TEAM_DARK_BLUE -> net.minecraft.world.scores.DisplaySlot.TEAM_DARK_BLUE
+            DisplaySlot.SIDEBAR_TEAM_DARK_GREEN -> net.minecraft.world.scores.DisplaySlot.TEAM_DARK_GREEN
+            DisplaySlot.SIDEBAR_TEAM_DARK_AQUA -> net.minecraft.world.scores.DisplaySlot.TEAM_DARK_AQUA
+            DisplaySlot.SIDEBAR_TEAM_DARK_RED -> net.minecraft.world.scores.DisplaySlot.TEAM_DARK_RED
+            DisplaySlot.SIDEBAR_TEAM_DARK_PURPLE -> net.minecraft.world.scores.DisplaySlot.TEAM_DARK_PURPLE
+            DisplaySlot.SIDEBAR_TEAM_GOLD -> net.minecraft.world.scores.DisplaySlot.TEAM_GOLD
+            DisplaySlot.SIDEBAR_TEAM_GRAY -> net.minecraft.world.scores.DisplaySlot.TEAM_GRAY
+            DisplaySlot.SIDEBAR_TEAM_DARK_GRAY -> net.minecraft.world.scores.DisplaySlot.TEAM_DARK_GRAY
+            DisplaySlot.SIDEBAR_TEAM_BLUE -> net.minecraft.world.scores.DisplaySlot.TEAM_BLUE
+            DisplaySlot.SIDEBAR_TEAM_GREEN -> net.minecraft.world.scores.DisplaySlot.TEAM_GREEN
+            DisplaySlot.SIDEBAR_TEAM_AQUA -> net.minecraft.world.scores.DisplaySlot.TEAM_AQUA
+            DisplaySlot.SIDEBAR_TEAM_RED -> net.minecraft.world.scores.DisplaySlot.TEAM_RED
+            DisplaySlot.SIDEBAR_TEAM_LIGHT_PURPLE -> net.minecraft.world.scores.DisplaySlot.TEAM_LIGHT_PURPLE
+            DisplaySlot.SIDEBAR_TEAM_YELLOW -> net.minecraft.world.scores.DisplaySlot.TEAM_YELLOW
+            DisplaySlot.SIDEBAR_TEAM_WHITE -> net.minecraft.world.scores.DisplaySlot.TEAM_WHITE
+        }
+    }
+
+    fun snowball(renderType: ObjectiveCriteria.RenderType): Objective.RenderType {
+        return when (renderType) {
+            ObjectiveCriteria.RenderType.HEARTS -> Objective.RenderType.HEARTS
+            ObjectiveCriteria.RenderType.INTEGER -> Objective.RenderType.INTEGER
+        }
+    }
+
+    fun vanilla(renderType: Objective.RenderType): ObjectiveCriteria.RenderType {
+        return when (renderType) {
+            Objective.RenderType.HEARTS -> ObjectiveCriteria.RenderType.HEARTS
+            Objective.RenderType.INTEGER -> ObjectiveCriteria.RenderType.INTEGER
+        }
+    }
+
+    fun snowball(score: ExtendedScoreAccess): Score = ScoreImpl(score)
+    fun snowball(criterion: ObjectiveCriteria): Criterion = CriterionImpl(criterion)
+    fun snowball(objective: net.minecraft.world.scores.Objective): Objective = convertible(objective)
     fun snowball(scoreboard: net.minecraft.world.scores.Scoreboard): Scoreboard = convertible(scoreboard)
     fun snowball(team: PlayerTeam): Team = convertible(team)
     fun snowball(type: DataComponentType<*>): ItemComponentType<*> = SnowballImpl.registries.itemComponentType(type)
@@ -254,8 +351,16 @@ object Conversions {
             return AdventureText(component)
         }
 
-        fun adventure(text: net.minecraft.network.chat.Component): Component {
-            return VanillaComponentSerializer.deserialize(text)
+        fun adventure(component: net.minecraft.network.chat.Component): Component {
+            return VanillaComponentSerializer.deserialize(component)
+        }
+
+        fun vanilla(style: Style): net.minecraft.network.chat.Style {
+            return VanillaComponentSerializer.serialize(style)
+        }
+
+        fun adventure(style: net.minecraft.network.chat.Style): Style {
+            return VanillaComponentSerializer.deserialize(style)
         }
 
         fun vanilla(color: NamedTextColor): ChatFormatting {

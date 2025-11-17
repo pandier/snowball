@@ -1510,11 +1510,5 @@ public object ItemTypes {
     @JvmField public val VAULT: RegistryReference<ItemType> = ref("vault")
     @JvmField public val OMINOUS_BOTTLE: RegistryReference<ItemType> = ref("ominous_bottle")
 
-    public fun ref(entry: ItemType): RegistryReference<ItemType> {
-        return Snowball.registries.itemType(entry)
-    }
-
-    private fun ref(id: String): RegistryReference<ItemType> {
-        return Snowball.registries.itemType(Key.key(Key.MINECRAFT_NAMESPACE, id))
-    }
+    private fun ref(id: String): RegistryReference<ItemType> = Snowball.registries.itemType(Key.key(Key.MINECRAFT_NAMESPACE, id))
 }

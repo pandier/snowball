@@ -41,11 +41,5 @@ public object AttributeTypes {
     @JvmField public val WAYPOINT_TRANSMIT_RANGE: RegistryReference<AttributeType> = ref("waypoint_transmit_range")
     @JvmField public val WAYPOINT_RECEIVE_RANGE: RegistryReference<AttributeType> = ref("waypoint_receive_range")
 
-    public fun ref(entry: AttributeType): RegistryReference<AttributeType> {
-        return Snowball.registries.attributeType(entry)
-    }
-
-    private fun ref(id: String): RegistryReference<AttributeType> {
-        return Snowball.registries.attributeType(Key.key(Key.MINECRAFT_NAMESPACE, id))
-    }
+    private fun ref(id: String): RegistryReference<AttributeType> = Snowball.registries.attributeType(Key.key(Key.MINECRAFT_NAMESPACE, id))
 }

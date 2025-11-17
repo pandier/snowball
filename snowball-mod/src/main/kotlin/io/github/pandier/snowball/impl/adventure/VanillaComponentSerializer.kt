@@ -1,9 +1,11 @@
 package io.github.pandier.snowball.impl.adventure
 
+import com.google.gson.JsonElement
 import com.mojang.serialization.JsonOps
 import io.github.pandier.snowball.impl.SnowballImpl
 import net.kyori.adventure.text.*
 import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.Style
 import net.kyori.adventure.text.serializer.ComponentSerializer
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 import net.minecraft.ChatFormatting
@@ -12,10 +14,12 @@ import net.minecraft.resources.RegistryOps
 
 object VanillaComponentSerializer : ComponentSerializer<Component, Component, net.minecraft.network.chat.Component> {
     private val gsonSerializer = GsonComponentSerializer.gson()
+    private val ops: RegistryOps<JsonElement> by lazy {
+        RegistryOps.create(JsonOps.INSTANCE, SnowballImpl.server.adaptee.registryAccess())
+    }
 
     override fun serialize(component: Component): net.minecraft.network.chat.Component {
         val json = gsonSerializer.serializeToTree(component)
-        val ops = RegistryOps.create(JsonOps.INSTANCE, SnowballImpl.server.adaptee.registryAccess())
         return ComponentSerialization.CODEC
             .decode(ops, json)
             .getOrThrow { error("Failed to serialize component: $it") }
@@ -25,11 +29,25 @@ object VanillaComponentSerializer : ComponentSerializer<Component, Component, ne
     override fun deserialize(input: net.minecraft.network.chat.Component): Component {
         if (input is AdventureText) return input.adventure
 
-        val ops = RegistryOps.create(JsonOps.INSTANCE, SnowballImpl.server.adaptee.registryAccess())
         val json = ComponentSerialization.CODEC
             .encodeStart(ops, input)
             .getOrThrow { error("Failed to deserialize component: $it") }
         return gsonSerializer.deserializeFromTree(json)
+    }
+
+    fun serialize(style: Style): net.minecraft.network.chat.Style {
+        val json = gsonSerializer.serializer().toJsonTree(style)
+        return net.minecraft.network.chat.Style.Serializer.CODEC
+            .decode(ops, json)
+            .getOrThrow { error("Failed to serialize component: $it") }
+            .first
+    }
+
+    fun deserialize(style: net.minecraft.network.chat.Style): Style {
+        val json = net.minecraft.network.chat.Style.Serializer.CODEC
+            .encodeStart(ops, style)
+            .getOrThrow { error("Failed to deserialize component: $it") }
+        return gsonSerializer.serializer().fromJson(json, Style::class.java)
     }
 
     fun serialize(color: NamedTextColor): ChatFormatting {

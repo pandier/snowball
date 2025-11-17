@@ -1,9 +1,9 @@
 package io.github.pandier.snowball.entity
 
 import io.github.pandier.snowball.Snowball
+import io.github.pandier.snowball.entity.player.Player
 import io.github.pandier.snowball.registry.RegistryReference
 import net.kyori.adventure.key.Key
-import io.github.pandier.snowball.entity.player.Player
 
 public object EntityTypes {
     @JvmField public val ACACIA_BOAT: RegistryReference<EntityType<Entity>> = ref("acacia_boat")
@@ -164,11 +164,5 @@ public object EntityTypes {
     @JvmField public val ZOMBIE_VILLAGER: RegistryReference<EntityType<Mob>> = ref("zombie_villager")
     @JvmField public val ZOMBIFIED_PIGLIN: RegistryReference<EntityType<Mob>> = ref("zombified_piglin")
 
-    public fun <T : Entity> ref(entry: EntityType<T>): RegistryReference<EntityType<T>> {
-        return Snowball.registries.entityType(entry)
-    }
-
-    private fun <T : Entity> ref(id: String): RegistryReference<EntityType<T>> {
-        return Snowball.registries.entityType(Key.key(Key.MINECRAFT_NAMESPACE, id))
-    }
+    private fun <T : Entity> ref(id: String): RegistryReference<EntityType<T>> = Snowball.registries.entityType(Key.key(Key.MINECRAFT_NAMESPACE, id))
 }

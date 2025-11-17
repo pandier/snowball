@@ -7,8 +7,9 @@ import io.github.pandier.snowball.item.ItemStackView
 import io.github.pandier.snowball.profile.GameProfile
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.bossbar.BossBarViewer
+import net.kyori.adventure.text.`object`.PlayerHeadObjectContents
 
-public interface Player : LivingEntity, Audience, BossBarViewer {
+public interface Player : LivingEntity, Audience, BossBarViewer, PlayerHeadObjectContents.SkinSource {
     public val gameProfile: GameProfile
 
     /**

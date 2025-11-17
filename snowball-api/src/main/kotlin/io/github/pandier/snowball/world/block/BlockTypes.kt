@@ -1172,11 +1172,5 @@ public object BlockTypes {
     @JvmField public val POTTED_CLOSED_EYEBLOSSOM: RegistryReference<BlockType> = ref("potted_closed_eyeblossom")
     @JvmField public val FIREFLY_BUSH: RegistryReference<BlockType> = ref("firefly_bush")
 
-    public fun ref(entry: BlockType): RegistryReference<BlockType> {
-        return Snowball.registries.blockType(entry)
-    }
-
-    private fun ref(id: String): RegistryReference<BlockType> {
-        return Snowball.registries.blockType(Key.key(Key.MINECRAFT_NAMESPACE, id))
-    }
+    private fun ref(id: String): RegistryReference<BlockType> = Snowball.registries.blockType(Key.key(Key.MINECRAFT_NAMESPACE, id))
 }
