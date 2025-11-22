@@ -31,7 +31,6 @@ import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemType
 import io.github.pandier.snowball.profile.GameProfile
 import io.github.pandier.snowball.profile.GameProfileProperty
-import io.github.pandier.snowball.scoreboard.CollisionRule
 import io.github.pandier.snowball.scoreboard.Criterion
 import io.github.pandier.snowball.scoreboard.DisplaySlot
 import io.github.pandier.snowball.scoreboard.NumberFormat
@@ -39,7 +38,6 @@ import io.github.pandier.snowball.scoreboard.Objective
 import io.github.pandier.snowball.scoreboard.Score
 import io.github.pandier.snowball.scoreboard.Scoreboard
 import io.github.pandier.snowball.scoreboard.Team
-import io.github.pandier.snowball.scoreboard.Visibility
 import io.github.pandier.snowball.server.Server
 import io.github.pandier.snowball.world.World
 import io.github.pandier.snowball.world.block.BlockState
@@ -187,39 +185,39 @@ object Conversions {
         }
     }
 
-    fun snowball(visiblity: net.minecraft.world.scores.Team.Visibility): Visibility {
+    fun snowball(visiblity: net.minecraft.world.scores.Team.Visibility): Team.Visibility {
         return when (visiblity) {
-            net.minecraft.world.scores.Team.Visibility.ALWAYS -> Visibility.ALWAYS
-            net.minecraft.world.scores.Team.Visibility.HIDE_FOR_OTHER_TEAMS -> Visibility.HIDE_FOR_OTHER_TEAMS
-            net.minecraft.world.scores.Team.Visibility.HIDE_FOR_OWN_TEAM -> Visibility.HIDE_FOR_OWN_TEAM
-            net.minecraft.world.scores.Team.Visibility.NEVER -> Visibility.NEVER
+            net.minecraft.world.scores.Team.Visibility.ALWAYS -> Team.Visibility.ALWAYS
+            net.minecraft.world.scores.Team.Visibility.HIDE_FOR_OTHER_TEAMS -> Team.Visibility.HIDE_FOR_OTHER_TEAMS
+            net.minecraft.world.scores.Team.Visibility.HIDE_FOR_OWN_TEAM -> Team.Visibility.HIDE_FOR_OWN_TEAM
+            net.minecraft.world.scores.Team.Visibility.NEVER -> Team.Visibility.NEVER
         }
     }
 
-    fun vanilla(visiblity: Visibility): net.minecraft.world.scores.Team.Visibility {
+    fun vanilla(visiblity: Team.Visibility): net.minecraft.world.scores.Team.Visibility {
         return when (visiblity) {
-            Visibility.ALWAYS -> net.minecraft.world.scores.Team.Visibility.ALWAYS
-            Visibility.HIDE_FOR_OTHER_TEAMS -> net.minecraft.world.scores.Team.Visibility.HIDE_FOR_OTHER_TEAMS
-            Visibility.HIDE_FOR_OWN_TEAM -> net.minecraft.world.scores.Team.Visibility.HIDE_FOR_OWN_TEAM
-            Visibility.NEVER -> net.minecraft.world.scores.Team.Visibility.NEVER
+            Team.Visibility.ALWAYS -> net.minecraft.world.scores.Team.Visibility.ALWAYS
+            Team.Visibility.HIDE_FOR_OTHER_TEAMS -> net.minecraft.world.scores.Team.Visibility.HIDE_FOR_OTHER_TEAMS
+            Team.Visibility.HIDE_FOR_OWN_TEAM -> net.minecraft.world.scores.Team.Visibility.HIDE_FOR_OWN_TEAM
+            Team.Visibility.NEVER -> net.minecraft.world.scores.Team.Visibility.NEVER
         }
     }
 
-    fun snowball(rule: net.minecraft.world.scores.Team.CollisionRule): CollisionRule {
+    fun snowball(rule: net.minecraft.world.scores.Team.CollisionRule): Team.CollisionRule {
         return when (rule) {
-            net.minecraft.world.scores.Team.CollisionRule.ALWAYS -> CollisionRule.ALWAYS
-            net.minecraft.world.scores.Team.CollisionRule.PUSH_OTHER_TEAMS -> CollisionRule.PUSH_OTHER_TEAMS
-            net.minecraft.world.scores.Team.CollisionRule.PUSH_OWN_TEAM -> CollisionRule.PUSH_OWN_TEAM
-            net.minecraft.world.scores.Team.CollisionRule.NEVER -> CollisionRule.NEVER
+            net.minecraft.world.scores.Team.CollisionRule.ALWAYS -> Team.CollisionRule.ALWAYS
+            net.minecraft.world.scores.Team.CollisionRule.PUSH_OTHER_TEAMS -> Team.CollisionRule.PUSH_OTHER_TEAMS
+            net.minecraft.world.scores.Team.CollisionRule.PUSH_OWN_TEAM -> Team.CollisionRule.PUSH_OWN_TEAM
+            net.minecraft.world.scores.Team.CollisionRule.NEVER -> Team.CollisionRule.NEVER
         }
     }
 
-    fun vanilla(rule: CollisionRule): net.minecraft.world.scores.Team.CollisionRule {
+    fun vanilla(rule: Team.CollisionRule): net.minecraft.world.scores.Team.CollisionRule {
         return when (rule) {
-            CollisionRule.ALWAYS -> net.minecraft.world.scores.Team.CollisionRule.ALWAYS
-            CollisionRule.PUSH_OTHER_TEAMS -> net.minecraft.world.scores.Team.CollisionRule.PUSH_OTHER_TEAMS
-            CollisionRule.PUSH_OWN_TEAM -> net.minecraft.world.scores.Team.CollisionRule.PUSH_OWN_TEAM
-            CollisionRule.NEVER -> net.minecraft.world.scores.Team.CollisionRule.NEVER
+            Team.CollisionRule.ALWAYS -> net.minecraft.world.scores.Team.CollisionRule.ALWAYS
+            Team.CollisionRule.PUSH_OTHER_TEAMS -> net.minecraft.world.scores.Team.CollisionRule.PUSH_OTHER_TEAMS
+            Team.CollisionRule.PUSH_OWN_TEAM -> net.minecraft.world.scores.Team.CollisionRule.PUSH_OWN_TEAM
+            Team.CollisionRule.NEVER -> net.minecraft.world.scores.Team.CollisionRule.NEVER
         }
     }
 

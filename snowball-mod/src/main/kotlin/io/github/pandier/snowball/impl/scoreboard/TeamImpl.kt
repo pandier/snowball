@@ -2,9 +2,7 @@ package io.github.pandier.snowball.impl.scoreboard
 
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.adapter.SnowballAdapter
-import io.github.pandier.snowball.scoreboard.CollisionRule
 import io.github.pandier.snowball.scoreboard.Team
-import io.github.pandier.snowball.scoreboard.Visibility
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minecraft.ChatFormatting
@@ -43,15 +41,15 @@ class TeamImpl(
         get() = adaptee.canSeeFriendlyInvisibles()
         set(value) { adaptee.setSeeFriendlyInvisibles(value) }
 
-    override var nameTagVisibility: Visibility
+    override var nameTagVisibility: Team.Visibility
         get() = adaptee.nameTagVisibility.let(Conversions::snowball)
         set(value) { adaptee.nameTagVisibility = value.let(Conversions::vanilla) }
 
-    override var deathMessageVisibility: Visibility
+    override var deathMessageVisibility: Team.Visibility
         get() = adaptee.deathMessageVisibility.let(Conversions::snowball)
         set(value) { adaptee.deathMessageVisibility = value.let(Conversions::vanilla) }
 
-    override var collisionRule: CollisionRule
+    override var collisionRule: Team.CollisionRule
         get() = adaptee.collisionRule.let(Conversions::snowball)
         set(value) { adaptee.collisionRule = value.let(Conversions::vanilla) }
 

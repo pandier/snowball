@@ -91,4 +91,61 @@ public interface Team {
      * Removes this team from the scoreboard.
      */
     public fun remove()
+
+
+    /**
+     * Represents the visiblity of certain [Team] properties.
+     */
+    public enum class Visibility(
+        public val isMembers: Boolean,
+        public val isOthers: Boolean,
+    ) {
+        /**
+         * Visible to everyone.
+         */
+        ALWAYS(true, true),
+
+        /**
+         * Visible only to members of the same team.
+         */
+        HIDE_FOR_OTHER_TEAMS(true, false),
+
+        /**
+         * Visible to everyone except members of the same team.
+         */
+        HIDE_FOR_OWN_TEAM(false, true),
+
+        /**
+         * Hidden.
+         */
+        NEVER(false, false),
+    }
+
+    /**
+     * Represents how collision between entities is applied.
+     */
+    public enum class CollisionRule(
+        public val isMembers: Boolean,
+        public val isOthers: Boolean,
+    ) {
+        /**
+         * Everyone has collision.
+         */
+        ALWAYS(true, true),
+
+        /**
+         * Only members of different teams have collision.
+         */
+        PUSH_OTHER_TEAMS(false, true),
+
+        /**
+         * Only members of the same team have collision.
+         */
+        PUSH_OWN_TEAM(true, false),
+
+        /**
+         * No collision.
+         */
+        NEVER(false, false),
+    }
 }
