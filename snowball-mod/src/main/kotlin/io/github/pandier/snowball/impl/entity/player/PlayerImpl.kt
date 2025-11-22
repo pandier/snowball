@@ -7,7 +7,7 @@ import io.github.pandier.snowball.impl.adventure.SnowballBossBarImplementation
 import io.github.pandier.snowball.impl.entity.LivingEntityImpl
 import io.github.pandier.snowball.impl.inventory.PlayerInventoryImpl
 import io.github.pandier.snowball.impl.item.ItemStackImpl
-import io.github.pandier.snowball.inventory.PlayerInventory
+import io.github.pandier.snowball.entity.player.PlayerInventory
 import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemStackView
 import io.github.pandier.snowball.math.Vector3d

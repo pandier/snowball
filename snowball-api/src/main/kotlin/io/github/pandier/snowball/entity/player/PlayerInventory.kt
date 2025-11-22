@@ -1,6 +1,8 @@
-package io.github.pandier.snowball.inventory
+package io.github.pandier.snowball.entity.player
 
 import io.github.pandier.snowball.entity.EquipmentSlot
+import io.github.pandier.snowball.inventory.Hotbar
+import io.github.pandier.snowball.inventory.Inventory
 import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemStackView
 

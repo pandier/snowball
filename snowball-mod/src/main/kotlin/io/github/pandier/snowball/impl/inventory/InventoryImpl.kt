@@ -26,7 +26,7 @@ open class InventoryImpl(
     override fun isEmpty(): Boolean =
         adaptee.isEmpty
 
-    override fun get(index: Int): ItemStackView =
+    override fun get(index: Int): ItemStack =
         adaptee.getItem(index).let(Conversions::snowball)
 
     override fun remove(index: Int): ItemStack =
@@ -41,6 +41,6 @@ open class InventoryImpl(
     override fun clear() =
         adaptee.clearContent()
 
-    override fun iterator(): Iterator<ItemStackView> =
+    override fun iterator(): Iterator<ItemStack> =
         Iterators.transform(adaptee.iterator(), Conversions::snowball)
 }

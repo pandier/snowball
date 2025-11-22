@@ -4,9 +4,8 @@ import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemStackView
 import io.github.pandier.snowball.item.ItemStacks
 import io.github.pandier.snowball.item.ItemType
-import java.util.function.Consumer
 
-public interface Inventory : Iterable<ItemStackView> {
+public interface Inventory : Iterable<ItemStack> {
     public val size: Int
 
     /**
@@ -17,15 +16,9 @@ public interface Inventory : Iterable<ItemStackView> {
     public fun isEmpty(): Boolean =
         all { it.isEmpty() }
 
-    public operator fun get(index: Int): ItemStackView
+    public operator fun get(index: Int): ItemStack
 
     public operator fun set(index: Int, stack: ItemStackView)
-
-    public fun modify(index: Int, action: Consumer<ItemStack>): ItemStack {
-        return get(index).copy()
-            .also(action::accept)
-            .also { set(index, it) }
-    }
 
     public fun remove(index: Int): ItemStack
 

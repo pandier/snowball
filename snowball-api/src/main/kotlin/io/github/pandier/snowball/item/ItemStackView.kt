@@ -1,9 +1,7 @@
 package io.github.pandier.snowball.item
 
 /**
- * A read-only view of an [ItemStack].
- * It is not guaranteed that the underlying [ItemStack] will not change,
- * but it is also not guaranteed that it can change.
+ * A view of an [ItemStack].
  */
 public interface ItemStackView {
     public val type: ItemType

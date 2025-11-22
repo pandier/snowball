@@ -6,7 +6,7 @@ import io.github.pandier.snowball.impl.mixin.InventoryAccessor
 import io.github.pandier.snowball.entity.EquipmentSlot
 import io.github.pandier.snowball.inventory.Hotbar
 import io.github.pandier.snowball.inventory.Inventory
-import io.github.pandier.snowball.inventory.PlayerInventory
+import io.github.pandier.snowball.entity.player.PlayerInventory
 import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemStackView
 import net.minecraft.world.entity.player.Inventory.SELECTION_SIZE
