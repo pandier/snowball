@@ -43,7 +43,7 @@ public interface Entity : Sound.Emitter {
     /**
      * Returns the entity's [name] formatted using its team.
      */
-    public val formattedName: Component
+    public val displayName: Component
 
     /**
      * The name used for scoreboard scores and teams.

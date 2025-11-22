@@ -70,7 +70,7 @@ open class EntityImpl(
     override val name: Component
         get() = adaptee.name.let(Conversions.Adventure::adventure)
 
-    override val formattedName: Component
+    override val displayName: Component
         get() = adaptee.displayName.let(Conversions.Adventure::adventure)
 
     override val scoreboardName: String
