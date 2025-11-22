@@ -57,14 +57,6 @@ open class PlayerImpl(
             adaptee.setGameMode(value.let(Conversions::vanilla))
         }
 
-//    override var rotation: Vector2f
-//        get() = super.rotation
-//        set(value) {
-//            adaptee.networkHandler.requestTeleport(PlayerPosition(Vec3d.ZERO, Vec3d.ZERO, value.x, value.y),
-//                EnumSet.of(PositionFlag.X, PositionFlag.Y, PositionFlag.Z, PositionFlag.DELTA_X,
-//                    PositionFlag.DELTA_Y, PositionFlag.DELTA_Z, PositionFlag.ROTATE_DELTA))
-//        }
-
     override var velocity: Vector3d
         get() = super.velocity
         set(value) {
@@ -126,23 +118,19 @@ open class PlayerImpl(
 
     override fun <T> sendTitlePart(part: TitlePart<T?>, value: T & Any) {
         when (part) {
-            TitlePart.TITLE -> adaptee.connection.send(ClientboundSetTitleTextPacket(Conversions.Adventure.vanilla(value as Component)))
-            TitlePart.SUBTITLE -> adaptee.connection.send(
-                ClientboundSetSubtitleTextPacket(
-                    Conversions.Adventure.vanilla(
-                        value as Component
-                    )
-                )
-            )
+            TitlePart.TITLE -> adaptee.connection.send(ClientboundSetTitleTextPacket(
+                Conversions.Adventure.vanilla(value as Component)
+            ))
+            TitlePart.SUBTITLE -> adaptee.connection.send(ClientboundSetSubtitleTextPacket(
+                Conversions.Adventure.vanilla(value as Component)
+            ))
             TitlePart.TIMES -> {
                 val times = value as Title.Times
-                adaptee.connection.send(
-                    ClientboundSetTitlesAnimationPacket(
-                        Conversions.Adventure.toTicks(times.fadeIn()).toInt(),
-                        Conversions.Adventure.toTicks(times.stay()).toInt(),
-                        Conversions.Adventure.toTicks(times.fadeOut()).toInt(),
-                    )
-                )
+                adaptee.connection.send(ClientboundSetTitlesAnimationPacket(
+                    Conversions.Adventure.toTicks(times.fadeIn()).toInt(),
+                    Conversions.Adventure.toTicks(times.stay()).toInt(),
+                    Conversions.Adventure.toTicks(times.fadeOut()).toInt(),
+                ))
             }
         }
     }

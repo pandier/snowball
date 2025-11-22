@@ -4,6 +4,7 @@ import io.github.pandier.snowball.event.EventManager
 import io.github.pandier.snowball.factory.SnowballFactories
 import io.github.pandier.snowball.registry.SnowballRegistries
 import io.github.pandier.snowball.server.Server
+import org.jetbrains.annotations.ApiStatus
 
 public object Snowball {
     private lateinit var instance: SnowballInterface
@@ -14,6 +15,7 @@ public object Snowball {
     @JvmStatic public val server: Server get() = instance.server
 }
 
+@ApiStatus.Internal
 public interface SnowballInterface {
     public val registries: SnowballRegistries
     public val factories: SnowballFactories
