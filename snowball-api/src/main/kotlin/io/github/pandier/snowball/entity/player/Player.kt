@@ -4,6 +4,7 @@ import io.github.pandier.snowball.entity.LivingEntity
 import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemStackView
 import io.github.pandier.snowball.profile.GameProfile
+import io.github.pandier.snowball.scoreboard.Scoreboard
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.bossbar.BossBarViewer
 import net.kyori.adventure.text.`object`.PlayerHeadObjectContents
@@ -20,6 +21,12 @@ public interface Player : LivingEntity, Audience, BossBarViewer, PlayerHeadObjec
      * The player's inventory.
      */
     public val inventory: PlayerInventory
+
+    /**
+     * The [Scoreboard] that the player is viewing. This can either be
+     * [Server.scoreboard][io.github.pandier.snowball.server.Server.scoreboard] or a custom [Scoreboard] instance.
+     */
+    public var scoreboard: Scoreboard
 
     /**
      * Gives the specified [stack] to the player by inserting it into their inventory and playing a sound effect.

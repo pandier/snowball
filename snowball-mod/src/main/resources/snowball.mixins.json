@@ -33,6 +33,7 @@
     "ServerLevelMixin",
     "ServerPlayerGameModeMixin",
     "ServerPlayerMixin",
+    "ServerScoreboardMixin",
     "TamableAnimalMixin"
   ],
   "injectors": {

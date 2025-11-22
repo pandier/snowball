@@ -12,10 +12,13 @@ import io.github.pandier.snowball.impl.item.EmptyItemStack
 import io.github.pandier.snowball.impl.item.ItemStackImpl
 import io.github.pandier.snowball.impl.item.ItemTypeImpl
 import io.github.pandier.snowball.impl.mixin.DamageSourceAccessor
+import io.github.pandier.snowball.impl.scoreboard.ScoreboardImpl
 import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemType
 import io.github.pandier.snowball.math.Vector3d
+import io.github.pandier.snowball.scoreboard.Scoreboard
 import net.minecraft.core.registries.Registries
+import net.minecraft.server.ServerScoreboard
 import net.minecraft.world.phys.Vec3
 
 class SnowballFactoriesImpl : SnowballFactories {
@@ -36,5 +39,9 @@ class SnowballFactoriesImpl : SnowballFactories {
             causingEntity?.let { (it as EntityImpl).adaptee },
             position?.let { Vec3(it.x, it.y, it.z) },
         ))
+    }
+
+    override fun scoreboard(): Scoreboard {
+        return ScoreboardImpl(ServerScoreboard(SnowballImpl.server.adaptee))
     }
 }

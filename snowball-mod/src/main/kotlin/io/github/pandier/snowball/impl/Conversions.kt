@@ -61,6 +61,7 @@ import net.minecraft.network.chat.numbers.StyledFormat
 import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
+import net.minecraft.server.ServerScoreboard
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
@@ -236,7 +237,6 @@ object Conversions {
             is NumberFormat.Blank -> BlankFormat.INSTANCE
             is NumberFormat.Fixed -> FixedFormat(format.text.let(Adventure::vanilla))
             is NumberFormat.Styled -> StyledFormat(format.style.let(Adventure::vanilla))
-            else -> error("Unrecognizable number format: $format")
         }
     }
 
@@ -305,7 +305,7 @@ object Conversions {
     fun snowball(score: ExtendedScoreAccess): Score = ScoreImpl(score)
     fun snowball(criterion: ObjectiveCriteria): Criterion = CriterionImpl(criterion)
     fun snowball(objective: net.minecraft.world.scores.Objective): Objective = convertible(objective)
-    fun snowball(scoreboard: net.minecraft.world.scores.Scoreboard): Scoreboard = convertible(scoreboard)
+    fun snowball(scoreboard: ServerScoreboard): Scoreboard = convertible(scoreboard)
     fun snowball(team: PlayerTeam): Team = convertible(team)
     fun snowball(type: DataComponentType<*>): ItemComponentType<*> = SnowballImpl.registries.itemComponentType(type)
     fun snowball(stack: net.minecraft.world.item.ItemStack): ItemStack = ItemStackImpl(stack)

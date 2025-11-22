@@ -1,18 +1,21 @@
 package io.github.pandier.snowball.impl.scoreboard
 
 import com.google.common.collect.Collections2
+import io.github.pandier.snowball.entity.player.Player
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.adapter.SnowballAdapter
+import io.github.pandier.snowball.impl.bridge.ServerScoreboardBridge
 import io.github.pandier.snowball.scoreboard.Criterion
 import io.github.pandier.snowball.scoreboard.DisplaySlot
 import io.github.pandier.snowball.scoreboard.Objective
 import io.github.pandier.snowball.scoreboard.Scoreboard
 import io.github.pandier.snowball.scoreboard.Team
 import net.minecraft.network.chat.Component
+import net.minecraft.server.ServerScoreboard
 import org.jetbrains.annotations.UnmodifiableView
 
 class ScoreboardImpl(
-    override val adaptee: net.minecraft.world.scores.Scoreboard
+    override val adaptee: ServerScoreboard
 ) : SnowballAdapter(adaptee), Scoreboard {
 
     override val objectives: @UnmodifiableView Collection<Objective>
@@ -72,4 +75,7 @@ class ScoreboardImpl(
         getTeam(name)?.let { return it }
         return adaptee.addPlayerTeam(name).let(Conversions::snowball)
     }
+
+    override val viewers: @UnmodifiableView Collection<Player>
+        get() = Collections2.transform((adaptee as ServerScoreboardBridge).`snowball$getViewers`(), Conversions::snowball)
 }

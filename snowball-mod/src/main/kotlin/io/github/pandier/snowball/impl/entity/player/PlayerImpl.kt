@@ -8,10 +8,13 @@ import io.github.pandier.snowball.impl.entity.LivingEntityImpl
 import io.github.pandier.snowball.impl.inventory.PlayerInventoryImpl
 import io.github.pandier.snowball.impl.item.ItemStackImpl
 import io.github.pandier.snowball.entity.player.PlayerInventory
+import io.github.pandier.snowball.impl.bridge.ServerPlayerBridge
+import io.github.pandier.snowball.impl.scoreboard.ScoreboardImpl
 import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemStackView
 import io.github.pandier.snowball.math.Vector3d
 import io.github.pandier.snowball.profile.GameProfile
+import io.github.pandier.snowball.scoreboard.Scoreboard
 import net.kyori.adventure.audience.MessageType
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.bossbar.BossBarImplementation
@@ -67,6 +70,10 @@ open class PlayerImpl(
         }
 
     override val inventory: PlayerInventory = PlayerInventoryImpl(adaptee.inventory)
+
+    override var scoreboard: Scoreboard
+        get() = (adaptee as ServerPlayerBridge).`snowball$getScoreboard`().let(Conversions::snowball)
+        set(value) = (adaptee as ServerPlayerBridge).`snowball$setScoreboard`((value as ScoreboardImpl).adaptee)
 
     override fun give(stack: ItemStack, silent: Boolean): Int {
         val amount = inventory.insert(stack)

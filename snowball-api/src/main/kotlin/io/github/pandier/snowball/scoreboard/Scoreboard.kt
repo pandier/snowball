@@ -1,10 +1,20 @@
 package io.github.pandier.snowball.scoreboard
 
+import io.github.pandier.snowball.Snowball
 import io.github.pandier.snowball.entity.Entity
+import io.github.pandier.snowball.entity.player.Player
 import org.jetbrains.annotations.UnmodifiableView
 import java.util.function.Supplier
 
 public interface Scoreboard {
+    public companion object {
+
+        /**
+         * Creates a new [Scoreboard] instance that can be set for individual players with [Player.scoreboard].
+         */
+        @JvmStatic
+        public fun create(): Scoreboard = Snowball.factories.scoreboard()
+    }
 
     /**
      * An unmodifiable view to the objectives in this scoreboard.
@@ -82,4 +92,9 @@ public interface Scoreboard {
      * If a team with the given name already exists, it is returned.
      */
     public fun createTeam(name: String): Team
+
+    /**
+     * An unmodifiable view to the collection of players that are viewing this scoreboard.
+     */
+    public val viewers: @UnmodifiableView Collection<Player>
 }

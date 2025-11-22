@@ -6,6 +6,7 @@ import io.github.pandier.snowball.Snowball;
 import io.github.pandier.snowball.event.entity.EntityDeathEvent;
 import io.github.pandier.snowball.impl.Conversions;
 import io.github.pandier.snowball.impl.bridge.ServerPlayerBridge;
+import io.github.pandier.snowball.impl.bridge.ServerScoreboardBridge;
 import io.github.pandier.snowball.impl.entity.player.PlayerImpl;
 import io.github.pandier.snowball.impl.entity.tracker.EntityDeathTracker;
 import net.kyori.adventure.audience.Audience;
@@ -14,12 +15,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundPlayerCombatKillPacket;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.ServerScoreboard;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.scores.Team;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,7 +39,9 @@ public abstract class ServerPlayerMixin extends PlayerMixin implements ServerPla
     @Shadow public ServerGamePacketListenerImpl connection;
     @Shadow public abstract ServerLevel level();
 
-    @Unique private Component impl$joinMessage = null;
+    @Unique private Component snowball$joinMessage = null;
+    @Unique @Nullable private ServerScoreboard snowball$scoreboard = null;
+    @Unique private boolean snowball$isScoreboardInitialized = false;
 
     @Override
     public PlayerImpl snowball$createAdapter() {
@@ -44,12 +50,35 @@ public abstract class ServerPlayerMixin extends PlayerMixin implements ServerPla
 
     @Override
     public void snowball$setJoinMessage(Component message) {
-        this.impl$joinMessage = message;
+        this.snowball$joinMessage = message;
     }
 
     @Override
     public Component snowball$getJoinMessage() {
-        return this.impl$joinMessage;
+        return this.snowball$joinMessage;
+    }
+
+    @Override
+    public void snowball$setScoreboard(@Nullable ServerScoreboard scoreboard) {
+        if (this.snowball$isScoreboardInitialized) {
+            ((ServerScoreboardBridge) this.snowball$getScoreboard()).snowball$removeViewer((ServerPlayer) (Object) this);
+        }
+        this.snowball$scoreboard = scoreboard != this.server.getScoreboard() ? scoreboard : null;
+        if (this.snowball$isScoreboardInitialized) {
+            ((ServerScoreboardBridge) this.snowball$getScoreboard()).snowball$addViewer((ServerPlayer) (Object) this);
+        }
+    }
+
+    @Override
+    public @NotNull ServerScoreboard snowball$getScoreboard() {
+        return this.snowball$scoreboard != null ? this.snowball$scoreboard : this.server.getScoreboard();
+    }
+
+    @Override
+    public void snowball$initializeScoreboard() {
+        if (this.snowball$isScoreboardInitialized) return;
+        this.snowball$isScoreboardInitialized = true;
+        ((ServerScoreboardBridge) this.snowball$getScoreboard()).snowball$addViewer((ServerPlayer) (Object) this);
     }
 
     @ModifyVariable(method = "die", at = @At(value = "STORE", ordinal = 0))
@@ -100,6 +129,7 @@ public abstract class ServerPlayerMixin extends PlayerMixin implements ServerPla
 
     @Inject(method = "disconnect", at = @At("TAIL"))
     public void inject$disconnet(CallbackInfo ci) {
+        ((ServerScoreboardBridge) this.snowball$getScoreboard()).snowball$removeViewer((ServerPlayer) (Object) this);
         ((PlayerImpl) snowball$get()).disconnect();
     }
 }

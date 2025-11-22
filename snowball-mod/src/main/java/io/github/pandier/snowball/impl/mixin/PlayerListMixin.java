@@ -10,6 +10,7 @@ import io.github.pandier.snowball.math.Location;
 import io.github.pandier.snowball.world.World;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.ServerScoreboard;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.players.PlayerList;
@@ -25,7 +26,7 @@ public class PlayerListMixin {
     @Inject(method = "placeNewPlayer",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/server/level/ServerPlayer;level()Lnet/minecraft/server/level/ServerLevel;"))
-    private void redirect$onPlayerConnect$prepareEvent(Connection connection, ServerPlayer vPlayer, CommonListenerCookie commonListenerCookie, CallbackInfo ci) {
+    private void inject$placeNewPlayer$prepareEvent(Connection connection, ServerPlayer vPlayer, CommonListenerCookie commonListenerCookie, CallbackInfo ci) {
         final Player player = Conversions.INSTANCE.snowball(vPlayer);
         final World originalWorld = Conversions.INSTANCE.snowball(vPlayer.level());
         final Location originalLocation = player.getLocation();
@@ -46,8 +47,15 @@ public class PlayerListMixin {
     @Redirect(method = "placeNewPlayer",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/server/players/PlayerList;broadcastSystemMessage(Lnet/minecraft/network/chat/Component;Z)V"))
-    private void redirect$onPlayerConnect$cacheJoinMessage(PlayerList playerList, Component message, boolean overlay, Connection connection, ServerPlayer vPlayer) {
+    private void redirect$placeNewPlayer$cacheJoinMessage(PlayerList playerList, Component message, boolean overlay, Connection connection, ServerPlayer vPlayer) {
         // Cache the join message so we can use it later in the join event
         ((ServerPlayerBridge) vPlayer).snowball$setJoinMessage(message);
+    }
+
+    @Redirect(method = "placeNewPlayer",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/server/players/PlayerList;updateEntireScoreboard(Lnet/minecraft/server/ServerScoreboard;Lnet/minecraft/server/level/ServerPlayer;)V"))
+    private void redirect$placeNewPlayer$initPlayerScoreboard(PlayerList instance, ServerScoreboard serverScoreboard, ServerPlayer vPlayer) {
+        ((ServerPlayerBridge) vPlayer).snowball$initializeScoreboard();
     }
 }

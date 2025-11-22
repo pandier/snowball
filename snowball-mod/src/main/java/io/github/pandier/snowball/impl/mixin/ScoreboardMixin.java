@@ -1,29 +1,23 @@
 package io.github.pandier.snowball.impl.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import io.github.pandier.snowball.impl.adapter.SnowballAdapterHolder;
-import io.github.pandier.snowball.impl.bridge.SnowballConvertible;
 import io.github.pandier.snowball.impl.scoreboard.ExtendedScoreAccess;
-import io.github.pandier.snowball.impl.scoreboard.ScoreboardImpl;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.numbers.NumberFormat;
 import net.minecraft.world.scores.*;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Scoreboard.class)
-public class ScoreboardMixin implements SnowballConvertible<io.github.pandier.snowball.scoreboard.Scoreboard> {
-    @Unique private final SnowballAdapterHolder<ScoreboardImpl> impl$adapter = new SnowballAdapterHolder.Lazy<>(() -> new ScoreboardImpl((Scoreboard) (Object) this));
+import java.util.Collection;
 
-    @Override
-    public io.github.pandier.snowball.scoreboard.@NotNull Scoreboard snowball$get() {
-        return impl$adapter.get();
-    }
+@Mixin(Scoreboard.class)
+public abstract class ScoreboardMixin {
+    @Shadow public abstract Collection<PlayerTeam> getPlayerTeams();
+    @Shadow public abstract @org.jspecify.annotations.Nullable Objective getDisplayObjective(DisplaySlot displaySlot);
 
     @Inject(method = "getOrCreatePlayerScore(Lnet/minecraft/world/scores/ScoreHolder;Lnet/minecraft/world/scores/Objective;Z)Lnet/minecraft/world/scores/ScoreAccess;",
             cancellable = true,
