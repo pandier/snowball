@@ -31,7 +31,7 @@ open class ProxyInventory(
         }
     }
 
-    override fun iterator(): Iterator<ItemStackView> {
+    override fun iterator(): Iterator<ItemStack> {
         val iterator = proxied.iterator()
         Iterators.advance(iterator, offset)
         return Iterators.limit(iterator, size)

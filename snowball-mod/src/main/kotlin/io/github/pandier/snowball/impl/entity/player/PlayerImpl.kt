@@ -69,15 +69,6 @@ open class PlayerImpl(
             )
         }
 
-    override var velocity: Vector3d
-        get() = super.velocity
-        set(value) {
-            adaptee.connection.teleport(
-                PositionMoveRotation(Vec3.ZERO, Vec3(value.x, value.y, value.z), 0f, 0f),
-                setOf(Relative.X, Relative.Y, Relative.Z, Relative.X_ROT, Relative.Y_ROT, Relative.ROTATE_DELTA)
-            )
-        }
-
     override val inventory: PlayerInventory = PlayerInventoryImpl(adaptee.inventory)
 
     override var scoreboard: Scoreboard

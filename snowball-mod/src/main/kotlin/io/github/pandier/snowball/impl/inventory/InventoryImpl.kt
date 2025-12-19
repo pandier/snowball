@@ -41,6 +41,6 @@ open class InventoryImpl(
     override fun clear() =
         adaptee.clearContent()
 
-    override fun iterator(): Iterator<ItemStackView> =
+    override fun iterator(): Iterator<ItemStack> =
         Iterators.transform(adaptee.iterator(), Conversions::snowball)
 }

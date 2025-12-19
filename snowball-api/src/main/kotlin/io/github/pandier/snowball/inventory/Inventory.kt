@@ -5,7 +5,7 @@ import io.github.pandier.snowball.item.ItemStackView
 import io.github.pandier.snowball.item.ItemStacks
 import io.github.pandier.snowball.item.ItemType
 
-public interface Inventory : Iterable<ItemStackView> {
+public interface Inventory : Iterable<ItemStack> {
     public val size: Int
 
     /**
