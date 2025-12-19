@@ -1,14 +1,13 @@
 plugins {
     id("snowball.kotlin-conventions")
-    id("fabric-loom") version "1.14-SNAPSHOT"
+    id("net.fabricmc.fabric-loom") version "1.14-SNAPSHOT"
 }
 
 dependencies {
     minecraft(libs.minecraft)
-    mappings(loom.officialMojangMappings())
-    modImplementation(libs.fabric.loader)
-    modImplementation(libs.fabric.language.kotlin)
-    modImplementation(libs.fabric.api)
+    implementation(libs.fabric.loader)
+    implementation(libs.fabric.language.kotlin)
+    implementation(libs.fabric.api)
     implementation(project(":snowball-api"))
 
     testImplementation(kotlin("test"))
