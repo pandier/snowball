@@ -77,5 +77,5 @@ class ScoreboardImpl(
     }
 
     override val viewers: @UnmodifiableView Collection<Player>
-        get() = Collections2.transform((adaptee as ServerScoreboardBridge).`snowball$getViewers`(), Conversions::snowball)
+        get() = Collections2.transform((adaptee as ServerScoreboardBridge).`snowball$getViewers`()) { Conversions.snowball(it.player) }
 }

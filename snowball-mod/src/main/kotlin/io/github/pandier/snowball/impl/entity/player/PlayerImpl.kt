@@ -8,7 +8,7 @@ import io.github.pandier.snowball.impl.entity.LivingEntityImpl
 import io.github.pandier.snowball.impl.inventory.PlayerInventoryImpl
 import io.github.pandier.snowball.impl.item.ItemStackImpl
 import io.github.pandier.snowball.entity.player.PlayerInventory
-import io.github.pandier.snowball.impl.bridge.ServerPlayerBridge
+import io.github.pandier.snowball.impl.bridge.ServerGamePacketListenerImplBridge
 import io.github.pandier.snowball.impl.scoreboard.ScoreboardImpl
 import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemStackView
@@ -72,8 +72,8 @@ open class PlayerImpl(
     override val inventory: PlayerInventory = PlayerInventoryImpl(adaptee.inventory)
 
     override var scoreboard: Scoreboard
-        get() = (adaptee as ServerPlayerBridge).`snowball$getScoreboard`().let(Conversions::snowball)
-        set(value) = (adaptee as ServerPlayerBridge).`snowball$setScoreboard`((value as ScoreboardImpl).adaptee)
+        get() = (adaptee.connection as ServerGamePacketListenerImplBridge).`snowball$getScoreboard`().let(Conversions::snowball)
+        set(value) = (adaptee.connection as ServerGamePacketListenerImplBridge).`snowball$setScoreboard`((value as ScoreboardImpl).adaptee)
 
     override fun give(stack: ItemStack, silent: Boolean): Int {
         val amount = inventory.insert(stack)
@@ -232,7 +232,7 @@ open class PlayerImpl(
      * Called when the player disconnects.
      */
     @ApiStatus.Internal
-    fun disconnect() {
+    fun handleDisconnect() {
         for (bar in activeBossBars().toList()) {
             hideBossBar(bar)
         }

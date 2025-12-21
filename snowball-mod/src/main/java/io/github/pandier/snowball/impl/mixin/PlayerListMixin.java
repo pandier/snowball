@@ -4,6 +4,7 @@ import io.github.pandier.snowball.Snowball;
 import io.github.pandier.snowball.entity.player.Player;
 import io.github.pandier.snowball.event.entity.player.PlayerPrepareEvent;
 import io.github.pandier.snowball.impl.Conversions;
+import io.github.pandier.snowball.impl.bridge.ServerGamePacketListenerImplBridge;
 import io.github.pandier.snowball.impl.bridge.ServerPlayerBridge;
 import io.github.pandier.snowball.impl.world.WorldImpl;
 import io.github.pandier.snowball.math.Location;
@@ -56,6 +57,6 @@ public class PlayerListMixin {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/server/players/PlayerList;updateEntireScoreboard(Lnet/minecraft/server/ServerScoreboard;Lnet/minecraft/server/level/ServerPlayer;)V"))
     private void redirect$placeNewPlayer$initPlayerScoreboard(PlayerList instance, ServerScoreboard serverScoreboard, ServerPlayer vPlayer) {
-        ((ServerPlayerBridge) vPlayer).snowball$initializeScoreboard();
+        ((ServerGamePacketListenerImplBridge) vPlayer.connection).snowball$initializeScoreboard();
     }
 }

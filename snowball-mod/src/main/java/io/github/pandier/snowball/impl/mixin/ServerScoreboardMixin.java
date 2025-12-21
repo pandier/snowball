@@ -9,6 +9,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.PlayerTeam;
@@ -29,7 +30,7 @@ public abstract class ServerScoreboardMixin extends ScoreboardMixin implements S
     @Shadow @Final private Set<Objective> trackedObjectives;
 
     @Unique private final SnowballAdapterHolder<ScoreboardImpl> impl$adapter = new SnowballAdapterHolder.Lazy<>(() -> new ScoreboardImpl((ServerScoreboard) (Object) this));
-    @Unique protected final Set<ServerPlayer> snowball$viewers = new HashSet<>();
+    @Unique protected final Set<ServerGamePacketListenerImpl> snowball$viewers = new HashSet<>();
 
     @Override
     public io.github.pandier.snowball.scoreboard.@NotNull Scoreboard snowball$get() {
@@ -37,53 +38,53 @@ public abstract class ServerScoreboardMixin extends ScoreboardMixin implements S
     }
 
     @Override
-    public void snowball$addViewer(@NotNull ServerPlayer viewer) {
+    public void snowball$addViewer(@NotNull ServerGamePacketListenerImpl viewer) {
         if (!this.snowball$viewers.add(viewer)) return;
 
         for (PlayerTeam playerTeam : this.getPlayerTeams()) {
-            viewer.connection.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(playerTeam, true));
+            viewer.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(playerTeam, true));
         }
 
         for (Objective objective : this.trackedObjectives) {
             for (Packet<?> packet : this.getStartTrackingPackets(objective)) {
-                viewer.connection.send(packet);
+                viewer.send(packet);
             }
         }
     }
 
     @Override
-    public void snowball$removeViewer(@NotNull ServerPlayer viewer) {
+    public void snowball$removeViewer(@NotNull ServerGamePacketListenerImpl viewer) {
         if (!this.snowball$viewers.remove(viewer)) return;
 
         for (PlayerTeam playerTeam : this.getPlayerTeams()) {
-            viewer.connection.send(ClientboundSetPlayerTeamPacket.createRemovePacket(playerTeam));
+            viewer.send(ClientboundSetPlayerTeamPacket.createRemovePacket(playerTeam));
         }
 
         for (Objective objective : this.trackedObjectives) {
             for (Packet<?> packet : this.getStopTrackingPackets(objective)) {
-                viewer.connection.send(packet);
+                viewer.send(packet);
             }
         }
     }
 
     @Override
-    public Collection<ServerPlayer> snowball$getViewers() {
+    public Collection<ServerGamePacketListenerImpl> snowball$getViewers() {
         return this.snowball$viewers;
     }
 
     @Unique
     public void snowball$broadcast(@NotNull Packet<?> packet) {
         this.snowball$viewers.removeIf(viewer -> {
-            if (viewer.hasDisconnected()) return true;
-            viewer.connection.send(packet);
+            if (viewer.getPlayer().hasDisconnected()) return true;
+            viewer.send(packet);
             return false;
         });
     }
 
     @Unique
     public Iterator<ServerPlayer> snowball$getViewersForBroadcast() {
-        this.snowball$viewers.removeIf(ServerPlayer::hasDisconnected);
-        return this.snowball$viewers.iterator();
+        this.snowball$viewers.removeIf(viewer -> viewer.getPlayer().hasDisconnected());
+        return this.snowball$viewers.stream().map(ServerGamePacketListenerImpl::getPlayer).iterator();
     }
 
     @Redirect(method = "onScoreChanged",
