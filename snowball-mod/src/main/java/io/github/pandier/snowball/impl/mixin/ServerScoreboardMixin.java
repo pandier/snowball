@@ -21,7 +21,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 @Mixin(ServerScoreboard.class)
 public abstract class ServerScoreboardMixin extends ScoreboardMixin implements ServerScoreboardBridge, SnowballConvertible<Scoreboard> {
@@ -73,26 +72,18 @@ public abstract class ServerScoreboardMixin extends ScoreboardMixin implements S
     }
 
     @Unique
-    public void snowball$forEachViewer(@NotNull Consumer<ServerPlayer> consumer) {
+    public void snowball$broadcast(@NotNull Packet<?> packet) {
         this.snowball$viewers.removeIf(viewer -> {
             if (viewer.hasDisconnected()) return true;
-            consumer.accept(viewer);
+            viewer.connection.send(packet);
             return false;
         });
     }
 
     @Unique
-    public void snowball$broadcast(@NotNull Packet<?> packet) {
-        this.snowball$forEachViewer(viewer -> viewer.connection.send(packet));
-    }
-
-    @Unique
-    public List<ServerPlayer> snowball$getViewersForBroadcast() {
-        // TODO: This could probably be optimized so that we're not copying the list.
-        //       Perhaps a stripped down version of List?
-        List<ServerPlayer> list = new ArrayList<>(this.snowball$viewers.size());
-        this.snowball$forEachViewer(list::add);
-        return list;
+    public Iterator<ServerPlayer> snowball$getViewersForBroadcast() {
+        this.snowball$viewers.removeIf(ServerPlayer::hasDisconnected);
+        return this.snowball$viewers.iterator();
     }
 
     @Redirect(method = "onScoreChanged",
@@ -167,15 +158,17 @@ public abstract class ServerScoreboardMixin extends ScoreboardMixin implements S
 
     @Redirect(method = "stopTrackingObjective",
             at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/server/players/PlayerList;getPlayers()Ljava/util/List;"))
-    public List<ServerPlayer> redirect$stopTrackingObjective$getViewers(PlayerList instance) {
+                    target = "Ljava/util/List;iterator()Ljava/util/Iterator;",
+                    ordinal = 0))
+    public Iterator<ServerPlayer> redirect$stopTrackingObjective$getViewers(List<?> instance) {
         return this.snowball$getViewersForBroadcast();
     }
 
     @Redirect(method = "startTrackingObjective",
             at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/server/players/PlayerList;getPlayers()Ljava/util/List;"))
-    public List<ServerPlayer> redirect$startTrackingObjective$getViewers(PlayerList instance) {
+                    target = "Ljava/util/List;iterator()Ljava/util/Iterator;",
+                    ordinal = 0))
+    public Iterator<ServerPlayer> redirect$startTrackingObjective$getViewers(List<?> instance) {
         return this.snowball$getViewersForBroadcast();
     }
 }
