@@ -18,7 +18,7 @@ import java.util.UUID
 
 class WorldImpl(
     override val adaptee: ServerLevel
-) : SnowballAdapter(adaptee), World {
+) : SnowballAdapter(), World {
     override val key: Key
         get() = Conversions.Adventure.adventure(adaptee.dimension().identifier())
 

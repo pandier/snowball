@@ -6,7 +6,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute
 
 class AttributeTypeImpl(
     override val adaptee: Attribute
-) : SnowballAdapter(adaptee), AttributeType {
+) : SnowballAdapter(), AttributeType {
     override val defaultValue: Double
         get() = adaptee.defaultValue
 }

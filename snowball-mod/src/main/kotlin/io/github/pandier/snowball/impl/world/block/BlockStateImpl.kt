@@ -7,7 +7,7 @@ import io.github.pandier.snowball.world.block.BlockType
 
 class BlockStateImpl(
     override val adaptee: net.minecraft.world.level.block.state.BlockState,
-) : SnowballAdapter(adaptee), BlockState {
+) : SnowballAdapter(), BlockState {
     override val type: BlockType
         get() = Conversions.snowball(adaptee.block)
 }

@@ -13,7 +13,7 @@ import net.minecraft.commands.CommandSourceStack
 
 class CommandSourceImpl(
     override val adaptee: CommandSourceStack,
-) : SnowballAdapter(adaptee), CommandSource {
+) : SnowballAdapter(), CommandSource {
     override val name: String
         get() = adaptee.textName
     override val displayName: Component

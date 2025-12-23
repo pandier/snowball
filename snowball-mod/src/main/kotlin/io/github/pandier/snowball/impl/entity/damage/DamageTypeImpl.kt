@@ -5,7 +5,7 @@ import io.github.pandier.snowball.impl.adapter.SnowballAdapter
 
 class DamageTypeImpl(
     override val adaptee: net.minecraft.world.damagesource.DamageType
-) : SnowballAdapter(adaptee), DamageType {
+) : SnowballAdapter(), DamageType {
     override val translationId: String
         get() = adaptee.msgId
     override val exhaustion: Float

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.UnmodifiableView
 
 class ScoreboardImpl(
     override val adaptee: ServerScoreboard
-) : SnowballAdapter(adaptee), Scoreboard {
+) : SnowballAdapter(), Scoreboard {
 
     override val objectives: @UnmodifiableView Collection<Objective>
         get() = Collections2.transform(adaptee.objectives, Conversions::snowball)

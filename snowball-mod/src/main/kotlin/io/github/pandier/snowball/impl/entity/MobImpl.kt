@@ -6,8 +6,8 @@ import io.github.pandier.snowball.impl.mixin.MobAccessor
 open class MobImpl(
     adaptee: net.minecraft.world.entity.Mob
 ) : LivingEntityImpl(adaptee), Mob {
-    @Suppress("CanBePrimaryConstructorProperty")
-    override val adaptee: net.minecraft.world.entity.Mob = adaptee
+    override val adaptee: net.minecraft.world.entity.Mob
+        get() = super.adapteeInternal as net.minecraft.world.entity.Mob
 
     override var isPersistent: Boolean
         get() = adaptee.isPersistenceRequired

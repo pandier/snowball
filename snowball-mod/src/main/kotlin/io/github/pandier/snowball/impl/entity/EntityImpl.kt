@@ -12,13 +12,16 @@ import io.github.pandier.snowball.world.World
 import net.kyori.adventure.text.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.phys.Vec3
+import org.jetbrains.annotations.ApiStatus
 import java.util.UUID
 
 open class EntityImpl(
     adaptee: net.minecraft.world.entity.Entity
-) : SnowballAdapter(adaptee), Entity {
-    @Suppress("CanBePrimaryConstructorProperty")
-    override val adaptee: net.minecraft.world.entity.Entity = adaptee
+) : SnowballAdapter(), Entity {
+    protected var adapteeInternal: net.minecraft.world.entity.Entity = adaptee
+
+    override val adaptee: net.minecraft.world.entity.Entity
+        get() = adapteeInternal
 
     override val id: Int
         get() = adaptee.id
@@ -91,5 +94,16 @@ open class EntityImpl(
 
     override fun remove() {
         adaptee.remove(net.minecraft.world.entity.Entity.RemovalReason.DISCARDED)
+    }
+
+    /**
+     * Updates the adaptee of this entity adapter.
+     * Called when entities teleport across dimensions because the entity instance changes.
+     */
+    @ApiStatus.Internal
+    fun updateAdapatee(newAdaptee: net.minecraft.world.entity.Entity) {
+        if (newAdaptee.type != adapteeInternal.type)
+            throw IllegalArgumentException("New entity adaptee is not of the same type")
+        adapteeInternal = newAdaptee
     }
 }

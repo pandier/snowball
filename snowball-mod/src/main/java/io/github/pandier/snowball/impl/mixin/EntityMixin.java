@@ -1,6 +1,5 @@
 package io.github.pandier.snowball.impl.mixin;
 
-import io.github.pandier.snowball.impl.adapter.SnowballAdapterHolder;
 import io.github.pandier.snowball.impl.bridge.SnowballConvertible;
 import io.github.pandier.snowball.impl.entity.EntityImpl;
 import net.minecraft.server.level.ServerLevel;
@@ -17,6 +16,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
@@ -28,7 +28,7 @@ public abstract class EntityMixin implements SnowballConvertible<io.github.pandi
     @Shadow public abstract @Nullable PlayerTeam getTeam();
     @Shadow public abstract int getId();
 
-    @Unique protected SnowballAdapterHolder<EntityImpl> impl$adapter = new SnowballAdapterHolder.Lazy<>(this::snowball$createAdapter);
+    @Unique protected @Nullable EntityImpl impl$adapter = null;
 
     @Unique
     public EntityImpl snowball$createAdapter() {
@@ -37,7 +37,10 @@ public abstract class EntityMixin implements SnowballConvertible<io.github.pandi
 
     @Override
     public @NotNull io.github.pandier.snowball.entity.Entity snowball$get() {
-        return impl$adapter.get();
+        if (this.impl$adapter == null) {
+            this.impl$adapter = this.snowball$createAdapter();
+        }
+        return this.impl$adapter;
     }
 
     @SuppressWarnings("CancellableInjectionUsage")
@@ -49,5 +52,15 @@ public abstract class EntityMixin implements SnowballConvertible<io.github.pandi
                     target = "Lnet/minecraft/server/level/ServerLevel;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"))
     public void inject$spawnAtLocation(ServerLevel serverLevel, ItemStack itemStack, Vec3 vec3, CallbackInfoReturnable<ItemEntity> cir, ItemEntity entity) {
         // Used in LivingEntity to capture death drops
+    }
+
+    @Inject(method = "restoreFrom", at = @At("HEAD"))
+    public void inject$restoreFrom(Entity oldEntity, CallbackInfo ci) {
+        EntityImpl adapter = ((EntityMixin) (Object) oldEntity).impl$adapter;
+        if (adapter != null) {
+            adapter.updateAdapatee((Entity) (Object) this);
+            this.impl$adapter = adapter;
+            ((EntityMixin) (Object) oldEntity).impl$adapter = null;
+        }
     }
 }

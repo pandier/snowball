@@ -11,7 +11,7 @@ import net.minecraft.world.entity.EntityEquipment
 
 class EquipmentImpl(
     override val adaptee: EntityEquipment,
-) : SnowballAdapter(adaptee), Equipment {
+) : SnowballAdapter(), Equipment {
     override fun get(slot: EquipmentSlot): ItemStack =
         adaptee.get(slot.let(Conversions::vanilla)).let(Conversions::snowball)
 

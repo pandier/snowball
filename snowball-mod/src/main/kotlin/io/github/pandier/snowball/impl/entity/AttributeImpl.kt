@@ -11,7 +11,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance
 
 class AttributeImpl(
     override val adaptee: AttributeInstance,
-) : SnowballAdapter(adaptee), Attribute {
+) : SnowballAdapter(), Attribute {
     override val type: AttributeType
         get() = adaptee.attribute.value().let(Conversions::snowball)
     override val modifiers: Collection<AttributeModifier>

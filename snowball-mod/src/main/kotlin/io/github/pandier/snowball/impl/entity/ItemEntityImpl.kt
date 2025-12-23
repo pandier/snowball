@@ -16,8 +16,8 @@ private const val SHORT_MAX: Int = Short.MAX_VALUE.toInt()
 open class ItemEntityImpl(
     adaptee: net.minecraft.world.entity.item.ItemEntity
 ) : EntityImpl(adaptee), ItemEntity {
-    @Suppress("CanBePrimaryConstructorProperty")
-    override val adaptee: net.minecraft.world.entity.item.ItemEntity = adaptee
+    override val adaptee: net.minecraft.world.entity.item.ItemEntity
+        get() = super.adapteeInternal as net.minecraft.world.entity.item.ItemEntity
 
     override var itemStack: ItemStack
         get() = adaptee.item.let(Conversions::snowball)

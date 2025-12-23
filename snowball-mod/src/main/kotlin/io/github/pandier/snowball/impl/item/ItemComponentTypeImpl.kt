@@ -9,7 +9,7 @@ class ItemComponentTypeImpl<T, V : Any>(
     val type: Class<T>?,
     private val snowballMapper: (V) -> T,
     private val vanillaMapper: (T) -> V,
-) : SnowballAdapter(adaptee), ItemComponentType<T> {
+) : SnowballAdapter(), ItemComponentType<T> {
     fun snowball(value: V): T = snowballMapper(value)
     fun vanilla(value: T): V = vanillaMapper(value)
 }

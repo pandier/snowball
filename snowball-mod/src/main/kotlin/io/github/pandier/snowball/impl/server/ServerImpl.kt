@@ -20,7 +20,7 @@ import java.util.UUID
 
 class ServerImpl(
     override val adaptee: MinecraftServer,
-) : SnowballAdapter(adaptee), Server, ForwardingAudience {
+) : SnowballAdapter(), Server, ForwardingAudience {
     override val scheduler: SchedulerImpl = SchedulerImpl()
 
     override val console: Console = ConsoleImpl(this)

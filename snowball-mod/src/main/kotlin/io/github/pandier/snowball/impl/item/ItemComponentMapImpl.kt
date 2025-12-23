@@ -9,7 +9,7 @@ import java.util.stream.Collectors
 
 class ItemComponentMapImpl(
     override val adaptee: DataComponentMap,
-) : SnowballAdapter(adaptee), ItemComponentMap {
+) : SnowballAdapter(), ItemComponentMap {
     override val size: Int
         get() = adaptee.size()
     override val types: Set<ItemComponentType<*>>

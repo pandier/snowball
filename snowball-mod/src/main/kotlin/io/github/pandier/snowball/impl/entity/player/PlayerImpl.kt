@@ -46,8 +46,8 @@ import java.util.Collections
 open class PlayerImpl(
     adaptee: ServerPlayer
 ) : LivingEntityImpl(adaptee), Player {
-    @Suppress("CanBePrimaryConstructorProperty")
-    override val adaptee: ServerPlayer = adaptee
+    override val adaptee: ServerPlayer
+        get() = super.adapteeInternal as ServerPlayer
 
     private var bossBars: MutableList<BossBar>? = null
 
@@ -228,6 +228,10 @@ open class PlayerImpl(
         builder.hat(adaptee.isModelPartShown(PlayerModelPart.HAT))
     }
 
+    override fun remove() {
+        error("A player cannot be removed")
+    }
+
     /**
      * Called when the player disconnects.
      */
@@ -236,9 +240,5 @@ open class PlayerImpl(
         for (bar in activeBossBars().toList()) {
             hideBossBar(bar)
         }
-    }
-
-    override fun remove() {
-        error("A player cannot be removed")
     }
 }

@@ -11,7 +11,7 @@ import java.util.Objects
 
 open class ItemStackImpl(
     override val adaptee: net.minecraft.world.item.ItemStack,
-) : SnowballAdapter(adaptee), ItemStack {
+) : SnowballAdapter(), ItemStack {
     override var count: Int
         get() = adaptee.count
         set(value) {
