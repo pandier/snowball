@@ -6,8 +6,10 @@ import io.github.pandier.snowball.item.ItemStackView
 import io.github.pandier.snowball.profile.GameProfile
 import io.github.pandier.snowball.scoreboard.Scoreboard
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.bossbar.BossBarViewer
 import net.kyori.adventure.text.`object`.PlayerHeadObjectContents
+import org.jetbrains.annotations.UnmodifiableView
 
 public interface Player : LivingEntity, Audience, BossBarViewer, PlayerHeadObjectContents.SkinSource {
     public val gameProfile: GameProfile
@@ -68,4 +70,6 @@ public interface Player : LivingEntity, Audience, BossBarViewer, PlayerHeadObjec
      * The supplied stack is **not modified**.
      */
     public fun giveOrDrop(stack: ItemStackView, silent: Boolean)
+
+    override fun activeBossBars(): @UnmodifiableView Collection<BossBar?>
 }
