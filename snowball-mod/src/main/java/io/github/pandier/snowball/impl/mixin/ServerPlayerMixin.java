@@ -9,6 +9,7 @@ import io.github.pandier.snowball.impl.bridge.ServerPlayerBridge;
 import io.github.pandier.snowball.impl.entity.player.PlayerImpl;
 import io.github.pandier.snowball.impl.entity.tracker.EntityDeathTracker;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.bossbar.BossBar;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -28,6 +29,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin extends PlayerMixin implements ServerPlayerBridge {
@@ -95,6 +99,26 @@ public abstract class ServerPlayerMixin extends PlayerMixin implements ServerPla
         if (event != null) {
             Component message = event.getMessage() == null ? CommonComponents.EMPTY : Conversions.Adventure.INSTANCE.vanilla(event.getMessage());
             this.connection.send(new ClientboundPlayerCombatKillPacket(this.getId(), message));
+        }
+    }
+
+    @Inject(method = "restoreFrom", at = @At("TAIL"))
+    public void inject$restoreFrom(ServerPlayer vOldPlayer, boolean restoreAll, CallbackInfo ci) {
+        if (vOldPlayer == null) return;
+
+        PlayerImpl player = (PlayerImpl) this.snowball$get();
+        PlayerImpl oldPlayer = (PlayerImpl) ((ServerPlayerMixin) (Object) vOldPlayer).impl$adapter;
+
+        if (oldPlayer == null) return;
+
+        List<BossBar> bossBars = new ArrayList<>(oldPlayer.activeBossBars());
+
+        for (BossBar bossBar : bossBars) {
+            oldPlayer.hideBossBar(bossBar);
+        }
+
+        for (BossBar bossBar : bossBars) {
+            player.showBossBar(bossBar);
         }
     }
 

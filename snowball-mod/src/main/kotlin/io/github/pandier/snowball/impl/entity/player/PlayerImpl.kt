@@ -49,7 +49,7 @@ open class PlayerImpl(
     override val adaptee: ServerPlayer
         get() = super.adapteeInternal as ServerPlayer
 
-    private var bossBars: MutableList<BossBar>? = null
+    private var bossBars: MutableSet<BossBar>? = null
 
     override val gameProfile: GameProfile
         get() = Conversions.snowball(adaptee.gameProfile)
@@ -196,7 +196,7 @@ open class PlayerImpl(
         BossBarImplementation.get(bar, SnowballBossBarImplementation::class.java)
             .addPlayer(adaptee)
 
-        val bossBars = this.bossBars ?: mutableListOf<BossBar>().also { this.bossBars = it }
+        val bossBars = this.bossBars ?: mutableSetOf<BossBar>().also { this.bossBars = it }
         bossBars.add(bar)
     }
 
@@ -214,8 +214,8 @@ open class PlayerImpl(
         }
     }
 
-    override fun activeBossBars(): @UnmodifiableView Iterable<BossBar> {
-        return this.bossBars?.let(Collections::unmodifiableList) ?: Collections.emptyList()
+    override fun activeBossBars(): @UnmodifiableView Collection<BossBar> {
+        return this.bossBars?.let(Collections::unmodifiableSet) ?: Collections.emptyList()
     }
 
     @Suppress("UnstableApiUsage")
