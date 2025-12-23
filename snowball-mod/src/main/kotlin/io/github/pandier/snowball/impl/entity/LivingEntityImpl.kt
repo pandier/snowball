@@ -19,8 +19,8 @@ import net.minecraft.server.level.ServerLevel
 open class LivingEntityImpl(
     adaptee: net.minecraft.world.entity.LivingEntity
 ) : EntityImpl(adaptee), LivingEntity {
-    @Suppress("CanBePrimaryConstructorProperty")
-    override val adaptee: net.minecraft.world.entity.LivingEntity = adaptee
+    override val adaptee: net.minecraft.world.entity.LivingEntity
+        get() = super.adapteeInternal as net.minecraft.world.entity.LivingEntity
 
     override var health: Float
         get() = adaptee.health

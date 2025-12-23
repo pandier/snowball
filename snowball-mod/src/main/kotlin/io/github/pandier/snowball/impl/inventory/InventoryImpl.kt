@@ -13,7 +13,7 @@ import net.minecraft.world.Container
 
 open class InventoryImpl(
     adaptee: Container
-) : SnowballAdapter(adaptee), Inventory {
+) : SnowballAdapter(), Inventory {
     @Suppress("CanBePrimaryConstructorProperty")
     override val adaptee: Container = adaptee
 

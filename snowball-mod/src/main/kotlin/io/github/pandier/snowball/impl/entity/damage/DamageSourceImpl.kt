@@ -13,7 +13,7 @@ import net.kyori.adventure.text.Component
 
 class DamageSourceImpl(
     override val adaptee: net.minecraft.world.damagesource.DamageSource
-) : SnowballAdapter(adaptee), DamageSource {
+) : SnowballAdapter(), DamageSource {
     override val type: DamageType
         get() = adaptee.type().let(Conversions::snowball)
     override val causingEntity: Entity?

@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.Block
 
 class BlockTypeImpl(
     override val adaptee: Block
-) : SnowballAdapter(adaptee), BlockType {
+) : SnowballAdapter(), BlockType {
     override val blockState: BlockState
         get() = Conversions.snowball(adaptee.defaultBlockState())
 }

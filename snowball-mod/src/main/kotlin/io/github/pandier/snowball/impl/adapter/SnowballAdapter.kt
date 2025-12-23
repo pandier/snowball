@@ -1,8 +1,8 @@
 package io.github.pandier.snowball.impl.adapter
 
-abstract class SnowballAdapter(
-    open val adaptee: Any
-) {
+abstract class SnowballAdapter {
+    abstract val adaptee: Any
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is SnowballAdapter) return false

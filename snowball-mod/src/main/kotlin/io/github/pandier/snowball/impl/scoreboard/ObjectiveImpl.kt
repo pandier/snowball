@@ -11,7 +11,7 @@ import net.minecraft.world.scores.ScoreHolder
 
 class ObjectiveImpl(
     override val adaptee: net.minecraft.world.scores.Objective
-) : SnowballAdapter(adaptee), Objective {
+) : SnowballAdapter(), Objective {
 
     override val name: String
         get() = adaptee.name

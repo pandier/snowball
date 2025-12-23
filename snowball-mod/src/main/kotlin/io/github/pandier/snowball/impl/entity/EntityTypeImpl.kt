@@ -12,7 +12,7 @@ import net.minecraft.world.entity.EntitySpawnReason
 
 class EntityTypeImpl<T : Entity, V : net.minecraft.world.entity.Entity>(
     override val adaptee: net.minecraft.world.entity.EntityType<V>,
-) : SnowballAdapter(adaptee), EntityType<T> {
+) : SnowballAdapter(), EntityType<T> {
 
     override val name: Component
         get() = adaptee.description.let(Conversions.Adventure::adventure)

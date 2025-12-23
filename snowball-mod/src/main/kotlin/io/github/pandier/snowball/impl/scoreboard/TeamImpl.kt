@@ -12,7 +12,7 @@ import java.util.Collections
 
 class TeamImpl(
     override val adaptee: PlayerTeam
-) : SnowballAdapter(adaptee), Team {
+) : SnowballAdapter(), Team {
 
     override val name: String
         get() = adaptee.name

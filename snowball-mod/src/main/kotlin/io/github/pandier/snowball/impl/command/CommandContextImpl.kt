@@ -8,7 +8,7 @@ import net.minecraft.commands.CommandSourceStack
 class CommandContextImpl(
     override val adaptee: com.mojang.brigadier.context.CommandContext<CommandSourceStack>,
     private val transformedArguments: Map<String, Any?>,
-) : SnowballAdapter(adaptee), CommandContext{
+) : SnowballAdapter(), CommandContext{
     override val source: CommandSource = CommandSourceImpl(adaptee.source)
 
     override fun <T> require(name: String): T {

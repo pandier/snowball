@@ -6,4 +6,4 @@ import net.minecraft.world.item.Item
 
 class ItemTypeImpl(
     override val adaptee: Item
-) : SnowballAdapter(adaptee), ItemType
+) : SnowballAdapter(), ItemType

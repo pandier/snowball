@@ -8,7 +8,7 @@ import net.kyori.adventure.text.Component
 
 class ScoreImpl(
     override val adaptee: ExtendedScoreAccess
-) : SnowballAdapter(adaptee), Score {
+) : SnowballAdapter(), Score {
 
     override var value: Int
         get() = adaptee.get()
