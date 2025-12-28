@@ -1,6 +1,6 @@
 package io.github.pandier.snowball.impl.item
 
-import io.github.pandier.snowball.item.ItemComponentType
+import io.github.pandier.snowball.item.component.ItemComponentType
 import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemType
 import io.github.pandier.snowball.item.ItemTypes

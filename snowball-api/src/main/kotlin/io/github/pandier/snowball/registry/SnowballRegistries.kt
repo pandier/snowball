@@ -4,7 +4,7 @@ import io.github.pandier.snowball.entity.AttributeType
 import io.github.pandier.snowball.entity.Entity
 import io.github.pandier.snowball.entity.EntityType
 import io.github.pandier.snowball.entity.damage.DamageType
-import io.github.pandier.snowball.item.ItemComponentType
+import io.github.pandier.snowball.item.component.ItemComponentType
 import io.github.pandier.snowball.item.ItemType
 import io.github.pandier.snowball.scoreboard.Criterion
 import io.github.pandier.snowball.world.GameRule

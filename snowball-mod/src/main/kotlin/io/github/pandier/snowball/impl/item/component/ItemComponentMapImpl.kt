@@ -1,9 +1,9 @@
-package io.github.pandier.snowball.impl.item
+package io.github.pandier.snowball.impl.item.component
 
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.adapter.SnowballAdapter
-import io.github.pandier.snowball.item.ItemComponentMap
-import io.github.pandier.snowball.item.ItemComponentType
+import io.github.pandier.snowball.item.component.ItemComponentMap
+import io.github.pandier.snowball.item.component.ItemComponentType
 import net.minecraft.core.component.DataComponentMap
 import java.util.stream.Collectors
 

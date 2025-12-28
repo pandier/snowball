@@ -1,6 +1,7 @@
 package io.github.pandier.snowball.item
 
 import io.github.pandier.snowball.Snowball
+import io.github.pandier.snowball.item.component.ItemComponentType
 import java.util.function.Supplier
 
 public interface ItemStack : ItemStackView {

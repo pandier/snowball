@@ -1,4 +1,4 @@
-package io.github.pandier.snowball.item
+package io.github.pandier.snowball.item.component
 
 public interface ItemComponentMap {
     public val size: Int

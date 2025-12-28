@@ -3,8 +3,10 @@ package io.github.pandier.snowball.impl.item
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.adapter.SnowballAdapter
 import io.github.pandier.snowball.impl.bridge.ResetableComponentAccessBridge
-import io.github.pandier.snowball.item.ItemComponentMap
-import io.github.pandier.snowball.item.ItemComponentType
+import io.github.pandier.snowball.impl.item.component.ItemComponentMapImpl
+import io.github.pandier.snowball.impl.item.component.ItemComponentTypeImpl
+import io.github.pandier.snowball.item.component.ItemComponentMap
+import io.github.pandier.snowball.item.component.ItemComponentType
 import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemType
 import java.util.Objects

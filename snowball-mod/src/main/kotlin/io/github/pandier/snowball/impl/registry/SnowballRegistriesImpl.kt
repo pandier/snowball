@@ -8,7 +8,7 @@ import io.github.pandier.snowball.entity.damage.DamageType
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.SnowballImpl
 import io.github.pandier.snowball.impl.adapter.SnowballAdapter
-import io.github.pandier.snowball.item.ItemComponentType
+import io.github.pandier.snowball.item.component.ItemComponentType
 import io.github.pandier.snowball.item.ItemType
 import io.github.pandier.snowball.registry.RegistryReference
 import io.github.pandier.snowball.registry.SnowballRegistries

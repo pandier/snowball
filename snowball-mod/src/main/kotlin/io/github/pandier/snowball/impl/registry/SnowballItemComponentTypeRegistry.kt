@@ -1,7 +1,7 @@
 package io.github.pandier.snowball.impl.registry
 
 import io.github.pandier.snowball.impl.Conversions
-import io.github.pandier.snowball.impl.item.ItemComponentTypeImpl
+import io.github.pandier.snowball.impl.item.component.ItemComponentTypeImpl
 import io.github.pandier.snowball.item.ItemRarity
 import io.github.pandier.snowball.math.Color
 import net.kyori.adventure.key.Key
@@ -22,7 +22,7 @@ import java.util.Collections
 import java.util.Optional
 
 /**
- * A registry that properly handles [io.github.pandier.snowball.item.ItemComponentType]s.
+ * A registry that properly handles [io.github.pandier.snowball.item.component.ItemComponentType]s.
  */
 class SnowballItemComponentTypeRegistry {
     private val entries = mutableMapOf<Key, ItemComponentTypeImpl<*, *>>()

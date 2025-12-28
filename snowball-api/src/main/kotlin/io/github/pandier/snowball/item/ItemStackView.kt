@@ -1,5 +1,9 @@
 package io.github.pandier.snowball.item
 
+import io.github.pandier.snowball.item.component.ItemComponentMap
+import io.github.pandier.snowball.item.component.ItemComponentType
+import io.github.pandier.snowball.item.component.ItemComponentTypes
+
 /**
  * A view of an [ItemStack].
  */

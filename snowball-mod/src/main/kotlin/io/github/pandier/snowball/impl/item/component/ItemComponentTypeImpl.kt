@@ -1,7 +1,7 @@
-package io.github.pandier.snowball.impl.item
+package io.github.pandier.snowball.impl.item.component
 
 import io.github.pandier.snowball.impl.adapter.SnowballAdapter
-import io.github.pandier.snowball.item.ItemComponentType
+import io.github.pandier.snowball.item.component.ItemComponentType
 import net.minecraft.core.component.DataComponentType
 
 class ItemComponentTypeImpl<T, V : Any>(

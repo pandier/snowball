@@ -25,7 +25,7 @@ import io.github.pandier.snowball.impl.scoreboard.CriterionImpl
 import io.github.pandier.snowball.impl.scoreboard.ExtendedScoreAccess
 import io.github.pandier.snowball.impl.scoreboard.ScoreImpl
 import io.github.pandier.snowball.inventory.Inventory
-import io.github.pandier.snowball.item.ItemComponentType
+import io.github.pandier.snowball.item.component.ItemComponentType
 import io.github.pandier.snowball.item.ItemRarity
 import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemType
