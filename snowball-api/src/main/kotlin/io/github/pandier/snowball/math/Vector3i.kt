@@ -11,7 +11,7 @@ public data class Vector3i(
     public constructor(a: Int) : this(a, a, a)
 
     public companion object Constants {
-        @JvmStatic
+        @JvmField
         public val ZERO: Vector3i = Vector3i(0, 0, 0)
     }
 

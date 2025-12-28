@@ -12,7 +12,7 @@ public data class Vector2d(
     public constructor(a: Double) : this(a, a)
 
     public companion object Constants {
-        @JvmStatic
+        @JvmField
         public val ZERO: Vector2d = Vector2d(0.0, 0.0)
     }
 

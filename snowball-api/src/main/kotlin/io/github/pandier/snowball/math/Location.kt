@@ -11,7 +11,7 @@ public data class Location(
     public constructor(a: Double) : this(a, a, a)
 
     public companion object Constants {
-        @JvmStatic
+        @JvmField
         public val ZERO: Location = Location(0.0, 0.0, 0.0, 0f, 0f)
     }
 

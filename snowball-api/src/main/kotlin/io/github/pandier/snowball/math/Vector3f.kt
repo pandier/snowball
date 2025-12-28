@@ -15,7 +15,7 @@ public data class Vector3f(
     public constructor(a: Float) : this(a, a, a)
 
     public companion object Constants {
-        @JvmStatic
+        @JvmField
         public val ZERO: Vector3f = Vector3f(0f, 0f, 0f)
     }
 
