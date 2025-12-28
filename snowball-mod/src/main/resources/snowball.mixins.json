@@ -12,6 +12,7 @@
     "DamageTypeMixin",
     "EntityMixin",
     "EntityTypeMixin",
+    "GameRuleMixin",
     "InventoryAccessor",
     "InventoryMixin",
     "ItemEntityAccessor",

@@ -7,6 +7,7 @@ import io.github.pandier.snowball.entity.damage.DamageType
 import io.github.pandier.snowball.item.ItemComponentType
 import io.github.pandier.snowball.item.ItemType
 import io.github.pandier.snowball.scoreboard.Criterion
+import io.github.pandier.snowball.world.GameRule
 import io.github.pandier.snowball.world.block.BlockType
 import net.kyori.adventure.key.Key
 import java.util.function.Supplier
@@ -24,11 +25,17 @@ public interface SnowballRegistries {
     public fun damageType(key: Key): RegistryReference<DamageType>
     public fun damageType(entry: DamageType): RegistryReference<DamageType>
 
-    public fun <T : Entity> entityType(entry: EntityType<T>): RegistryReference<EntityType<T>>
     public fun <T : Entity> entityType(key: Key): RegistryReference<EntityType<T>>
+    public fun <T : Entity> entityType(entry: EntityType<T>): RegistryReference<EntityType<T>>
 
     public fun attributeType(key: Key): RegistryReference<AttributeType>
     public fun attributeType(entry: AttributeType): RegistryReference<AttributeType>
 
     public fun criterion(name: String): Supplier<Criterion>
+
+    public fun gameRuleAny(key: Key): RegistryReference<GameRule<*>>
+    public fun gameRuleAny(entry: GameRule<*>): RegistryReference<GameRule<*>>
+
+    public fun <T : Any> gameRule(key: Key, type: Class<T>): RegistryReference<GameRule<T>>
+    public fun <T : Any> gameRule(entry: GameRule<T>): RegistryReference<GameRule<T>>
 }

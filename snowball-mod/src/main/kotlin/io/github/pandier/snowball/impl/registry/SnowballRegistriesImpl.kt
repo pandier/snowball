@@ -13,6 +13,7 @@ import io.github.pandier.snowball.item.ItemType
 import io.github.pandier.snowball.registry.RegistryReference
 import io.github.pandier.snowball.registry.SnowballRegistries
 import io.github.pandier.snowball.scoreboard.Criterion
+import io.github.pandier.snowball.world.GameRule
 import io.github.pandier.snowball.world.block.BlockType
 import net.kyori.adventure.key.Key
 import net.minecraft.core.Registry
@@ -89,6 +90,27 @@ class SnowballRegistriesImpl : SnowballRegistries {
                 .orElseThrow { IllegalArgumentException("Unknown criterion '$name'") }
                 .let(Conversions::snowball)
         }
+    }
+
+    override fun gameRuleAny(key: Key): RegistryReference<GameRule<*>> {
+        return RegistryReferenceImpl.Lazy(Registries.GAME_RULE, key, Conversions::snowballAny)
+    }
+
+    override fun gameRuleAny(entry: GameRule<*>): RegistryReference<GameRule<*>> {
+        return fromEntry(Registries.GAME_RULE, entry)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : Any> gameRule(key: Key, type: Class<T>): RegistryReference<GameRule<T>> {
+        return RegistryReferenceImpl.Lazy(Registries.GAME_RULE, key) {
+            if (it.valueClass() != type)
+                error("Type ${type.name} for game rule '$key' doesn't match type in registry (${it.valueClass().name})")
+            Conversions.snowball(it as net.minecraft.world.level.gamerules.GameRule<T>)
+        }
+    }
+
+    override fun <T : Any> gameRule(entry: GameRule<T>): RegistryReference<GameRule<T>> {
+        return fromEntry(Registries.GAME_RULE, entry)
     }
 
     @Suppress("UNCHECKED_CAST")

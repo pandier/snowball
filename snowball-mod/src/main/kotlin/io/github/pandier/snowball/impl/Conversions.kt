@@ -39,6 +39,7 @@ import io.github.pandier.snowball.scoreboard.Score
 import io.github.pandier.snowball.scoreboard.Scoreboard
 import io.github.pandier.snowball.scoreboard.Team
 import io.github.pandier.snowball.server.Server
+import io.github.pandier.snowball.world.GameRule
 import io.github.pandier.snowball.world.World
 import io.github.pandier.snowball.world.block.BlockState
 import io.github.pandier.snowball.world.block.BlockType
@@ -302,6 +303,8 @@ object Conversions {
         }
     }
 
+    fun <T : Any> snowball(gameRule: net.minecraft.world.level.gamerules.GameRule<T>): GameRule<T> = convertible(gameRule)
+    fun snowballAny(gameRule: net.minecraft.world.level.gamerules.GameRule<*>): GameRule<*> = convertible(gameRule)
     fun snowball(score: ExtendedScoreAccess): Score = ScoreImpl(score)
     fun snowball(criterion: ObjectiveCriteria): Criterion = CriterionImpl(criterion)
     fun snowball(objective: net.minecraft.world.scores.Objective): Objective = convertible(objective)
