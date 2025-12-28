@@ -40,6 +40,7 @@ import io.github.pandier.snowball.scoreboard.Scoreboard
 import io.github.pandier.snowball.scoreboard.Team
 import io.github.pandier.snowball.server.Server
 import io.github.pandier.snowball.world.GameRule
+import io.github.pandier.snowball.world.HeightMap
 import io.github.pandier.snowball.world.World
 import io.github.pandier.snowball.world.block.BlockState
 import io.github.pandier.snowball.world.block.BlockType
@@ -74,6 +75,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.levelgen.Heightmap
 import net.minecraft.world.scores.PlayerTeam
 import net.minecraft.world.scores.criteria.ObjectiveCriteria
 import java.time.Duration
@@ -300,6 +302,28 @@ object Conversions {
         return when (renderType) {
             Objective.RenderType.HEARTS -> ObjectiveCriteria.RenderType.HEARTS
             Objective.RenderType.INTEGER -> ObjectiveCriteria.RenderType.INTEGER
+        }
+    }
+
+    fun snowball(type: Heightmap.Types): HeightMap {
+        return when (type) {
+            Heightmap.Types.WORLD_SURFACE -> HeightMap.WORLD_SURFACE
+            Heightmap.Types.WORLD_SURFACE_WG -> HeightMap.WORLD_SURFACE_WG
+            Heightmap.Types.OCEAN_FLOOR -> HeightMap.OCEAN_FLOOR
+            Heightmap.Types.OCEAN_FLOOR_WG -> HeightMap.OCEAN_FLOOR_WG
+            Heightmap.Types.MOTION_BLOCKING -> HeightMap.MOTION_BLOCKING
+            Heightmap.Types.MOTION_BLOCKING_NO_LEAVES -> HeightMap.MOTION_BLOCKING_NO_LEAVES
+        }
+    }
+
+    fun vanilla(type: HeightMap): Heightmap.Types {
+        return when (type) {
+            HeightMap.WORLD_SURFACE -> Heightmap.Types.WORLD_SURFACE
+            HeightMap.WORLD_SURFACE_WG -> Heightmap.Types.WORLD_SURFACE_WG
+            HeightMap.OCEAN_FLOOR -> Heightmap.Types.OCEAN_FLOOR
+            HeightMap.OCEAN_FLOOR_WG -> Heightmap.Types.OCEAN_FLOOR_WG
+            HeightMap.MOTION_BLOCKING -> Heightmap.Types.MOTION_BLOCKING
+            HeightMap.MOTION_BLOCKING_NO_LEAVES -> Heightmap.Types.MOTION_BLOCKING_NO_LEAVES
         }
     }
 

@@ -31,6 +31,10 @@ public interface World {
         }
     }
 
+    public fun <T : Entity> spawnEntity(type: Supplier<EntityType<T>>, position: Vector3d): T {
+        return spawnEntity(type.get(), position)
+    }
+
     public fun <T : Entity> spawnEntity(type: EntityType<T>, position: Vector3d, block: Consumer<T>): T {
         return createEntity(type, position).also {
             block.accept(it)
@@ -71,6 +75,8 @@ public interface World {
     public fun <T : Any> getGameRule(rule: Supplier<GameRule<T>>): T {
         return getGameRule(rule.get())
     }
+
+    public fun getHeight(heightMap: HeightMap, x: Int, z: Int): Int
 
     public val seed: Long
 

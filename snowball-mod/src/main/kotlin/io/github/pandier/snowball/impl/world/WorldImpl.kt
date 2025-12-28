@@ -12,6 +12,7 @@ import io.github.pandier.snowball.impl.entity.EntityTypeImpl
 import io.github.pandier.snowball.impl.world.block.BlockStateImpl
 import io.github.pandier.snowball.math.Vector3d
 import io.github.pandier.snowball.world.GameRule
+import io.github.pandier.snowball.world.HeightMap
 import io.github.pandier.snowball.world.World
 import io.github.pandier.snowball.world.block.BlockState
 import net.kyori.adventure.key.Key
@@ -62,6 +63,10 @@ class WorldImpl(
 
     override fun <T : Any> getGameRule(rule: GameRule<T>): T {
         return adaptee.gameRules.get((rule as GameRuleImpl<T>).adaptee)
+    }
+
+    override fun getHeight(heightMap: HeightMap, x: Int, z: Int): Int {
+        return adaptee.getHeight(heightMap.let(Conversions::vanilla), x, z)
     }
 
     override val seed: Long
