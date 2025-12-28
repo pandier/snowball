@@ -29,6 +29,9 @@ import io.github.pandier.snowball.item.component.ItemComponentType
 import io.github.pandier.snowball.item.ItemRarity
 import io.github.pandier.snowball.item.ItemStack
 import io.github.pandier.snowball.item.ItemType
+import io.github.pandier.snowball.item.component.FireworkExplosion
+import io.github.pandier.snowball.item.component.FireworksComponent
+import io.github.pandier.snowball.math.Color
 import io.github.pandier.snowball.profile.GameProfile
 import io.github.pandier.snowball.profile.GameProfileProperty
 import io.github.pandier.snowball.scoreboard.Criterion
@@ -44,6 +47,7 @@ import io.github.pandier.snowball.world.HeightMap
 import io.github.pandier.snowball.world.World
 import io.github.pandier.snowball.world.block.BlockState
 import io.github.pandier.snowball.world.block.BlockType
+import it.unimi.dsi.fastutil.ints.IntArrayList
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.chat.ChatType
 import net.kyori.adventure.key.Key
@@ -73,6 +77,7 @@ import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.ai.attributes.AttributeInstance
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Rarity
+import net.minecraft.world.item.component.Fireworks
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.levelgen.Heightmap
@@ -303,6 +308,60 @@ object Conversions {
             Objective.RenderType.HEARTS -> ObjectiveCriteria.RenderType.HEARTS
             Objective.RenderType.INTEGER -> ObjectiveCriteria.RenderType.INTEGER
         }
+    }
+
+    fun snowball(shape: net.minecraft.world.item.component.FireworkExplosion.Shape): FireworkExplosion.Shape {
+        return when (shape) {
+            net.minecraft.world.item.component.FireworkExplosion.Shape.SMALL_BALL -> FireworkExplosion.Shape.SMALL_BALL
+            net.minecraft.world.item.component.FireworkExplosion.Shape.LARGE_BALL -> FireworkExplosion.Shape.LARGE_BALL
+            net.minecraft.world.item.component.FireworkExplosion.Shape.STAR -> FireworkExplosion.Shape.STAR
+            net.minecraft.world.item.component.FireworkExplosion.Shape.CREEPER -> FireworkExplosion.Shape.CREEPER
+            net.minecraft.world.item.component.FireworkExplosion.Shape.BURST -> FireworkExplosion.Shape.BURST
+        }
+    }
+
+    fun vanilla(shape: FireworkExplosion.Shape): net.minecraft.world.item.component.FireworkExplosion.Shape {
+        return when (shape) {
+            FireworkExplosion.Shape.SMALL_BALL -> net.minecraft.world.item.component.FireworkExplosion.Shape.SMALL_BALL
+            FireworkExplosion.Shape.LARGE_BALL -> net.minecraft.world.item.component.FireworkExplosion.Shape.LARGE_BALL
+            FireworkExplosion.Shape.STAR -> net.minecraft.world.item.component.FireworkExplosion.Shape.STAR
+            FireworkExplosion.Shape.CREEPER -> net.minecraft.world.item.component.FireworkExplosion.Shape.CREEPER
+            FireworkExplosion.Shape.BURST -> net.minecraft.world.item.component.FireworkExplosion.Shape.BURST
+        }
+    }
+
+    fun snowball(explosion: net.minecraft.world.item.component.FireworkExplosion): FireworkExplosion {
+        return FireworkExplosion(
+            snowball(explosion.shape),
+            explosion.colors.map { Color(it) },
+            explosion.fadeColors.map { Color(it) },
+            explosion.hasTrail,
+            explosion.hasTwinkle,
+        )
+    }
+
+    fun vanilla(explosion: FireworkExplosion): net.minecraft.world.item.component.FireworkExplosion {
+        return net.minecraft.world.item.component.FireworkExplosion(
+            vanilla(explosion.shape),
+            IntArrayList().apply { explosion.colors.forEach { add(it.rgb) } },
+            IntArrayList().apply { explosion.fadeColors.forEach { add(it.rgb) } },
+            explosion.isTrail,
+            explosion.isTwinkle,
+        )
+    }
+
+    fun snowball(fireworks: Fireworks): FireworksComponent {
+        return FireworksComponent(
+            fireworks.flightDuration,
+            fireworks.explosions.map(Conversions::snowball),
+        )
+    }
+
+    fun vanilla(fireworks: FireworksComponent): Fireworks {
+        return Fireworks(
+            fireworks.duration,
+            fireworks.explosions.map(Conversions::vanilla),
+        )
     }
 
     fun snowball(type: Heightmap.Types): HeightMap {

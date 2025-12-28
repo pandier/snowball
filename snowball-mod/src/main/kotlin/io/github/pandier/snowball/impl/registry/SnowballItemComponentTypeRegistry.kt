@@ -3,6 +3,8 @@ package io.github.pandier.snowball.impl.registry
 import io.github.pandier.snowball.impl.Conversions
 import io.github.pandier.snowball.impl.item.component.ItemComponentTypeImpl
 import io.github.pandier.snowball.item.ItemRarity
+import io.github.pandier.snowball.item.component.FireworkExplosion
+import io.github.pandier.snowball.item.component.FireworksComponent
 import io.github.pandier.snowball.math.Color
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
@@ -13,6 +15,7 @@ import net.minecraft.server.network.Filterable
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.item.component.BlockItemStateProperties
 import net.minecraft.world.item.component.DyedItemColor
+import net.minecraft.world.item.component.Fireworks
 import net.minecraft.world.item.component.ItemLore
 import net.minecraft.world.item.component.MapItemColor
 import net.minecraft.world.item.component.OminousBottleAmplifier
@@ -89,8 +92,8 @@ class SnowballItemComponentTypeRegistry {
         registerMinecraftUnknown("provides_banner_patterns")
         registerMinecraftUnknown("recipes")
         registerMinecraftUnknown("lodestone_tracker")
-        registerMinecraftUnknown("firework_explosion")
-        registerMinecraftUnknown("fireworks")
+        registerMinecraft<FireworkExplosion, net.minecraft.world.item.component.FireworkExplosion>("firework_explosion", Conversions::snowball, Conversions::vanilla)
+        registerMinecraft<FireworksComponent, Fireworks>("fireworks", Conversions::snowball, Conversions::vanilla)
         registerMinecraftUnknown("profile")
         registerMinecraft<Key, Identifier>("note_block_sound", Conversions.Adventure::adventure, Conversions.Adventure::vanilla)
         registerMinecraftUnknown("banner_patterns")

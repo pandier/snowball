@@ -2,6 +2,7 @@ package io.github.pandier.snowball.impl.mixin;
 
 import io.github.pandier.snowball.impl.bridge.SnowballConvertible;
 import io.github.pandier.snowball.impl.entity.EntityImpl;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -11,6 +12,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -22,12 +24,12 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements SnowballConvertible<io.github.pandier.snowball.entity.Entity> {
+    @Shadow @Final protected SynchedEntityData entityData;
     @Shadow public int invulnerableTime;
     @Shadow public abstract Level level();
     @Shadow public abstract Vec3 position();
     @Shadow public abstract @Nullable PlayerTeam getTeam();
     @Shadow public abstract int getId();
-
     @Unique protected @Nullable EntityImpl impl$adapter = null;
 
     @Unique
