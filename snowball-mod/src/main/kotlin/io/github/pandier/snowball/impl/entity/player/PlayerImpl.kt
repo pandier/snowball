@@ -8,6 +8,7 @@ import io.github.pandier.snowball.impl.entity.LivingEntityImpl
 import io.github.pandier.snowball.impl.inventory.PlayerInventoryImpl
 import io.github.pandier.snowball.impl.item.ItemStackImpl
 import io.github.pandier.snowball.entity.player.PlayerInventory
+import io.github.pandier.snowball.impl.bridge.FoodDataBridge
 import io.github.pandier.snowball.impl.bridge.ServerGamePacketListenerImplBridge
 import io.github.pandier.snowball.impl.scoreboard.ScoreboardImpl
 import io.github.pandier.snowball.item.ItemStack
@@ -21,22 +22,29 @@ import net.kyori.adventure.bossbar.BossBarImplementation
 import net.kyori.adventure.chat.ChatType
 import net.kyori.adventure.chat.SignedMessage
 import net.kyori.adventure.identity.Identity
+import net.kyori.adventure.inventory.Book
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.sound.SoundStop
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.`object`.PlayerHeadObjectContents
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.kyori.adventure.title.Title
 import net.kyori.adventure.title.TitlePart
 import net.minecraft.core.Holder
+import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.OutgoingChatMessage
 import net.minecraft.network.protocol.game.*
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.network.Filterable
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.PositionMoveRotation
 import net.minecraft.world.entity.Relative
 import net.minecraft.world.entity.player.PlayerModelPart
+import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.WrittenBookContent
 import net.minecraft.world.phys.Vec3
 import org.jetbrains.annotations.ApiStatus
 import org.jetbrains.annotations.UnmodifiableView
@@ -59,6 +67,18 @@ open class PlayerImpl(
         set(value) {
             adaptee.setGameMode(value.let(Conversions::vanilla))
         }
+
+    override var foodLevel: Int
+        get() = adaptee.foodData.foodLevel
+        set(value) { adaptee.foodData.foodLevel = value }
+
+    override var saturation: Float
+        get() = adaptee.foodData.saturationLevel
+        set(value) { adaptee.foodData.setSaturation(value) }
+
+    override var exhaustion: Float
+        get() = (adaptee.foodData as FoodDataBridge).`snowball$getExhaustion`()
+        set(value) { (adaptee.foodData as FoodDataBridge).`snowball$setExhaustion`(value) }
 
     override var velocity: Vector3d
         get() = super.velocity
@@ -216,6 +236,30 @@ open class PlayerImpl(
 
     override fun activeBossBars(): @UnmodifiableView Collection<BossBar> {
         return this.bossBars?.let(Collections::unmodifiableSet) ?: Collections.emptyList()
+    }
+
+    override fun openBook(book: Book) {
+        val bookItem = net.minecraft.world.item.ItemStack(Items.WRITTEN_BOOK).apply {
+            val legacySerializer = LegacyComponentSerializer.legacySection()
+            set(DataComponents.WRITTEN_BOOK_CONTENT, WrittenBookContent(
+                Filterable.passThrough(legacySerializer.serialize(book.title())),
+                legacySerializer.serialize(book.title()),
+                0,
+                book.pages().map { Filterable.passThrough(Conversions.Adventure.vanilla(it)) },
+                false,
+            ))
+        }
+
+        WrittenBookContent.resolveForItem(bookItem, adaptee.createCommandSourceStack(), adaptee)
+
+        val selectedItem = adaptee.inventory.selectedItem
+        val selectedSlot = adaptee.inventory.selectedSlot
+
+        adaptee.connection.send(ClientboundBundlePacket(listOf(
+            ClientboundSetPlayerInventoryPacket(selectedSlot, bookItem),
+            ClientboundOpenBookPacket(InteractionHand.MAIN_HAND),
+            ClientboundSetPlayerInventoryPacket(selectedSlot, selectedItem)
+        )))
     }
 
     @Suppress("UnstableApiUsage")

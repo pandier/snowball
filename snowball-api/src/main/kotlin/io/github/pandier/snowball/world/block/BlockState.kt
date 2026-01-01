@@ -11,7 +11,7 @@ public interface BlockState {
 
         @JvmStatic
         public fun of(type: BlockType): BlockState {
-            return type.blockState
+            return type.defaultBlockState
         }
     }
 

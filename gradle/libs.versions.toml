@@ -14,5 +14,6 @@ fabric-language-kotlin = { module = "net.fabricmc:fabric-language-kotlin", versi
 fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
 adventure-api = { module = "net.kyori:adventure-api", version.ref = "adventure" }
 adventure-text-serializer-plain = { module = "net.kyori:adventure-text-serializer-plain", version.ref = "adventure" }
+adventure-text-serializer-legacy = { module = "net.kyori:adventure-text-serializer-legacy", version.ref = "adventure" }
 adventure-text-serializer-gson = { module = "net.kyori:adventure-text-serializer-gson", version.ref = "adventure" }
 log4j = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }

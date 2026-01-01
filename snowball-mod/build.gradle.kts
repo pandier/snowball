@@ -9,7 +9,7 @@ dependencies {
     modImplementation(libs.fabric.loader)
     modImplementation(libs.fabric.language.kotlin)
     modImplementation(libs.fabric.api)
-    implementation(project(":snowball-api"))
+    api(project(":snowball-api"))
 
     testImplementation(kotlin("test"))
 }

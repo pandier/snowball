@@ -1,6 +1,7 @@
 package io.github.pandier.snowball.entity
 
 import net.kyori.adventure.key.Key
+import org.jetbrains.annotations.UnmodifiableView
 
 /**
  * Represents a [LivingEntity] attribute with a value that's calculated using a base value and [AttributeModifier]s.
@@ -27,7 +28,7 @@ public interface Attribute {
     /**
      * A collection of all the attribute's modifiers.
      */
-    public val modifiers: Collection<AttributeModifier>
+    public val modifiers: @UnmodifiableView Collection<AttributeModifier>
 
     /**
      * The base value of the attribute.
@@ -53,6 +54,15 @@ public interface Attribute {
      * @return true if the modifier existed and was removed
      */
     public fun removeModifier(key: Key): Boolean
+
+    /**
+     * Removes an existing [modifier] using its key.
+     *
+     * @return true if the modifier existed and was removed
+     */
+    public fun removeModifier(modifier: AttributeModifier): Boolean {
+        return removeModifier(modifier.key)
+    }
 
     /**
      * Returns a modifier with the given [key] or null if it doesn't exist.

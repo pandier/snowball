@@ -20,6 +20,26 @@ public interface Player : LivingEntity, Audience, BossBarViewer, PlayerHeadObjec
     public var gameMode: GameMode
 
     /**
+     * The player's current food level.
+     */
+    public var foodLevel: Int
+
+    /**
+     * The player's current saturation level.
+     *
+     * Saturation is consumed before food level.
+     */
+    public var saturation: Float
+
+    /**
+     * The player's current exhaustion level.
+     *
+     * Exhaustion is increased by performing actions that exhaust the player,
+     * and when it reaches a certain amount, saturation or food level is decreased.
+     */
+    public var exhaustion: Float
+
+    /**
      * The player's inventory.
      */
     public val inventory: PlayerInventory

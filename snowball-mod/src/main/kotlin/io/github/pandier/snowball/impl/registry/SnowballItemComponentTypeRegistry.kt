@@ -146,7 +146,7 @@ class SnowballItemComponentTypeRegistry {
     }
 
     private fun registerMinecraftUnknown(id: String): ItemComponentTypeImpl<Unit, *> {
-        return registerMinecraft(id, null, {}, { throw UnsupportedOperationException() })
+        return registerMinecraft<Unit, Any>(id, null, {}, { throw UnsupportedOperationException() })
     }
 
     private inline fun <reified T, V : Any> registerMinecraft(id: String, noinline snowballMapper: (V) -> T, noinline vanillaMapper: (T) -> V): ItemComponentTypeImpl<T, V> {

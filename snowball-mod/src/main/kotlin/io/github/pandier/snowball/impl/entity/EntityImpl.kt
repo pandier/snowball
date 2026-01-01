@@ -13,6 +13,8 @@ import net.kyori.adventure.text.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.phys.Vec3
 import org.jetbrains.annotations.ApiStatus
+import org.jetbrains.annotations.UnmodifiableView
+import java.util.Collections
 import java.util.UUID
 
 open class EntityImpl(
@@ -79,12 +81,30 @@ open class EntityImpl(
     override val scoreboardName: String
         get() = adaptee.scoreboardName
 
+    override val isOnGround: Boolean
+        get() = adaptee.onGround()
+
     override val isRemoved: Boolean
         get() = adaptee.isRemoved
     override val isAlive: Boolean
         get() = adaptee.isAlive
     override val isDead: Boolean
         get() = !isAlive
+
+    override val tags: @UnmodifiableView Set<String>
+        get() = Collections.unmodifiableSet(adaptee.tags)
+
+    override fun addTag(tag: String): Boolean {
+        return adaptee.addTag(tag)
+    }
+
+    override fun removeTag(tag: String): Boolean {
+        return adaptee.removeTag(tag)
+    }
+
+    override fun hasTag(tag: String): Boolean {
+        return adaptee.tags.contains(tag)
+    }
 
     override fun teleport(world: World, location: Location): Boolean {
         return adaptee.teleportTo((world as WorldImpl).adaptee,

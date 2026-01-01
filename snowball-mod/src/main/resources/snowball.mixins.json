@@ -13,6 +13,7 @@
     "EntityMixin",
     "EntityTypeMixin",
     "FireworkRocketEntityMixin",
+    "FoodDataMixin",
     "GameRuleMixin",
     "InventoryAccessor",
     "InventoryMixin",
